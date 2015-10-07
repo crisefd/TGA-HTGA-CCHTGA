@@ -2,7 +2,6 @@ require 'rubygems'
 require 'bundler/setup'
 require_relative 'chromosome'
 class HTGA < Array
-
   def initialize(**input)
      @values = Array.new input[:values]
      @upper_bounds = input[:upper_bounds]
