@@ -20,16 +20,21 @@
 # of the original implementation in Matlab by
 # Natasha Y Jeppu, natasha.jeppu@gmail.com
 
-require 'matrix'
 
+require 'rubygems'
+require 'bundler/setup'
+require 'matrix'
+$output = ""
+$file_name = ""
 def oa_permut(q, n, j)
   if n != (q**j - 1)/(q - 1) then
     p "Does not satisfy criteria ..."
     return nil
   end
+  $file_name = "L#{n + 1}"
   row = q**j
   col = (q**j - 1)/(q - 1)
-  puts "row=#{row} col=#{col}"
+  #puts "row=#{row} col=#{col}"
   _A = Matrix.build(row, col){|r, c| 0}
   #Compute de basic columns
   for k in 0...j
@@ -37,31 +42,22 @@ def oa_permut(q, n, j)
     #p _J
     for i in 0...row
       m =  (i/(q ** (j + -1 *(k + 1)))) % q
-      p m
+      #p m
       _A.send(:[]=, i, _J, m)
     end
   end
-  print_matrix(_A)
-  puts "==========================="
-  #puts _A
-  #Compute the non-basic columns
+  #print_matrix(_A)
+  #puts "==========================="
   for k in 1...j
     _J = (q ** k - 1)/(q - 1)
-    #p "k"
     for s in 0..._J
-    #    p "s"
       for t in 0...(q - 1)
-
         x = _J + (s + 1)  * (q - 1) + t
-        p "#{x} = #{_J} + (#{s} + 1) * (#{q} - 1) + #{t}"
-    #    p "t"
-    #p x
+      #  p "#{x} = #{_J} + (#{s} + 1) * (#{q} - 1) + #{t}"
         replace_column(_A,s,t + 1,_J,q, x)
       end
     end
   end
-  #puts _A
-  #puts "============================="
   _A = _A.map{|e| e % q}
   _A
 end
@@ -78,14 +74,16 @@ def replace_column(_A,s,t,_J,q, x)
 end
 
 def print_matrix(_A)
-  output = ""
+  matrix_file = open("taguchi_orthogonal_matrices/#{$file_name}", 'w')
   for i in 0..._A.row_size
     for j in 0..._A.column_size
-      output += "#{_A[i,j]},"
+      $output += "#{_A[i,j]};"
     end
-    output += "\n"
+    $output += "\n"
   end
-  print output
+  matrix_file.write($output)
+  matrix_file.close
+
 end
 
 if __FILE__ == $PROGRAM_NAME
