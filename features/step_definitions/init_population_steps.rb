@@ -1,6 +1,6 @@
 # language: en
 # encoding: utf-8
-# file: init_population.feature
+# file: init_population_steps.rb
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co
 # creation date: 2015-10-07
@@ -8,39 +8,56 @@
 # version: 0.2
 # licence: GPL
 
-Given /^a population size of (\d+)$ / do |size|
-  @pop_size = size
+@input = {}
+
+Given(/^a population size of (\d+)$/) do |size|
+  @input[:pop_size] = size
 end
 
-And /^a number of genes of (\d+)$/ do |num_genes|
-  @num_genes = num_genes
+Given(/^a number of genes of (\d+)$/) do |num_genes|
+  @input[:num_genes] = num_genes
 end
 
-And /^the upper bounds are$/ do |table|
-  @upper_bounds = Array.new
+Given(/^the upper bounds are$/) do |table|
+  table = table.raw
+  upper_bounds = []
   table.each do |item|
-    @upper_bounds << item.to_i
+    upper_bounds << item.to_i
   end
+  @input[:upper_bounds] = upper_bounds
 end
 
-And /^the lower bounds are$/ do |table|
-  @lower_bounds = Array.new
+Given(/^the lower bounds are$/) do |table|
+  table = table.raw
+  lower_bounds = []
   table.each do |item|
-    @lower_bounds << item.to_i
+    lower_bounds << item.to_i
   end
+  @input[:lower_bounds] = lower_bounds
 end
 
-And /^the list of values is$/ do |table|
-  @values = Array.new
+Given(/^the list of values is$/) do |table|
+  table = table.raw
+  values = []
   table.each do |item|
-    @values << item.to_f
+    values << item.to_f
   end
+  @input[:values] = values
 end
 
-Wnen /^I create  the chromosomes$/ do
-
+When(/^I initialize  the HTGA$/) do
+  @htga = HTGA.new @input
 end
 
-Then /^all of the values,the genes, must be integer numbers between their corresponding upper and lower bounds$/ do
-
+Then(/^all of the chromosomes genes(values) for the initial population must be integer numbers between their corresponding upper and lower bounds$/) do
+  @htga.init_population
+  @htga.chromosomes.each do |chromosome|
+    i = 0
+    chromosome.each do |gene|
+      expect(gene).to_be_a(Integer)
+      expect(gene).to be_between(@htga.lower_bounds[i],
+                                 @htga.upper_bounds[i]).inclusive
+      i += 1
+    end
+  end
 end

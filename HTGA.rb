@@ -3,7 +3,10 @@ require 'rubygems'
 require 'bundler/setup'
 require_relative 'chromosome'
 
-class HTGA < Array
+class HTGA
+
+  attr_reader :chromosomes, :lower_bounds, :upper_bounds
+
   def initialize(**input)
     @values = Array.new input[:values]
     @upper_bounds = input[:upper_bounds]
@@ -12,22 +15,21 @@ class HTGA < Array
     @cross_rate = input[:cross_rate]
     @mut_rate = input[:mut_rate]
     @num_genes = input[:num_genes]
+    @chromosomes = []
   end
 
   def start
-
   end
 
   def init_population
     beta = @values[rand(0...@values.size)]
     (0...@pop_size).each do
-      crom = Chromosome.new
+      chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         crom << @lower_bounds[i] + beta * (@upper_bounds[i] - @lower_bounds)
       end
-      self << crom
+      @chromosomes << chromosome
     end
-
   end
 end
 
