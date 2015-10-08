@@ -1,10 +1,8 @@
-
 require 'rubygems'
 require 'bundler/setup'
 require_relative 'chromosome'
 
 class HTGA
-
   attr_reader :chromosomes, :lower_bounds, :upper_bounds
 
   def initialize(**input)
@@ -26,7 +24,8 @@ class HTGA
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
-        crom << @lower_bounds[i] + beta * (@upper_bounds[i] - @lower_bounds)
+        chromosome << @lower_bounds[i] + beta * (@upper_bounds[i] -
+                                                 @lower_bounds[i])
       end
       @chromosomes << chromosome
     end

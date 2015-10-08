@@ -14,8 +14,39 @@ Feature: initial population test
   Scenario: Test generation of discrete genes
     Given a population size of 20
     And a number of genes of 10
-    And the upper bounds are |15|15|15|15|15|15|15|15|15|15|
-    And the lower bounds are |-5|-5|-5|-5|-5|-5|-5|-5|-5|-5|
-    And the list of values is |0|0.1| 0.2| 0.3| 0.4| 0.5| 0.6| 0.7| 0.8| 0.9| 1|
+    And the upper bounds are
+    |15|
+    |15|
+    |15|
+    |15|
+    |15|
+    |15|
+    |15|
+    |15|
+    |15|
+    |15|
+    And the lower bounds are
+    |-5|
+    |-5|
+    |-5|
+    |-5|
+    |-5|
+    |-5|
+    |-5|
+    |-5|
+    |-5|
+    |-5|
+    And the list of values is
+    |0|
+    |0.1|
+    |0.2|
+    |0.3|
+    |0.4|
+    |0.5|
+    |0.6|
+    |0.7|
+    |0.8|
+    |0.9|
+    |1|
     When I initialize  the HTGA
     Then all of the chromosomes genes(values) for the initial population must be integer numbers between their corresponding upper and lower bounds
