@@ -1,7 +1,17 @@
+# !/home/crisefd/.rvm/rubies/ruby-2.1.5/bin/ruby
+# encoding: utf-8
+# Program: algoritmoGenetico.rb
+# Author: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
+# Email: cristhian.fuertes@correounivalle.edu.co,
+#        oscar.tigreros@correounivalle.edu.co
+# Creation date: 2015-10-05
+
 require 'rubygems'
 require 'bundler/setup'
 require_relative 'chromosome'
 
+# @author Cristhian Fuertes
+# Main class for the Hybrid-Taguchi Genetic Algorithm
 class HTGA
   attr_reader :chromosomes, :lower_bounds, :upper_bounds
 
