@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 group :development do
   gem 'rubocop', require: false
+  gem 'ruby-beautify', require: false
 end
 
 group :test do
@@ -13,3 +14,5 @@ end
 group :documentation do
   gem 'yard'
 end
+
+gem 'matrix'

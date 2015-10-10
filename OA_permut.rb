@@ -16,27 +16,26 @@
 # Computation, IEEE Transactions on , vol.5, % no.1, pp.41,53, Feb 2001,
 # doi: 10.1109/4235.910464
 #
-# This is a Ruby implementation by Cristhian Fuertes cristhian.fuertes@correounivalle.edu.co
+# This is a Ruby implementation by Cristhian Fuertes
+# cristhian.fuertes@correounivalle.edu.co
 # of the original implementation in Matlab by
 # Natasha Y Jeppu, natasha.jeppu@gmail.com
 
-
 require 'rubygems'
 require 'bundler/setup'
-require 'matrix'
-$output = ""
-$file_name = ""
+
+output = ''
+file_name = ''
 def oa_permut(q, n, j)
   if n != (q**j - 1)/(q - 1) then
     p "Does not satisfy criteria ..."
     return nil
   end
-  $file_name = "L#{n + 1}"
+  file_name += "L#{n + 1}"
   row = q**j
-  col = (q**j - 1)/(q - 1)
-  #puts "row=#{row} col=#{col}"
-  _A = Matrix.build(row, col){|r, c| 0}
-  #Compute de basic columns
+  col = (q**j - 1) / (q - 1)
+  _A = Matrix.build(row, col ){|r, c| 0 }
+  # Compute de basic columns
   for k in 0...j
     _J = ((q **k ) - 1)/(q - 1)
     #p _J
@@ -46,14 +45,12 @@ def oa_permut(q, n, j)
       _A.send(:[]=, i, _J, m)
     end
   end
-  #print_matrix(_A)
-  #puts "==========================="
+
   for k in 1...j
     _J = (q ** k - 1)/(q - 1)
     for s in 0..._J
       for t in 0...(q - 1)
         x = _J + (s + 1)  * (q - 1) + t
-      #  p "#{x} = #{_J} + (#{s} + 1) * (#{q} - 1) + #{t}"
         replace_column(_A,s,t + 1,_J,q, x)
       end
     end
@@ -74,14 +71,14 @@ def replace_column(_A,s,t,_J,q, x)
 end
 
 def print_matrix(_A)
-  matrix_file = open("taguchi_orthogonal_matrices/#{$file_name}", 'w')
+  matrix_file = open("taguchi_orthogonal_matrices/#{file_name}", 'w')
   for i in 0..._A.row_size
     for j in 0..._A.column_size
-      $output += "#{_A[i,j]};"
+      output += "#{_A[i,j]};"
     end
-    $output += "\n"
+    output += "\n"
   end
-  matrix_file.write($output)
+  matrix_file.write(output)
   matrix_file.close
 
 end

@@ -1,6 +1,6 @@
-# !/home/crisefd/.rvm/rubies/ruby-2.1.5/bin/ruby
+# !~/.rvm/rubies/ruby-2.1.5/bin/ruby
 # encoding: utf-8
-# Program: algoritmoGenetico.rb
+# Program: htga.rb
 # Author: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
 # Email: cristhian.fuertes@correounivalle.edu.co,
 #        oscar.tigreros@correounivalle.edu.co
