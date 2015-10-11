@@ -33,3 +33,28 @@ Feature: initial population test
     And the values for beta are "discrete"
     When I initialize  the HTGA and generate the initial population
     Then all of the chromosomes genes (values) for the initial population must be real numbers between their corresponding upper and lower bounds
+
+
+    @test_uniform_distribution_value
+    Scenario: Test generation of integer values for genes
+      Given a population size of 5
+      And a number of genes of 7
+      And the upper bounds are
+      |5|
+      |5|
+      |5|
+      |5|
+      |5|
+      |5|
+      |5|
+      And the lower bounds are
+      |-11|
+      |-11|
+      |-11|
+      |-11|
+      |-11|
+      |-11|
+      |-11|
+      And the values for beta are "uniform distribution"
+      When I initialize  the HTGA and generate the initial population
+      Then all of the chromosomes genes (values) for the initial population must be real numbers between their corresponding upper and lower bounds
