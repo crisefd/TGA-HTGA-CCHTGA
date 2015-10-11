@@ -23,4 +23,16 @@ class Chromosome < Array
     end
     return chromosome_x, chromosome_y
   end
+
+  def self.mutate(**args)
+    beta = args[:beta]
+    i = args[:i]
+    k = args[:k]
+    chromosome = args[:chromosome]
+    gene_i = chromosome[i]
+    gene_k = chromosome[k]
+    chromosome[i] = (1 - beta) * gene_i + beta * gene_k
+    chromosome[k] = beta * gene_i + (1 - beta) * gene_k
+    chromosome
+  end
 end
