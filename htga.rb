@@ -16,7 +16,7 @@ class HTGA
   attr_reader :chromosomes, :lower_bounds, :upper_bounds
 
   def initialize(**input)
-    @values =  input[:values]
+    @values = input[:values]
     @upper_bounds = input[:upper_bounds]
     @lower_bounds = input[:lower_bounds]
     @pop_size = input[:pop_size]
@@ -24,6 +24,7 @@ class HTGA
     @mut_rate = input[:mut_rate]
     @num_genes = input[:num_genes]
     @chromosomes = []
+    @continuous = input[:continuous]
   end
 
   def start
@@ -33,14 +34,19 @@ class HTGA
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
-        if @values == 'discrete' then
+        if @values == 'discrete'
           arr = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
           beta = arr[rand(0...arr.size)]
         elsif @values == 'uniform distribution'
           beta = Random.new.rand(0..1000).to_f / 1000
         end
-        chromosome << @lower_bounds[i] + beta * (@upper_bounds[i] -
+        gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
                                                  @lower_bounds[i])
+        if @continuous
+          chromosome << gene
+        else
+          chromosome << gene.to_i
+        end
       end
 
       @chromosomes << chromosome

@@ -41,7 +41,13 @@ Given(/^the values for beta are "([^"]*)"$/) do |arg1|
 end
 
 
-When(/^I initialize  the HTGA and generate the initial population$/) do
+When(/^I initialize  the HTGA and generate the initial population with continuous variables$/) do
+  input[:continuous] = true
+  @htga = HTGA.new input
+end
+
+When(/^I initialize  the HTGA and generate the initial population with non continuous variables$/) do
+  input[:continuous] = false
   @htga = HTGA.new input
 end
 
@@ -52,6 +58,20 @@ Then(/^all of the chromosomes genes \(values\) for the initial population must b
     i = 0
     chromosome.each do |gene|
       expect(gene).to be_a(Float)
+      expect(gene).to be_between(@htga.lower_bounds[i],
+                                 @htga.upper_bounds[i]).inclusive
+      i += 1
+    end
+  end
+end
+
+Then(/^all of the chromosomes genes \(values\) for the initial population must be integer numbers between their corresponding upper and lower bounds$/) do
+  @htga.init_population
+  @htga.chromosomes.each do |chromosome|
+    puts "=> #{chromosome}"
+    i = 0
+    chromosome.each do |gene|
+      expect(gene).to be_a(Integer)
       expect(gene).to be_between(@htga.lower_bounds[i],
                                  @htga.upper_bounds[i]).inclusive
       i += 1
