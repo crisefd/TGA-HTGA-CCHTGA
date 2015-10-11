@@ -6,15 +6,15 @@ class Chromosome < Array
   def self.crossover(**args)
     chromosome_x = args[:chromosome_x]
     chromosome_y = args[:chromosome_y]
-    beta = args[:beta]
-    k = args[:k]
-    upper_bound = args[:upper_bound]
-    lower_bound = args[:lower_bound]
+    beta = rand(0..10) / 10.0
+    k = rand(0...chromosome_y.size)
+    upper_bounds = args[:upper_bounds]
+    lower_bounds = args[:lower_bounds]
     # new values for kth genes x and y
     cut_point_x = chromosome_x[k]
     cut_point_y = chromosome_y[k]
     cut_point_x = cut_point_x + beta * (cut_point_y - cut_point_x)
-    cut_point_y = lower_bound + beta * (upper_bound - lower_bound)
+    cut_point_y = lower_bounds[k] + beta * (upper_bounds[k] - lower_bounds[k])
     chromosome_x[k] = cut_point_x
     chromosome_y[k] = cut_point_y
     # swap right side of chromosomes x and y
@@ -24,11 +24,15 @@ class Chromosome < Array
     return chromosome_x, chromosome_y
   end
 
-  def self.mutate(**args)
-    beta = args[:beta]
-    i = args[:i]
-    k = args[:k]
-    chromosome = args[:chromosome]
+  def self.mutate(chromosome)
+    beta = rand(0..10) / 10.0
+    i = -1
+    k = -1
+    loop do
+      i = rand(0...chromosome.size)
+      k = rand(0...chromosome.size)
+      break if i != k
+    end
     gene_i = chromosome[i]
     gene_k = chromosome[k]
     chromosome[i] = (1 - beta) * gene_i + beta * gene_k

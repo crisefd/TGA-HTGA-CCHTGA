@@ -10,54 +10,57 @@
 args = {}
 Given(/^the chromosomes:$/) do |table|
   table = table.raw
-  chromosome_x = Chromosome.new
-  chromosome_y = Chromosome.new
+  @chromosome_x = Chromosome.new
+  @chromosome_y = Chromosome.new
   i = 0
   table.each do |item|
     if i > 0
-      chromosome_x << item[0].to_i
-      chromosome_y << item[1].to_i
+      @chromosome_x << item[0].to_i
+      @chromosome_y << item[1].to_i
     end
     i += 1
   end
-  args[:chromosome_x] = chromosome_x
-  args[:chromosome_y] = chromosome_y
+  args[:chromosome_x] = @chromosome_x.clone
+  args[:chromosome_y] = @chromosome_y.clone
 end
 
-When(/^I apply crossover with a beta value of "([^\"]*)$/) do |arg1|
-  beta = arg1.to_f
-  args[:beta] = beta
-end
-
-When(/^a k value of (\d+)$/) do |arg1|
-  k = arg1.to_i
-  args[:k] = k
-end
-
-When(/^I apply crossover with a beta value of "([^"]*)"$/) do |arg1|
-  beta = arg1.to_f
-  args[:beta] = beta
-end
-
-When(/^an upper bound value of "([^"]*)"$/) do |arg1|
-  upper_bound = arg1.to_i
-  args[:upper_bound] = upper_bound
-end
-
-When(/^a lower bound value of "([^"]*)"$/) do |arg1|
-  lower_bound = arg1.to_i
-  args[:lower_bound] = lower_bound
-end
-
-Then(/^the resulting chromosomes must be:$/) do |table|
-  chromosome_x, chromosome_y = Chromosome.crossover args
+Given(/^the upper bounds are:$/) do |table|
   table = table.raw
-  i = 0
+  table = table[0]
+  upper_bounds = []
   table.each do |item|
-    if i > 0
-      expect(chromosome_x[i - 1]).to eq item[0].to_i
-      expect(chromosome_y[i - 1]).to eq item[1].to_i
-    end
-    i += 1
+    upper_bounds << item.to_i
   end
+  args[:upper_bounds] = upper_bounds
+end
+
+Given(/^the lower bounds are:$/) do |table|
+  table = table.raw
+  table = table[0]
+  lower_bounds = []
+  table.each do |item|
+    lower_bounds << item.to_i
+  end
+  args[:lower_bounds] = lower_bounds
+end
+
+When(/^we apply crossover on the chromosomes$/) do
+  @crossed_chromosome_x, @crossed_chromosome_y = Chromosome.crossover args
+end
+
+Then(/^the resulting chromosomes must have swapped their right sides$/) do
+  cut_point = -1
+  size = @chromosome_x.size
+  (0...size).each do |i|
+    if @chromosome_x[i] != @crossed_chromosome_x[i]
+      cut_point = i
+      break
+    end
+  end
+  if cut_point < size - 1
+    expect(@crossed_chromosome_x[(cut_point + 1)...size]).to eq(@chromosome_y[(cut_point + 1)...size])
+    expect(@crossed_chromosome_y[(cut_point + 1)...size]).to eq(@chromosome_x[(cut_point + 1)...size])
+  end
+  expect(@crossed_chromosome_x[cut_point]).to_not eq(@chromosome_x)
+  expect(@crossed_chromosome_y[cut_point]).to_not eq(@chromosome_y)
 end

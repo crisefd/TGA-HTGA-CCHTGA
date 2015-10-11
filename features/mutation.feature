@@ -13,7 +13,5 @@ Feature: Mutation operation
   Scenario: Test the mutation operation derived from convex set theory with non continuous variables
     Given the chromosome:
     |1|1|-1|0|1|1|1|
-    And a beta value of "0.5"
-    When mutation is apply on genes 2 and 4
-    Then the resulting chromosome must be:
-    |1|1|0|0|0|1|1|
+    When mutation is apply
+    Then the resulting chromosome must be different from the original chromosome in two of the genes

@@ -11,34 +11,22 @@
 args = {}
 
 Given(/^the chromosome:$/) do |table|
-  chromosome = Chromosome.new
+  @chromosome = Chromosome.new
   table = table.raw
   table = table[0]
   table.each do |item|
-    chromosome << item.to_i
+    @chromosome << item.to_i
   end
-  args[:chromosome] = chromosome.clone
 end
 
-Given(/^a beta value of "([^"]*)"$/) do |arg1|
-  beta = arg1.to_f
-  args[:beta] = beta
+When(/^mutation is apply$/) do
+  @mutated_chromosome = Chromosome.mutate @chromosome.clone
 end
 
-When(/^mutation is apply on genes (\d+) and (\d+)$/) do |arg1, arg2|
-  i = arg1.to_i
-  k = arg2.to_i
-  args[:i] = i
-  args[:k] = k
-end
-
-Then(/^the resulting chromosome must be:$/) do |table|
-  chromosome = Chromosome.mutate(args)
-  table = table.raw
-  table = table[0]
-  i = 0
-  table.each do |item|
-    expect(chromosome[i]).to eq item.to_i
-    i += 1
+Then(/^the resulting chromosome must be different from the original chromosome in two of the genes$/) do
+  count = 0
+  (0...@chromosome.size).each do |i|
+    count += 1 if @chromosome[i] != @mutated_chromosome[i]
   end
+  expect(count).to eq 2
 end

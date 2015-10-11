@@ -20,16 +20,9 @@ Feature: Crossover operation
     |1|0|
     |1|0|
     |1|0|
-    When I apply crossover with a beta value of "0.5"
-    And a k value of 2
-    And an upper bound value of "5"
-    And a lower bound value of "-5"
-    Then the resulting chromosomes must be:
-    |chromosome x|chromosome y|
-    |1|0|
-    |1|0|
-    |1|0|
-    |1|0|
-    |0|1|
-    |0|1|
-    |0|1|
+    And the upper bounds are:
+    |5|5|5|5|5|5|5|
+    And the lower bounds are:
+    |-5|-5|-5|-5|-5|-5|-5|
+    When we apply crossover on the chromosomes
+    Then the resulting chromosomes must have swapped their right sides
