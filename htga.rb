@@ -45,7 +45,7 @@ class HTGA
         if @continuous
           chromosome << gene
         else
-          chromosome << gene.to_i
+          chromosome << gene.round
         end
       end
 
