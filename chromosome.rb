@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 
-# Chromosome class for HTGA
+# Chromosome class for Hybrid-Taguchi Genetic Algorithm
 class Chromosome < Array
   def self.crossover(**args)
     chromosome_x = args[:chromosome_x]

@@ -38,10 +38,8 @@ def oa_permut(q, n, j)
   # Compute de basic columns
   for k in 0...j
     _J = ((q **k ) - 1)/(q - 1)
-    #p _J
     for i in 0...row
       m =  (i/(q ** (j + -1 *(k + 1)))) % q
-      #p m
       _A.send(:[]=, i, _J, m)
     end
   end
@@ -80,7 +78,6 @@ def print_matrix(_A)
   end
   matrix_file.write(output)
   matrix_file.close
-
 end
 
 if __FILE__ == $PROGRAM_NAME

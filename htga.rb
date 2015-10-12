@@ -35,10 +35,9 @@ class HTGA
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @values == 'discrete'
-          arr = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-          beta = arr[rand(0...arr.size)]
+          beta = rand(0..10) / 10.0
         elsif @values == 'uniform distribution'
-          beta = Random.new.rand(0..1000).to_f / 1000
+          beta = rand(0..1000) / 1000.0
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
                                                  @lower_bounds[i])
@@ -48,7 +47,6 @@ class HTGA
           chromosome << gene.round
         end
       end
-
       @chromosomes << chromosome
     end
   end
