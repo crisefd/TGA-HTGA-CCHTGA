@@ -8,8 +8,6 @@
 # version: 0.2
 # licence: GPL
 
-args = {}
-
 Given(/^the chromosome:$/) do |table|
   @chromosome = Chromosome.new
   table = table.raw
@@ -23,10 +21,7 @@ When(/^mutation is apply$/) do
   @mutated_chromosome = Chromosome.mutate @chromosome.clone
 end
 
-Then(/^the resulting chromosome must be different from the original chromosome in two of the genes$/) do
-  count = 0
-  (0...@chromosome.size).each do |i|
-    count += 1 if @chromosome[i] != @mutated_chromosome[i]
-  end
-  expect(count).to eq 2
+Then(/^the resulting chromosome must be different from the original chromosome$/) do
+  p "mutated #{@mutated_chromosome}"
+  expect(@chromosome).to_not eq(@mutated_chromosome)
 end

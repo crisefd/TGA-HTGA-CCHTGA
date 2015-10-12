@@ -14,4 +14,4 @@ Feature: Mutation operation
     Given the chromosome:
     |1|1|-1|0|1|1|1|
     When mutation is apply
-    Then the resulting chromosome must be different from the original chromosome in two of the genes
+    Then the resulting chromosome must be different from the original chromosome
