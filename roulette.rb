@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 
+# @author Cristhian Fuertes
 # Inner class for roulette selection operation
 class Roulette
   # Normalizes an array that potentially contains negative numbers by shifting
