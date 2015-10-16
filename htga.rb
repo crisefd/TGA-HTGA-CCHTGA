@@ -9,10 +9,13 @@
 require 'rubygems'
 require 'bundler/setup'
 require_relative 'chromosome'
+require_relative 'roulette'
 
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
 class HTGA
+  include Roulette
+
   attr_reader :chromosomes, :lower_bounds, :upper_bounds
 
   def initialize(**input)
