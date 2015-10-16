@@ -3,6 +3,12 @@ require 'bundler/setup'
 
 # Chromosome class for Hybrid-Taguchi Genetic Algorithm
 class Chromosome < Array
+  attr_accessor :fitness, :prob
+
+  def initialize
+    @fitness = 0
+  end
+
   def self.crossover(**args)
     chromosome_x = args[:chromosome_x]
     chromosome_y = args[:chromosome_y]
