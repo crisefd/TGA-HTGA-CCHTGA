@@ -1,3 +1,13 @@
+# language: en
+# encoding: utf-8
+# file: roulette.rb
+# author: Cristhian Fuertes
+# email:  cristhian.fuertes@correounivalle.edu.co
+# creation date: 2015-15-11
+# last modified: 2015-15-11
+# version: 0.2
+# licence: GPL
+
 require 'rubygems'
 require 'bundler/setup'
 
@@ -8,7 +18,7 @@ module Roulette
   # all of them up to be positive (0 is left alone).
   #
   # +pop_fit+ array of each individual's fitness in a population to normalize
-  def norm_pop(chromosomes)
+  def Roulette.norm_pop(chromosomes)
     # Absolute value so can shift up
     # +1 so that it doesn't become 0
 
@@ -31,7 +41,7 @@ module Roulette
   #
   # +pop_fit+ array of each individual's fitness in the population
   # +is_high_fit+ true if high fitness is best or false if low fitness is best
-  def calc_probs(chromosomes, is_high_fit = true)
+  def Roulette.calc_probs(chromosomes, is_high_fit = true)
     fit_sum  = 0.0 # Sum of each individual's fitness in the population
     prob_sum = 0.0 # You can think of this in 2 ways; either...
                    # 1) Current sum of each individual's probability in the
@@ -46,7 +56,11 @@ module Roulette
     # Get fitness sum and best fitness
     chromosomes.each do |chromosome|
       fit_sum += chromosome.fitness
-      best_fit = chromosome.fitness if best_fit.nil? || chromosome.fitness > best_fit
+      if is_high_fit
+        best_fit = chromosome.fitness if best_fit.nil? || chromosome.fitness > best_fit
+      else
+        best_fit = chromosome.fitness if best_fit.nil? || chromosome.fitness < best_fit
+      end
     end
 
     best_fit += 1 # So that we don't get best_fit-best_fit=0
@@ -59,10 +73,10 @@ module Roulette
       else
         chromosomes[i].prob = (f != 0) ? (prob_sum + ((best_fit - f) / fit_sum)) : 0.0
       end
-      prob_sum = chromosomes[i].probs
+      prob_sum = chromosomes[i].prob
     end
     # Ensure that the last individual is 1.0
-    chromosomes[chromosomes.size - 1].prob = 1.0
+    chromosomes.last.prob = 1.0
   end
 
 end
