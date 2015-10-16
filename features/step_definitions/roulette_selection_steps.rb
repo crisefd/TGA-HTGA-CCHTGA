@@ -8,7 +8,7 @@
 # version: 0.2
 # licence: GPL
 
-Given(/^the fitness values of some chromosomes:$/) do |table|
+Given(/^the positive fitness values of some chromosomes:$/) do |table|
   table = table.raw
   table = table[0]
   @chromosomes = []
@@ -17,11 +17,10 @@ Given(/^the fitness values of some chromosomes:$/) do |table|
     c.fitness = item.to_f
     @chromosomes << c
   end
-
 end
 
-When(/^I execute the roulette selection operation for maximization$/) do
-    Roulette.calc_probs(@chromosomes)
+When(/^I execute the roulette selection operation for maximization of positive fitness values$/) do
+  Roulette.calc_probs(@chromosomes)
 end
 
 Then(/^The calculated probabilities must be:$/) do |table|
@@ -32,5 +31,21 @@ Then(/^The calculated probabilities must be:$/) do |table|
     expect(@chromosomes[i].prob.round(10)).to eq(item.to_f.round(10))
     i += 1
   end
+end
 
+###################################
+Given(/^the negative fitness values of some chromosomes:$/) do |table|
+  table = table.raw
+  table = table[0]
+  @chromosomes = []
+  table.each do |item|
+    c = Chromosome.new
+    c.fitness = item.to_f
+    @chromosomes << c
+  end
+end
+
+When(/^I execute the roulette selection operation for maximization of negative fitness values$/) do
+  Roulette.norm_pop @chromosomes
+  Roulette.calc_probs @chromosomes
 end

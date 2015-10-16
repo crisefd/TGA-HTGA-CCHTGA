@@ -18,13 +18,18 @@ module Roulette
   # all of them up to be positive (0 is left alone).
   #
   # +pop_fit+ array of each individual's fitness in a population to normalize
-  def Roulette.norm_pop(chromosomes)
+  def self.norm_pop(chromosomes)
     # Absolute value so can shift up
     # +1 so that it doesn't become 0
 
     least_fit = (chromosomes.min_by(&:fitness)).fitness.abs + 1
     chromosomes.map! do |chromosome|
-      (chromosome.fitness != 0) ? (chromosome.fitness + least_fit) : chromosome
+      if chromosome.fitness != 0
+        chromosome.fitness += least_fit
+        chromosome
+      else
+        chromosome
+      end
     end
   end
 
@@ -41,7 +46,7 @@ module Roulette
   #
   # +pop_fit+ array of each individual's fitness in the population
   # +is_high_fit+ true if high fitness is best or false if low fitness is best
-  def Roulette.calc_probs(chromosomes, is_high_fit = true)
+  def self.calc_probs(chromosomes, is_high_fit = true)
     fit_sum  = 0.0 # Sum of each individual's fitness in the population
     prob_sum = 0.0 # You can think of this in 2 ways; either...
                    # 1) Current sum of each individual's probability in the
@@ -77,6 +82,7 @@ module Roulette
     end
     # Ensure that the last individual is 1.0
     chromosomes.last.prob = 1.0
+
   end
 
 end
