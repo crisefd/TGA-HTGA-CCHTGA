@@ -33,6 +33,10 @@ class HTGA
   def start
   end
 
+  def roulette_select
+    
+  end
+
   def init_population
     (0...@pop_size).each do
       chromosome = Chromosome.new

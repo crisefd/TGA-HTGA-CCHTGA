@@ -14,6 +14,8 @@ require 'bundler/setup'
 # @author Cristhian Fuertes
 # module for roulette selection operation
 module Roulette
+  private
+
   # Normalizes an array that potentially contains negative numbers by shifting
   # all of them up to be positive (0 is left alone).
   #
@@ -33,6 +35,8 @@ module Roulette
     end
   end
 
+  public
+
   # Returns an array of each individual's probability between 0.0 and 1.0
   # fitted
   # onto an imaginary roulette wheel (or pie).
@@ -46,7 +50,8 @@ module Roulette
   #
   # +pop_fit+ array of each individual's fitness in the population
   # +is_high_fit+ true if high fitness is best or false if low fitness is best
-  def self.calc_probs(chromosomes, is_high_fit = true)
+  def self.calc_probs(chromosomes, is_high_fit: true, is_negative_fit: false)
+    Roulette.norm_pop chromosomes if is_negative_fit
     fit_sum  = 0.0 # Sum of each individual's fitness in the population
     prob_sum = 0.0 # You can think of this in 2 ways; either...
                    # 1) Current sum of each individual's probability in the
