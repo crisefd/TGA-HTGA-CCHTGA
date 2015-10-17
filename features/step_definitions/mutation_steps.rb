@@ -17,11 +17,24 @@ Given(/^the chromosome:$/) do |table|
   end
 end
 
-When(/^mutation is apply$/) do
+When(/^mutation is apply on two genes of the chromosome$/) do
   @mutated_chromosome = Chromosome.mutate @chromosome.clone
 end
 
-Then(/^the resulting chromosome must be different from the original chromosome$/) do
-  p "mutated #{@mutated_chromosome}"
-  expect(@chromosome).to_not eq(@mutated_chromosome)
+Then(/^the changed genes must be closer stepwise in the resulting chromosome$/) do
+  i, k, cont = 0, 0, 0
+  @mutated_chromosome.each_index do |index|
+    if @mutated_chromosome[index] != @chromosome[index]
+      if cont == 1
+        k = index
+        break
+      elsif  cont == 0
+        i = index
+      end
+      cont += 1
+    end
+  end
+  prev_distance = (@chromosome[i] - @chromosome[k]).abs
+  new_distance = (@mutated_chromosome[i] - @mutated_chromosome[k]).abs
+  expect(new_distance).to be <= prev_distance
 end

@@ -13,5 +13,5 @@ Feature: Mutation operation
   Scenario: Test the mutation operation derived from convex set theory with non continuous variables
     Given the chromosome:
     |1|1|-1|0|1|1|1|
-    When mutation is apply
-    Then the resulting chromosome must be different from the original chromosome
+    When mutation is apply on two genes of the chromosome
+    Then the changed genes must be closer stepwise in the resulting chromosome
