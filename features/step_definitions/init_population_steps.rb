@@ -43,11 +43,13 @@ end
 
 When(/^I initialize  the HTGA and generate the initial population with continuous variables$/) do
   input[:continuous] = true
+  input[:selected_func] = 0
   @htga = HTGA.new input
 end
 
 When(/^I initialize  the HTGA and generate the initial population with non continuous variables$/) do
   input[:continuous] = false
+  input[:selected_func] = 0
   @htga = HTGA.new input
 end
 

@@ -10,6 +10,7 @@ require 'rubygems'
 require 'bundler/setup'
 require_relative 'chromosome'
 require_relative 'roulette'
+require_relative 'test_functions'
 
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
@@ -28,13 +29,22 @@ class HTGA
     @num_genes = input[:num_genes]
     @chromosomes = []
     @continuous = input[:continuous]
+    @selected_func = input[:selected_func]
   end
 
   def start
   end
 
   def roulette_select
-    
+    Roulette.calc_probs @chromosomes
+    copied_chromosomes = @chromosomes.clone
+    @chromosomes.clear
+    (0...@pop_size).each do |k|
+      r = rand(0..10) / 10.0
+      copied_chromosomes.each_index do |i|
+        @chromosomes << copied_chromosomes[i] if r <= copied_chromosomes[i].prob
+      end
+    end
   end
 
   def init_population
@@ -54,6 +64,7 @@ class HTGA
           chromosome << gene.round
         end
       end
+      chromosome.fitness = TestFunctions::TEST_FUNCTIONS[@selected_func].call chromosome
       @chromosomes << chromosome
     end
   end
@@ -61,5 +72,8 @@ class HTGA
 end
 
 if __FILE__ == $PROGRAM_NAME
-
+  # htga = HTGA.new(selected_func: 0, values: 'uniform distribution',
+    #              continuous: true, pop_size: 5, num_genes: 5,
+    #              upper_bounds: [5,5,5,5,5], lower_bounds: [-5, -5, -5, -5, -5])
+  #htga.init_population
 end
