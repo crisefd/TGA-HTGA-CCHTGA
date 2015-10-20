@@ -17,14 +17,14 @@ module TestFunctions
   public
 
   TEST_FUNCTIONS = [
-    lambda do |x|
+    lambda do |x| # function 0
       r = 0.0
       x.each_index do |i|
         r += -1 * x[i] * Math.sin(Math.sqrt(radians(x[i].abs)))
       end
       r
     end,
-    lambda do |x|
+    lambda do |x| # function 1
       r = 0.0
       x.each_index do |i|
         r += x[i]**2 * -10 * Math.cos(radians(2 * Math::PI * x[i])) + 10
