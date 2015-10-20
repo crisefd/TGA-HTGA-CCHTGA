@@ -15,7 +15,7 @@ require_relative 'test_functions'
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
 class HTGA
-  include Roulette
+  include Roulette, TestFunctions
 
   attr_reader :chromosomes, :lower_bounds, :upper_bounds
 
@@ -39,10 +39,10 @@ class HTGA
     Roulette.calc_probs @chromosomes
     copied_chromosomes = @chromosomes.clone
     @chromosomes.clear
-    (0...@pop_size).each do |k|
-      r = rand(0..10) / 10.0
+    (0...@pop_size).each do
+      r = rand(0..1000) / 1000.0
       copied_chromosomes.each_index do |i|
-        @chromosomes << copied_chromosomes[i] if r <= copied_chromosomes[i].prob
+        @chromosomes << copied_chromosomes[i] if r < copied_chromosomes[i].prob
       end
     end
   end
@@ -64,16 +64,17 @@ class HTGA
           chromosome << gene.round
         end
       end
-      chromosome.fitness = TestFunctions::TEST_FUNCTIONS[@selected_func].call chromosome
+      chromosome.fitness = TEST_FUNCTIONS[@selected_func].call chromosome
       @chromosomes << chromosome
     end
   end
-
 end
 
 if __FILE__ == $PROGRAM_NAME
-  # htga = HTGA.new(selected_func: 0, values: 'uniform distribution',
-    #              continuous: true, pop_size: 5, num_genes: 5,
-    #              upper_bounds: [5,5,5,5,5], lower_bounds: [-5, -5, -5, -5, -5])
-  #htga.init_population
+=begin
+   htga = HTGA.new(selected_func: 0, values: 'uniform distribution',
+                 continuous: true, pop_size: 5, num_genes: 5,
+                  upper_bounds: [5,5,5,5,5], lower_bounds: [-5, -5, -5, -5, -5])
+  htga.init_population
+=end
 end
