@@ -33,21 +33,36 @@ class HTGA
   end
 
   def execute
-    init_population
-    cross_individuals
   end
 
   def cross_individuals
-    (0..(@cross_rate * @pop_size)).each do
+    m = @pop_size
+    (0...m).each do
+      r = rand(0..10) / 10.0
+      next if r > @cross_rate
       loop do
         x = rand(0...@pop_size)
         y = rand(0...@pop_size)
         next if x == y
-        Chromosome.crossover(chromosome_x: @chromosomes[x],
-                             chromosome_y: @chromosomes[y],
-                             upper_bounds: @upper_bounds,
-                             lower_bounds: @lower_bounds)
+        new_chrom_x, new_chrom_y =
+                       Chromosome.crossover(chromosome_x: @chromosomes[x].clone,
+                                            chromosome_y: @chromosomes[y].clone,
+                                            upper_bounds: @upper_bounds,
+                                            lower_bounds: @lower_bounds)
+        @chromosomes << new_chrom_x << new_chrom_y
+        break
       end
+    end
+  end
+
+  def mutate_individuals
+    m = @chromosomes.size
+    (0...m).each do
+      r = rand(0..10) / 10.0
+      next if r > @mut_rate
+      x = rand(0...m)
+      new_chrom = Chromosome.mutate(@chromosomes[x].clone)
+      @chromosomes << new_chrom
     end
   end
 
