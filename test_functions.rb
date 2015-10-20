@@ -30,6 +30,20 @@ module TestFunctions
         r += x[i]**2 * -10 * Math.cos(radians(2 * Math::PI * x[i])) + 10
       end
       r
+    end,
+
+    lambda do |x| # function 2
+      sum_square_x = 0.0
+      sum_cos = 0.0
+      x.each_index do |i|
+        sum_square_x += x[i]**2
+        sum_cos += Math.cos(radians(2 * Math::PI * x[i]))
+      end
+      sum_square_x *= 1.0 / x.size
+      sum_cos *= 1.0 / x.size
+      left_term = -20 * Math.exp(-0.2 * Math.sqrt(sum_square_x))
+      right_term = -1 * Math.exp(sum_cos)
+      left_term + right_term
     end
 
   ]

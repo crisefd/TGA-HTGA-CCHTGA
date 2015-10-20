@@ -32,7 +32,23 @@ class HTGA
     @selected_func = input[:selected_func]
   end
 
-  def start
+  def execute
+    init_population
+    cross_individuals
+  end
+
+  def cross_individuals
+    (0..(@cross_rate * @pop_size)).each do
+      loop do
+        x = rand(0...@pop_size)
+        y = rand(0...@pop_size)
+        next if x == y
+        Chromosome.crossover(chromosome_x: @chromosomes[x],
+                             chromosome_y: @chromosomes[y],
+                             upper_bounds: @upper_bounds,
+                             lower_bounds: @lower_bounds)
+      end
+    end
   end
 
   def roulette_select
