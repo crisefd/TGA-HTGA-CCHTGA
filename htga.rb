@@ -16,7 +16,7 @@ require_relative 'test_functions'
 # Main class for the Hybrid-Taguchi Genetic Algorithm
 class HTGA
   include Roulette, TestFunctions
-
+  $ran = Random.new
   attr_reader :chromosomes, :lower_bounds, :upper_bounds
 
   def initialize(**input)
@@ -38,7 +38,7 @@ class HTGA
   def cross_individuals
     m = @pop_size
     (0...m).each do
-      r = rand(0..10) / 10.0
+      r = $ran.rand(1.0)
       next if r > @cross_rate
       loop do
         x = rand(0...@pop_size)
@@ -58,7 +58,7 @@ class HTGA
   def mutate_individuals
     m = @chromosomes.size
     (0...m).each do
-      r = rand(0..10) / 10.0
+      r = $ran.rand(1.0)
       next if r > @mut_rate
       x = rand(0...m)
       new_chrom = Chromosome.mutate(@chromosomes[x].clone)
@@ -71,7 +71,7 @@ class HTGA
     copied_chromosomes = @chromosomes.clone
     @chromosomes.clear
     (0...@pop_size).each do
-      r = rand(0..1000) / 1000.0
+      r = $ran.rand(1.0)
       copied_chromosomes.each_index do |i|
         @chromosomes << copied_chromosomes[i] if r < copied_chromosomes[i].prob
       end
@@ -83,9 +83,9 @@ class HTGA
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @values == 'discrete'
-          beta = rand(0..10) / 10.0
+          beta = (Array.new(11){|i| i/10.0}).sample
         elsif @values == 'uniform distribution'
-          beta = rand(0..1000) / 1000.0
+          beta = $ran.rand(1.0)
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
                                                  @lower_bounds[i])
