@@ -87,7 +87,7 @@ class HTGA
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @values == 'discrete'
-          beta = (Array.new(11){|i| i/10.0}).sample
+          beta = (Array.new(11){|i| i / 10.0}).sample
         elsif @values == 'uniform distribution'
           beta = $ran.rand(1.0)
         end
