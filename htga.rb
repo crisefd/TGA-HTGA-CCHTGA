@@ -32,7 +32,6 @@ class HTGA
     @selected_func = input[:selected_func]
     @is_negative_fit = input[:is_negative_fit]
     @is_high_fit = input[:is_high_fit]
-    @is_negative_fit = false if @is_negative_fit.nil?
     @is_high_fit = false if @is_high_fit.nil?
   end
 
@@ -71,8 +70,7 @@ class HTGA
   end
 
   def roulette_select
-    Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
-                        is_negative_fit: @is_negative_fit
+    Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
     (0...@pop_size).each do
       r = $ran.rand(1.0)
