@@ -5,7 +5,7 @@ require 'bundler/setup'
 class Chromosome < Array
   attr_accessor :fitness, :prob
 
-  def self.crossover(**args)
+  def self.crossover **args
     chromosome_x = args[:chromosome_x]
     chromosome_y = args[:chromosome_y]
     beta = rand(0..10) / 10.0
@@ -42,3 +42,22 @@ class Chromosome < Array
     chromosome
   end
 end
+=begin
+if __FILE__ == $PROGRAM_NAME
+  c1 = Chromosome.new [-5, 3, 4.5]
+  c2 = Chromosome.new [0,1,5]
+  c3 = Chromosome.new [-1,-2, 1]
+  c4 = Chromosome.new [1,3,-5]
+  c5 = Chromosome.new [5,4,0]
+  c1 = mutate(c1.clone)
+  c2 = mutate(c2.clone)
+  c3 = mutate(c3.clone)
+  c4 = mutate(c4.clone)
+  c5 = mutate(c5.clone)
+  p c1
+  p c2
+  p c3
+  p c4
+  p c5
+end
+=end

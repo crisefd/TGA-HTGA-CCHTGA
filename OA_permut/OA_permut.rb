@@ -1,3 +1,5 @@
+# @author Cristhian Fuertes
+# @author Oscar Tigreros
 # Generate an Orthogonal Array using simple permutation method. The
 # algorithm was provided in the paper Leung et al.
 #
@@ -16,22 +18,31 @@
 # Computation, IEEE Transactions on , vol.5, % no.1, pp.41,53, Feb 2001,
 # doi: 10.1109/4235.910464
 #
-# This is a Ruby implementation by Cristhian Fuertes
-# cristhian.fuertes@correounivalle.edu.co
-# of the original implementation in Matlab by
+# This is a Ruby implementation by Cristhian Fuertes and Oscar Tigreros,
+# cristhian.fuertes@correounivalle.edu.co oscar.tigreros@correounivalle.edu.co
+# based on the original implementation in Matlab by
 # Natasha Y Jeppu, natasha.jeppu@gmail.com
+# visit http://www.mathworks.com/matlabcentral/fileexchange/47218-orthogonal-array
 
 require 'rubygems'
 require 'bundler/setup'
+require 'matrix'
 
-output = ''
-file_name = ''
+# @param [String] ouput, this contains the output string to be writen in files
+$output = ''
+# @param [String] file_name, this contains the name of the file to be writen
+$file_name = ''
+
+# Main function for the algorithm
+# @param [Integer] q, the number of levels of the Array
+# @param [Integer] n, a number that satisfy the equation N = (Q^J - 1)/(Q - 1)
+# @param [Integer] j, a number that satisfy the equation J = ln(N(Q - 1) + 1)/ln(Q - 1)
 def oa_permut(q, n, j)
   if n != (q**j - 1)/(q - 1) then
     p "Does not satisfy criteria ..."
     return nil
   end
-  file_name += "L#{n + 1}"
+  $file_name += "L#{n + 1}"
   row = q**j
   col = (q**j - 1) / (q - 1)
   _A = Matrix.build(row, col ){|r, c| 0 }
@@ -43,7 +54,7 @@ def oa_permut(q, n, j)
       _A.send(:[]=, i, _J, m)
     end
   end
-
+  #Compute the non basic columns
   for k in 1...j
     _J = (q ** k - 1)/(q - 1)
     for s in 0..._J
@@ -57,6 +68,8 @@ def oa_permut(q, n, j)
   _A
 end
 
+# Auxiliar function for the algorithm, it is tasked with replacing a column with
+# another column in a matrix
 def replace_column(_A,s,t,_J,q, x)
   col_s = _A.column(s)
   col_J = _A.column(_J)
@@ -68,15 +81,17 @@ def replace_column(_A,s,t,_J,q, x)
   end
 end
 
+# Auxiliar function for the algorithm, it is tasked with printing the matrix
+# on a file
 def print_matrix(_A)
-  matrix_file = open("taguchi_orthogonal_matrices/#{file_name}", 'w')
+  matrix_file = open("./taguchi_orthogonal_matrices/#{$file_name}", 'w')
   for i in 0..._A.row_size
     for j in 0..._A.column_size
-      output += "#{_A[i,j]};"
+      $output += "#{_A[i,j]};"
     end
-    output += "\n"
+    $output += "\n"
   end
-  matrix_file.write(output)
+  matrix_file.write($output)
   matrix_file.close
 end
 

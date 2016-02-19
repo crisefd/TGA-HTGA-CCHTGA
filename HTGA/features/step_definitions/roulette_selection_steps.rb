@@ -46,5 +46,5 @@ Given(/^the negative fitness values of some chromosomes:$/) do |table|
 end
 
 When(/^I execute the roulette selection operation for maximization of negative fitness values$/) do
-  Roulette.calc_probs @chromosomes
+  Roulette.calc_probs @chromosomes, is_negative_fit: true
 end

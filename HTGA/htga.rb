@@ -17,7 +17,9 @@ require_relative 'test_functions'
 class HTGA
   include Roulette, TestFunctions
   $ran = Random.new
-  attr_reader :chromosomes, :lower_bounds, :upper_bounds
+  attr_reader  :lower_bounds, :upper_bounds
+  attr_writer :pop_size
+  attr_accessor :chromosomes,
 
   def initialize(**input)
     @values = input[:values]
@@ -32,6 +34,7 @@ class HTGA
     @selected_func = input[:selected_func]
     @is_negative_fit = input[:is_negative_fit]
     @is_high_fit = input[:is_high_fit]
+    @is_negative_fit = false if @is_negative_fit.nil?
     @is_high_fit = false if @is_high_fit.nil?
   end
 
@@ -70,7 +73,8 @@ class HTGA
   end
 
   def roulette_select
-    Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit
+    Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
+                        is_negative_fit: @is_negative_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
     (0...@pop_size).each do
       r = $ran.rand(1.0)
@@ -78,6 +82,14 @@ class HTGA
         @chromosomes << copied_chromosomes[i] if r < copied_chromosomes[i].prob
       end
     end
+  end
+
+  def select_next_generation
+    #sort in decressing order of fitness values
+    @chromosomes.sort! do |left_chrom, right_chrom|
+                        right_chrom.fitness <=> left_chrom.fitness
+                      end
+    @chromosomes.slice!(@pop_size..@chromosomes.size)
   end
 
   def init_population
