@@ -1,5 +1,3 @@
-
-
 require 'rubygems'
 require 'bundler/setup'
 require 'matrix'
@@ -49,18 +47,18 @@ module OAPermut
     col = (q**j - 1) / (q - 1)
     _A = Matrix.build(row, col ){ |r, c| 0 }
     # Compute de basic columns
-    for k in 0...j
+    (0...j).each do |k|
       _J = ((q**k) - 1) / (q - 1)
-      for i in 0...row
+      (0...row).each do |i|
         m = (i / (q**(j + -1 * (k + 1)))) % q
         _A.send(:[]=, i, _J, m)
       end
     end
     # Compute the non basic columns
-    for k in 1...j
-      _J = (q**k - 1)/(q - 1)
-      for s in 0..._J
-        for t in 0...(q - 1)
+    (1...j).each do |k|
+      _J = (q**k - 1) / (q - 1)
+      (0..._J).each do |s|
+        (0...(q - 1)).each do |t|
           x = _J + (s + 1) * (q - 1) + t
           OAPermut.replace_column(_A, s, t + 1, _J, q, x)
         end
@@ -75,8 +73,8 @@ module OAPermut
   # @param [Matrix] matrix, the matrix object to be printed
   def self.print_matrix(matrix)
     matrix_file = open("../carpeta/#{@@file_name}", 'w')
-    for i in 0...matrix.row_size
-      for j in 0...matrix.column_size
+    (0...matrix.row_size).each do |i|
+      (0...matrix.column_size).each do |j|
         @@output += "#{matrix[i, j]};"
       end
       @@output += "\n"
@@ -94,11 +92,10 @@ private
     col_s = t * col_s
     col = col_s + col_J
     col = col.map { |e|  e % q}
-    for i in 0..._A.row_size
+    (0..._A.row_size).each do |i|
       _A.send(:[]=, i, x, col[i])
     end
   end
-
 end
 
 if __FILE__ == $PROGRAM_NAME
