@@ -93,6 +93,7 @@ def print_matrix(_A)
   end
   matrix_file.write($output)
   matrix_file.close
+  $output
 end
 
 if __FILE__ == $PROGRAM_NAME
