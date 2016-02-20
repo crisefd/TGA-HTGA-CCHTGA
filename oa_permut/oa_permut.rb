@@ -72,7 +72,7 @@ module OAPermut
   # on a file
   # @param [Matrix] matrix, the matrix object to be printed
   def self.print_matrix(matrix)
-    matrix_file = open("../carpeta/#{@@file_name}", 'w')
+    matrix_file = open("../taguchi_orthogonal_matrices/#{@@file_name}", 'w')
     (0...matrix.row_size).each do |i|
       (0...matrix.column_size).each do |j|
         @@output += "#{matrix[i, j]};"

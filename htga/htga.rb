@@ -1,4 +1,3 @@
-# !~/.rvm/rubies/ruby-2.1.5/bin/ruby
 # encoding: utf-8
 # Program: htga.rb
 # Authors: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
@@ -8,9 +7,12 @@
 
 require 'rubygems'
 require 'bundler/setup'
-require_relative 'chromosome'
-require_relative 'roulette'
-require_relative 'test_functions'
+Dir[File.dirname(__FILE__) + './../helpers/*.rb'].each do |file|
+  require File.basename(file, File.extname(file))
+end
+# require_relative 'chromosome'
+# require_relative 'roulette'
+# require_relative 'test_functions'
 
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
