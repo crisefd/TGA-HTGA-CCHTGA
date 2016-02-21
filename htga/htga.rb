@@ -7,21 +7,17 @@
 
 require 'rubygems'
 require 'bundler/setup'
-Dir[File.dirname(__FILE__) + './../helpers/*.rb'].each do |file|
-  require File.basename(file, File.extname(file))
-end
-# require_relative 'chromosome'
-# require_relative 'roulette'
-# require_relative 'test_functions'
+require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
+
+#Dir[File.dirname(__FILE__) + './../base_ga/*.rb'].each do |file|
+# require File.basename(file, File.extname(file))
+#end
+# require '/home/crisefd/Ruby/TGA-HTGA-CCHTGA/base_ga/base_ga'
 
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
-class HTGA
-  include Roulette, TestFunctions
-  $ran = Random.new
-  attr_reader  :lower_bounds, :upper_bounds
-  attr_writer :pop_size
-  attr_accessor :chromosomes,
+
+class HTGA < BaseGA
 
   def initialize(**input)
     @values = input[:values]
@@ -71,18 +67,6 @@ class HTGA
       x = rand(0...m)
       new_chrom = Chromosome.mutate(@chromosomes[x].clone)
       @chromosomes << new_chrom
-    end
-  end
-
-  def roulette_select
-    Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
-                        is_negative_fit: @is_negative_fit
-    copied_chromosomes = @chromosomes.clone and @chromosomes.clear
-    (0...@pop_size).each do
-      r = $ran.rand(1.0)
-      copied_chromosomes.each_index do |i|
-        @chromosomes << copied_chromosomes[i] if r < copied_chromosomes[i].prob
-      end
     end
   end
 

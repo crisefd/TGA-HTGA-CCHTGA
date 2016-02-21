@@ -7,9 +7,11 @@
 
 require 'rubygems'
 require 'bundler/setup'
-Dir[File.dirname(__FILE__) + './../helpers/*.rb'].each do |file|
- require File.basename(file, File.extname(file))
-end
+require File.join(File.dirname(__FILE__), '..', 'helpers/roulette.rb')
+require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
+#Dir[File.dirname(__FILE__) + './../helpers/*.rb'].each do |file|
+# require File.basename(file, File.extname(file))
+#end
 
 # @author Cristhian Fuertes
 # Base class for genetic algorithms
@@ -42,4 +44,10 @@ class BaseGA
     end
   end
 
+
+end
+
+
+if __FILE__ == $PROGRAM_NAME
+ p ":)"
 end
