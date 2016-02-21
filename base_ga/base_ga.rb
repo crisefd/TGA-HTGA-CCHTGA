@@ -26,8 +26,8 @@ class BaseGA
   # @attr [Array] chromosomes, the candidate solutions
   attr_accessor :chromosomes
 
-  # @attr [Random] ran, global variable for generation of random numbers
-  $ran = Random.new
+  # @attr [Random] ran, variable for generation of random numbers
+  @ran = Random.new
 
   # @param [Hash] input, hash list for construction parameters
   def initialize(**input)
@@ -41,11 +41,12 @@ class BaseGA
 
   # Roulette selection operation method
   def roulette_select
+    @ran = Random.new
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
                                   is_negative_fit: @is_negative_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
     (0...@pop_size).each do
-      r = $ran.rand(1.0)
+      r = @ran.rand(1.0)
       copied_chromosomes.each_index do |i|
         @chromosomes << copied_chromosomes[i] if r < copied_chromosomes[i].prob
       end
@@ -54,7 +55,6 @@ class BaseGA
 
 end
 
-
 if __FILE__ == $PROGRAM_NAME
- p ":)"
+
 end

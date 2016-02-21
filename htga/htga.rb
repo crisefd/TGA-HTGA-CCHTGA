@@ -1,3 +1,4 @@
+# language: english
 # encoding: utf-8
 # Program: htga.rb
 # Authors: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
@@ -9,16 +10,17 @@ require 'rubygems'
 require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 
-#Dir[File.dirname(__FILE__) + './../base_ga/*.rb'].each do |file|
+# Dir[File.dirname(__FILE__) + './../base_ga/*.rb'].each do |file|
 # require File.basename(file, File.extname(file))
-#end
+# end
+
 # require '/home/crisefd/Ruby/TGA-HTGA-CCHTGA/base_ga/base_ga'
 
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
-
 class HTGA < BaseGA
 
+  # @param [Hash] input, hash list for the initialization of the HTGA
   def initialize(**input)
     @values = input[:values]
     @upper_bounds = input[:upper_bounds]
@@ -36,13 +38,16 @@ class HTGA < BaseGA
     @is_high_fit = false if @is_high_fit.nil?
   end
 
+  # Main method for the HTGA
   def execute
   end
 
+  # Method to perform cross over operation over chromsomes
+  # @return [void]
   def cross_individuals
     m = @pop_size
     (0...m).each do
-      r = $ran.rand(1.0)
+      r = @ran.rand(1.0)
       next if r > @cross_rate
       loop do
         x = rand(0...@pop_size)
@@ -59,10 +64,12 @@ class HTGA < BaseGA
     end
   end
 
+  # Method to perform mutation operation over the chromosomes
+  # @return [void]
   def mutate_individuals
     m = @chromosomes.size
     (0...m).each do
-      r = $ran.rand(1.0)
+      r = @ran.rand(1.0)
       next if r > @mut_rate
       x = rand(0...m)
       new_chrom = Chromosome.mutate(@chromosomes[x].clone)
@@ -70,6 +77,8 @@ class HTGA < BaseGA
     end
   end
 
+  # Method that select the best M chromosomes for the next generation
+  # @return [void]
   def select_next_generation
     #sort in decressing order of fitness values
     @chromosomes.sort! do |left_chrom, right_chrom|
@@ -78,14 +87,17 @@ class HTGA < BaseGA
     @chromosomes.slice!(@pop_size..@chromosomes.size)
   end
 
+  # Method to generate the initial population of chromosomes
+  # @return [void]
   def init_population
+    @ran = Random.new
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @values == 'discrete'
           beta = (Array.new(11){|i| i / 10.0}).sample
         elsif @values == 'uniform distribution'
-          beta = $ran.rand(1.0)
+          beta = @ran.rand(1.0)
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
                                                  @lower_bounds[i])
