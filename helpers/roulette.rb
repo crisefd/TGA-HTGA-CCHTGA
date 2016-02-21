@@ -9,7 +9,7 @@ require 'rubygems'
 require 'bundler/setup'
 
 # @author Cristhian Fuertes
-# module for roulette selection operation
+# Module for roulette selection operation
 module Roulette
   private
 
@@ -21,7 +21,7 @@ module Roulette
     least_fit = (chromosomes.min_by(&:fitness)).fitness
     chromosomes.map! do |chromosome|
       if chromosome.fitness != 0
-        chromosome.fitness += least_fit * -1 #Correcto?
+        chromosome.fitness += least_fit * -1 # Correct?
       end
       chromosome
     end
@@ -67,7 +67,7 @@ module Roulette
       end
     end
 
-    best_fit += 1 # So that we don't get best_fit-best_fit=0
+    best_fit += 1 # So that we don't get best_fit=0
 
     # Get probabilities
     chromosomes.each_index do |i|

@@ -4,9 +4,6 @@
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co
 # creation date: 2015-15-11
-# last modified: 2015-15-11
-# version: 0.2
-# licence: GPL
 
 Given(/^the positive fitness values of some chromosomes:$/) do |table|
   table = table.raw
@@ -20,7 +17,7 @@ Given(/^the positive fitness values of some chromosomes:$/) do |table|
 end
 
 When(/^I execute the roulette selection operation for maximization of positive fitness values$/) do
-  Roulette.calc_probs(@chromosomes)
+  Roulette.calc_probs(@chromosomes, is_negative_fit: false)
 end
 
 Then(/^The calculated probabilities must be:$/) do |table|

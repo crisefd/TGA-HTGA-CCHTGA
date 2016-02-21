@@ -42,7 +42,7 @@ class BaseGA
   # Roulette selection operation method
   def roulette_select
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
-                        is_negative_fit: @is_negative_fit
+                                  is_negative_fit: @is_negative_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
     (0...@pop_size).each do
       r = $ran.rand(1.0)
@@ -51,7 +51,6 @@ class BaseGA
       end
     end
   end
-
 
 end
 
