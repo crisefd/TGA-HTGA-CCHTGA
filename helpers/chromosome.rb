@@ -1,11 +1,27 @@
+# encoding: utf-8
+# Program: htga.rb
+# Authors: Cristhian Fuertes & Oscar Tigreros
+# Email: cristhian.fuertes@correounivalle.edu.co,
+#        oscar.tigreros@correounivalle.edu.co
+# Creation date: 2015-10-05
+
 require 'rubygems'
 require 'bundler/setup'
 
-# Chromosome class for Hybrid-Taguchi Genetic Algorithm
+# Chromosome class for TGA, HTGA & CCHTGA
+# @author Cristhian Fuertes
+# @author Oscar Tigreros
 class Chromosome < Array
-  attr_accessor :fitness, :prob
 
-  def self.crossover **args
+  # @attr [Double] fitness, the fitness value for the chromosome
+  attr_accessor :fitness
+  # @attr [Double] prob, the probability value for the chromosome
+  attr_accessor :prob
+
+  # Crossover operation method for chromosomes
+  # @param [Hash] args, argument hash list that includes chromosomes, lower and upper bounds
+  # @return [Chromosome, Chromosome]  the resulting chromosomes.
+  def self.crossover(**args)
     chromosome_x = args[:chromosome_x]
     chromosome_y = args[:chromosome_y]
     beta = rand(0..10) / 10.0
@@ -26,6 +42,9 @@ class Chromosome < Array
     return chromosome_x, chromosome_y
   end
 
+  # Mutation operation method for the chromosomes
+  # @param [Chromosome] chromosome, the chromosome to mutate
+  # @return [Chromosome] the resulting chrmosome
   def self.mutate(chromosome)
     beta = rand(0..10) / 10.0
     i = -1

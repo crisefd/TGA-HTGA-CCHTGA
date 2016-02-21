@@ -1,12 +1,9 @@
 # language: en
 # encoding: utf-8
 # file: roulette.rb
-# author: Cristhian Fuertes
+# author: Cristhian Fuertes & Oscar Tigreros
 # email:  cristhian.fuertes@correounivalle.edu.co
 # creation date: 2015-15-11
-# last modified: 2015-15-11
-# version: 0.2
-# licence: GPL
 
 require 'rubygems'
 require 'bundler/setup'
@@ -16,25 +13,23 @@ require 'bundler/setup'
 module Roulette
   private
 
-  # Normalizes an array that potentially contains negative numbers by shifting
+  # Method that normalizes an array that potentially contains negative numbers by shifting
   # all of them up to be positive (0 is left alone).
-  #
-  # +pop_fit+ array of each individual's fitness in a population to normalize
+  # @param [Array<Chromosome>] chromosomes, list of chromosomes to normalize
+  # @return [Array<Chromosome>] the normalized chromosomes
   def self.norm_pop(chromosomes)
     least_fit = (chromosomes.min_by(&:fitness)).fitness
     chromosomes.map! do |chromosome|
       if chromosome.fitness != 0
         chromosome.fitness += least_fit * -1 #Correcto?
-        chromosome
-      else
-        chromosome
       end
+      chromosome
     end
   end
 
   public
 
-  # Returns an array of each individual's probability between 0.0 and 1.0
+  # Compute an array of each individual's probability between 0.0 and 1.0
   # fitted
   # onto an imaginary roulette wheel (or pie).
   #
@@ -44,9 +39,11 @@ module Roulette
   # negative
   # numbers, you will have to normalize the population first before using
   # this.
-  #
-  # +pop_fit+ array of each individual's fitness in the population
-  # +is_high_fit+ true if high fitness is best or false if low fitness is best
+  # @param [Array<Chromosome>] chromosomes, list of chromosomes
+  # @param [Boolean] pop_fit, array of each individual's fitness in the population
+  # @param [Boolean] is_high_fit, true if high fitness is best or false if low fitness is best
+  # @param [Boolean] is_negative_fit, true if there are negative fitness and false otherwise
+  # @return [void]
   def self.calc_probs(chromosomes, is_high_fit: true, is_negative_fit: true)
     norm_pop chromosomes if is_negative_fit
     fit_sum  = 0.0 # Sum of each individual's fitness in the population

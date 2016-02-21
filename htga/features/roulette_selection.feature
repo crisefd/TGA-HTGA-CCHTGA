@@ -4,9 +4,6 @@
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co
 # creation date: 2015-15-11
-# last modified: 2015-15-11
-# version: 0.2
-# licence: GPL
 
 Feature: Roulette selection operation
   @test_roulette_selection_positive_fitness

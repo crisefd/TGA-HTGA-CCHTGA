@@ -1,3 +1,8 @@
+# encoding: utf-8
+# Program: oa_permut.rb
+# Email: cristhian.fuertes@correounivalle.edu.co,
+#        oscar.tigreros@correounivalle.edu.co
+# Creation date: 2015-10-05
 require 'rubygems'
 require 'bundler/setup'
 require 'matrix'
@@ -35,6 +40,7 @@ module OAPermut
   # @param [Integer] q, the number of levels of the Array
   # @param [Integer] n, a number that satisfy the equation N = (Q^J - 1)/(Q - 1)
   # @param [Integer] j, a number that satisfy the equation J = ln(N(Q - 1) + 1)/ln(Q - 1)
+  # @return [Matrix] the generated Taguchi array
   def self.oa_permut(q, n, j)
     @@output = ''
     @@file_name = ''
@@ -71,6 +77,7 @@ module OAPermut
   # Auxiliar function for the algorithm, it is tasked with printing the matrix
   # on a file
   # @param [Matrix] matrix, the matrix object to be printed
+  # @return [void]
   def self.print_matrix(matrix)
     matrix_file = open("../taguchi_orthogonal_matrices/#{@@file_name}", 'w')
     (0...matrix.row_size).each do |i|
