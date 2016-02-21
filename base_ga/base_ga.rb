@@ -40,6 +40,7 @@ class BaseGA
   end
 
   # Roulette selection operation method
+  # @return [void]
   def roulette_select
     @ran = Random.new
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,

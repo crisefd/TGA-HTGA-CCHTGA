@@ -80,7 +80,7 @@ class HTGA < BaseGA
   # Method that select the best M chromosomes for the next generation
   # @return [void]
   def select_next_generation
-    #sort in decressing order of fitness values
+    # sort in decressing order of fitness values
     @chromosomes.sort! do |left_chrom, right_chrom|
                         right_chrom.fitness <=> left_chrom.fitness
                       end
@@ -95,7 +95,7 @@ class HTGA < BaseGA
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @values == 'discrete'
-          beta = (Array.new(11){|i| i / 10.0}).sample
+          beta = (Array.new(11) { |k| k / 10.0 }).sample
         elsif @values == 'uniform distribution'
           beta = @ran.rand(1.0)
         end
