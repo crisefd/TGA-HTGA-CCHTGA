@@ -4,9 +4,6 @@
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co
 # creation date: 2015-29-11
-# last modified: 2015-29-11
-# version: 0.2
-# licence: GPL
 
 Feature: select the better M chromosomes for the next generation
   @test_select_nex_generation

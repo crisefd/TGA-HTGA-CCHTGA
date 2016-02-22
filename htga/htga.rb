@@ -44,7 +44,7 @@ class HTGA < BaseGA
   def execute
   end
 
-  private
+
 
   # Method to perform cross over operation over chromsomes
   # @return [void]
@@ -94,13 +94,13 @@ class HTGA < BaseGA
   def select_taguchi_array
     closest = 0
     [8, 16, 32, 64, 128].each do |n|
-      if n == 8
-        closest = 8
-      elsif (@pop_size - n).abs < closest
+      if @pop_size <= n - 1
         closest = n
+        break
       end
     end
     file_name = "L#{closest}"
+    p file_name
     load_array_from_file file_name
   end
 
