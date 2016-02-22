@@ -1,3 +1,4 @@
+# language: en
 # encoding: utf-8
 # Program: htga.rb
 # Authors: Cristhian Fuertes & Oscar Tigreros
@@ -12,10 +13,12 @@ require 'bundler/setup'
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
 class Chromosome < Array
-  # @attr [Double] fitness, the fitness value for the chromosome
+  # @attr [Float] fitness, the fitness value for the chromosome
   attr_accessor :fitness
-  # @attr [Double] prob, the probability value for the chromosome
+  # @attr [Float] prob, the probability value for the chromosome
   attr_accessor :prob
+  # @attr [Float] snr_val, the value of the SNR
+  attr_accessor :snr_val
 
   # Crossover operation method for chromosomes
   # @param [Hash] args, argument hash list that includes chromosomes, lower and upper bounds
@@ -65,13 +68,11 @@ class Chromosome < Array
   # @param [Boolean] smaller_the_better, true if SNR if for minization and false otherwise
   # @return [Float] the calculated SNR
   def self.snr(chromosome, smaller_the_better: true)
-    val = 0
     n = chromosome.size
     if smaller_the_better
-      val = -10 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2 }.reduce(:+))
+      chromosome.snr_val = -10 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2 }.reduce(:+))
     else
-      val = -10 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2 }.reduce(:+))
+      chromosome.snr_val = -10 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2 }.reduce(:+))
     end
-    val
   end
 end
