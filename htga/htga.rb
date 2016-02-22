@@ -100,7 +100,6 @@ class HTGA < BaseGA
       end
     end
     file_name = "L#{closest}"
-    p file_name
     load_array_from_file file_name
   end
 

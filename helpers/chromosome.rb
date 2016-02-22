@@ -60,23 +60,15 @@ class Chromosome < Array
     chromosome[k] = beta * gene_i + (1 - beta) * gene_k
     chromosome
   end
+
+  def self.snr(chromosome, smaller_the_better: true)
+    val = 0
+    if smaller_the_better
+      val = chromosome.map{ |gene| gene**2 }.reduce(:+)
+    else
+      val = chromosome.map{ |gene| 1.0 / gene**2 }.reduce(:+)
+
+    end
+    val
+  end
 end
-=begin
-if __FILE__ == $PROGRAM_NAME
-  c1 = Chromosome.new [-5, 3, 4.5]
-  c2 = Chromosome.new [0,1,5]
-  c3 = Chromosome.new [-1,-2, 1]
-  c4 = Chromosome.new [1,3,-5]
-  c5 = Chromosome.new [5,4,0]
-  c1 = mutate(c1.clone)
-  c2 = mutate(c2.clone)
-  c3 = mutate(c3.clone)
-  c4 = mutate(c4.clone)
-  c5 = mutate(c5.clone)
-  p c1
-  p c2
-  p c3
-  p c4
-  p c5
-end
-=end
