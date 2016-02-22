@@ -20,6 +20,8 @@ require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 # Main class for the Hybrid-Taguchi Genetic Algorithm
 class HTGA < BaseGA
 
+  attr_reader :taguchi_array
+
   # @param [Hash] input, hash list for the initialization of the HTGA
   def initialize(**input)
     @values = input[:values]
@@ -41,6 +43,8 @@ class HTGA < BaseGA
   # Main method for the HTGA
   def execute
   end
+
+  private
 
   # Method to perform cross over operation over chromsomes
   # @return [void]
@@ -80,11 +84,35 @@ class HTGA < BaseGA
   # Method that select the best M chromosomes for the next generation
   # @return [void]
   def select_next_generation
-    # sort in decressing order of fitness values
+    # sort in decreasing order of fitness values
     @chromosomes.sort! do |left_chrom, right_chrom|
-                        right_chrom.fitness <=> left_chrom.fitness
-                      end
+      right_chrom.fitness <=> left_chrom.fitness
+    end
     @chromosomes.slice!(@pop_size..@chromosomes.size)
+  end
+
+  def select_taguchi_array
+    closest = 0
+    [8, 16, 32, 64, 128].each do |n|
+      if n == 8
+        closest = 8
+      elsif (@pop_size - n).abs < closest
+        closest = n
+      end
+    end
+    file_name = "L#{closest}"
+    load_array_from_file file_name
+  end
+
+  def load_array_from_file(filename)
+    @taguchi_array = []
+    path_to_file = File.join(File.dirname(__FILE__), '..',
+                             "taguchi_orthogonal_arrays/#{filename}")
+    array_file = open(path_to_file, 'r')
+    array_file.each_line do |line|
+      @taguchi_array << line.split(';')[0, @pop_size]
+    end
+    array_file.close
   end
 
   # Method to generate the initial population of chromosomes
