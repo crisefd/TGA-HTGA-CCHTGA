@@ -12,7 +12,6 @@ require 'bundler/setup'
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
 class Chromosome < Array
-
   # @attr [Double] fitness, the fitness value for the chromosome
   attr_accessor :fitness
   # @attr [Double] prob, the probability value for the chromosome
@@ -61,13 +60,17 @@ class Chromosome < Array
     chromosome
   end
 
+  # Method to perfom SNR calculation used in the HTGA
+  # @param [Chromosome] chromosome, the chromosome
+  # @param [Boolean] smaller_the_better, true if SNR if for minization and false otherwise
+  # @return [Float] the calculated SNR
   def self.snr(chromosome, smaller_the_better: true)
     val = 0
+    n = chromosome.size
     if smaller_the_better
-      val = chromosome.map{ |gene| gene**2 }.reduce(:+)
+      val = -10 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2 }.reduce(:+))
     else
-      val = chromosome.map{ |gene| 1.0 / gene**2 }.reduce(:+)
-
+      val = -10 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2 }.reduce(:+))
     end
     val
   end
