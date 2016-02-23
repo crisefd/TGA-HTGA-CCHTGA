@@ -20,7 +20,7 @@ class Chromosome < Array
   # @attr [Float] snr_val, the value of the SNR
   attr_accessor :snr_val
 
-  # Crossover operation method for chromosomes
+  # Crossover operation method use in HTGA
   # @param [Hash] args, argument hash list that includes chromosomes, lower and upper bounds
   # @return [Chromosome, Chromosome]  the resulting chromosomes.
   def self.crossover(**args)
@@ -65,7 +65,7 @@ class Chromosome < Array
 
   # Method to perfom SNR calculation used in the HTGA
   # @param [Chromosome] chromosome, the chromosome
-  # @param [Boolean] smaller_the_better, true if SNR if for minization and false otherwise
+  # @param [Boolean] smaller_the_better, true if SNR is for minization or false otherwise
   # @return [Float] the calculated SNR
   def self.snr(chromosome, smaller_the_better: true)
     n = chromosome.size
