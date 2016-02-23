@@ -19,7 +19,6 @@ require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
 class HTGA < BaseGA
-
   attr_reader :taguchi_array
 
   # @param [Hash] input, hash list for the initialization of the HTGA
@@ -100,9 +99,7 @@ class HTGA < BaseGA
     end
   end
 
-
-
-  # Method to perform cross over operation over chromsomes
+  # Method to perform cross over operation over chromosomes
   # @return [void]
   def cross_individuals
     m = @pop_size
@@ -114,10 +111,10 @@ class HTGA < BaseGA
         y = rand(0...@pop_size)
         next if x == y
         new_chrom_x, new_chrom_y =
-                       Chromosome.crossover(chromosome_x: @chromosomes[x].clone,
-                                            chromosome_y: @chromosomes[y].clone,
-                                            upper_bounds: @upper_bounds,
-                                            lower_bounds: @lower_bounds)
+                       HTGA.crossover(chromosome_x: @chromosomes[x].clone,
+                                      chromosome_y: @chromosomes[y].clone,
+                                      upper_bounds: @upper_bounds,
+                                      lower_bounds: @lower_bounds)
         @chromosomes << new_chrom_x << new_chrom_y
         break
       end
@@ -174,6 +171,29 @@ class HTGA < BaseGA
     end
     array_file.close
   end
+
+  def generate_optimal_chromosome(chromosome_x, chromosome_y)
+    experimental_matrix = generate_experimental_matrix chromosome_x,
+                                                       chromosome_y
+    
+  end
+
+  def generate_experimental_matrix(chromosome_x, chromosome_y)
+    experimental_matrix = []
+    (0...@taguchi_array.size).each do |i|
+      row_chromosome = Chromosome.new
+      (0...@taguchi_array[0].size).each do |j|
+        if @taguchi_array[i][j] == 0
+          row_chromosome << chromosome_x[j]
+        else
+          row_chromosome << chromosome_y[j]
+        end
+        @taguchi_array << row_chromosome
+      end
+    end
+    experimental_matrix
+  end
+
 
   # Method to generate the initial population of chromosomes
   # @return [void]
