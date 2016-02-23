@@ -1,8 +1,7 @@
 
-Given(/^that the population size is (\d+)$/) do |pop_size|
+Given(/^that the size fo the chromosome is (\d+)$/) do |size|
   @htga = HTGA.new
-  @htga.pop_size = pop_size.to_i
-  @htga.select_taguchi_array
+  @htga.select_taguchi_array size.to_i
 end
 
 Then(/^the selected Taguchi array should be L(\d+)$/) do |arg|

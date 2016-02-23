@@ -45,7 +45,7 @@ Given(/^the lower bounds are:$/) do |table|
 end
 
 When(/^we apply crossover on the chromosomes$/) do
-  @crossed_chromosome_x, @crossed_chromosome_y = Chromosome.crossover args
+  @crossed_chromosome_x, @crossed_chromosome_y = HTGA.crossover args
 end
 
 Then(/^the resulting chromosomes must have swapped their right sides$/) do
