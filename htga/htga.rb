@@ -32,7 +32,8 @@ class HTGA < BaseGA
     @num_genes = input[:num_genes]
     @chromosomes = []
     @continuous = input[:continuous]
-    @selected_func = input[:selected_func]
+    input[:selected_func] = 0 if input[:selected_func].nil?
+    @selected_func = TEST_FUNCTIONS[input[:selected_func]]
     @is_negative_fit = input[:is_negative_fit]
     @is_high_fit = input[:is_high_fit]
     @is_negative_fit = false if @is_negative_fit.nil?
@@ -173,10 +174,36 @@ class HTGA < BaseGA
   end
 
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
+    optimal_chromosome = Chromosome.new
     experimental_matrix = generate_experimental_matrix chromosome_x,
                                                        chromosome_y
+    p @taguchi_array.size
+    # Calculate fitness and SNR values
+    experimental_matrix.each_index do |i|
+      experimental_matrix[i].fitness = @selected_func.call experimental_matrix[i]
+      experimental_matrix[i].snr = HTGA.calculate_snr experimental_matrix[i]
+    end
 
+    # Calculate optimal levels
+    (0...experimental_matrix[0].size).each_index do |j|
+      sum_lvl_1 = 0.0
+      sum_lvl_2 = 0.0
+      (0...experimental_matrix.size).each_index do |i|
+        if experimental_matrix[i][j] == 1
+          sum_lvl_1 += experimental_matrix[i].snr
+        else
+          sum_lvl_2 += experimental_matrix[i].snr
+        end
+      end
+      if sum_lvl_1 > sum_lvl_2
+        optimal_chromosome << chromosome_x[j]
+      else
+        optimal_chromosome << chromosome_y[j]
+      end
+    end
+    optimal_chromosome
   end
+
 
   def generate_experimental_matrix(chromosome_x, chromosome_y)
     experimental_matrix = []
@@ -215,7 +242,7 @@ class HTGA < BaseGA
           chromosome << gene.round
         end
       end
-      chromosome.fitness = TEST_FUNCTIONS[@selected_func].call chromosome
+      chromosome.fitness = @selected_func.call chromosome
       @chromosomes << chromosome
     end
   end

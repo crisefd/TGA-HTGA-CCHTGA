@@ -26,6 +26,8 @@ class BaseGA
   # @attr [Array] chromosomes, the candidate solutions
   attr_accessor :chromosomes
 
+  attr_accessor :selected_func
+
   # @attr [Random] ran, variable for generation of random numbers
   @ran = Random.new
 
