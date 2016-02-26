@@ -19,7 +19,7 @@ require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
 class HTGA < BaseGA
-  attr_reader :taguchi_array
+  attr_accessor :taguchi_array
 
   # @param [Hash] input, hash list for the initialization of the HTGA
   def initialize(**input)
@@ -175,7 +175,7 @@ class HTGA < BaseGA
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
     experimental_matrix = generate_experimental_matrix chromosome_x,
                                                        chromosome_y
-    
+
   end
 
   def generate_experimental_matrix(chromosome_x, chromosome_y)
