@@ -203,6 +203,9 @@ class HTGA < BaseGA
         optimal_chromosome << chromosome_y[j]
       end
     end
+    # Find the optimal fitness value
+    optimal_chromosome.fitness = @selected_func.call optimal_chromosome
+    # Return the optimal chromosome
     optimal_chromosome
   end
 
