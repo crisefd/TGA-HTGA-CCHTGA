@@ -173,22 +173,24 @@ class HTGA < BaseGA
     array_file.close
   end
 
+  # Method to generate the optimal crossovered chromosome
+  # @param [Chromosome] chromosome_x, the first chromosome
+  # @param [Chromosome] chromosome_y, the second chromosome
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
+    select_taguchi_array chromosome_x.size
     optimal_chromosome = Chromosome.new
     experimental_matrix = generate_experimental_matrix chromosome_x,
                                                        chromosome_y
-    p @taguchi_array.size
     # Calculate fitness and SNR values
     experimental_matrix.each_index do |i|
       experimental_matrix[i].fitness = @selected_func.call experimental_matrix[i]
       experimental_matrix[i].snr = HTGA.calculate_snr experimental_matrix[i]
     end
-
     # Calculate optimal levels
-    (0...experimental_matrix[0].size).each_index do |j|
+    (0...experimental_matrix[0].size).each do |j|
       sum_lvl_1 = 0.0
       sum_lvl_2 = 0.0
-      (0...experimental_matrix.size).each_index do |i|
+      (0...experimental_matrix.size).each do |i|
         if experimental_matrix[i][j] == 1
           sum_lvl_1 += experimental_matrix[i].snr
         else
@@ -205,6 +207,10 @@ class HTGA < BaseGA
   end
 
 
+  # Auxiliar method to generate experiments matrix for the optimal crossovered
+  # chromosome
+  # @param [Chromosome] chromosome_x, the first chromosome
+  # @param [Chromosome] chromosome_y, the second chromosome
   def generate_experimental_matrix(chromosome_x, chromosome_y)
     experimental_matrix = []
     (0...@taguchi_array.size).each do |i|
@@ -215,8 +221,8 @@ class HTGA < BaseGA
         else
           row_chromosome << chromosome_y[j]
         end
-        @taguchi_array << row_chromosome
       end
+      experimental_matrix << row_chromosome
     end
     experimental_matrix
   end
