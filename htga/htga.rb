@@ -92,15 +92,18 @@ class HTGA < BaseGA
   # @param [Boolean] smaller_the_better, true if SNR is for minization or false otherwise
   # @return [Float] the calculated SNR
   def self.calculate_snr(chromosome, smaller_the_better: true)
-    n = chromosome.size
+    n = chromosome.size.to_f
+    # snr = 0
     if smaller_the_better
-      chromosome.snr = -10 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2 }.reduce(:+))
+      chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2.0 }.reduce(:+))
     else
-      chromosome.snr = -10 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2 }.reduce(:+))
+      chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
     end
+  #  p "calculated SNR is #{snr}"
+  #  snr
   end
 
-  # Method to perform cross over operation over chromosomes
+  # Method to perform crossover operation over chromosomes
   # @return [void]
   def cross_individuals
     m = @pop_size
@@ -168,7 +171,7 @@ class HTGA < BaseGA
                              "taguchi_orthogonal_arrays/#{filename}")
     array_file = open(path_to_file, 'r')
     array_file.each_line do |line|
-      @taguchi_array << line.split(';')[0, chrom_size]
+      @taguchi_array << line.split(';')[0, chrom_size].map!(&:to_i)
     end
     array_file.close
   end
@@ -184,17 +187,18 @@ class HTGA < BaseGA
     # Calculate fitness and SNR values
     experimental_matrix.each_index do |i|
       experimental_matrix[i].fitness = @selected_func.call experimental_matrix[i]
-      experimental_matrix[i].snr = HTGA.calculate_snr experimental_matrix[i]
+      HTGA.calculate_snr experimental_matrix[i]
     end
-    # Calculate optimal levels
+    # Calculate the effects of the various factors
     (0...experimental_matrix[0].size).each do |j|
+      p "Col #{j}"
       sum_lvl_1 = 0.0
       sum_lvl_2 = 0.0
       (0...experimental_matrix.size).each do |i|
-        if experimental_matrix[i][j] == 1
-          sum_lvl_1 += experimental_matrix[i].snr
-        else
+        if @taguchi_array[i][j] == 1
           sum_lvl_2 += experimental_matrix[i].snr
+        else
+          sum_lvl_1 += experimental_matrix[i].snr
         end
       end
       if sum_lvl_1 > sum_lvl_2

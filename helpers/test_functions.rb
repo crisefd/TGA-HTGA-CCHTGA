@@ -1,10 +1,10 @@
-# !~/.rvm/rubies/ruby-2.1.5/bin/ruby
+# language: en
 # encoding: utf-8
-# File: test_functions.rb
-# Authors: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
+# Program: test_functions.rb
+# Authors: Cristhian Fuertes & Oscar Tigreros
 # Email: cristhian.fuertes@correounivalle.edu.co,
 #        oscar.tigreros@correounivalle.edu.co
-# Creation date: 2015-10-17
+# Creation date: 2016-02-26
 
 # @author Cristhian Fuertes
 module TestFunctions

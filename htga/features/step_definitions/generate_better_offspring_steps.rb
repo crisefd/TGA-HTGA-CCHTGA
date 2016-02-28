@@ -4,8 +4,15 @@
 Given(/^as a test function the sum of squares of z$/) do
   @htga = HTGA.new
   @htga.selected_func = lambda do |x|
-    x.inject(0){ |sum, x| sum + x**2 }
+    x.inject(0){ |sum, z| sum + z**2 }
   end
+end
+
+Given(/^as a test function the sum of squares of z minus sixteen times z$/)do
+@htga = HTGA.new
+@htga.selected_func = lambda do |x|
+  x.inject(0){ |sum, z| sum + z**2 - 16*z }
+end
 end
 
 Given(/^the chromosome x being$/) do |table|
