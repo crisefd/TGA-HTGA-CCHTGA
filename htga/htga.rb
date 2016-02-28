@@ -42,9 +42,28 @@ class HTGA < BaseGA
 
   # Main method for the HTGA
   def execute
+    @generation = 0
+    begin
+      init_population
+      while @generation <= MAX_GENERATION
+        p "****** generation #{@generation}"
+        roulette_select
+        cross_individuals
+        generate_offspring_by_taguchi_method
+        mutate_individuals
+        select_next_generation
+        @generation += 1
+      end
+      p "optimal chromosome #{@chromosomes[0]}"
+      p "optimal fitness #{@chromosomes[0].fitness}"
+    rescue StandardError => error
+      p error.message
+      p error.backtrace.inspect
+      exit
+    end
   end
 
-  # Crossover operation method use in HTGA
+  # Crossover operator method use in HTGA
   # @param [Hash] args, argument hash list that includes chromosomes, lower and upper bounds
   # @return [Chromosome, Chromosome]  the resulting chromosomes.
   def self.crossover(**args)
@@ -68,7 +87,7 @@ class HTGA < BaseGA
     return chromosome_x, chromosome_y
   end
 
-  # Mutation operation method for the chromosomes
+  # Mutation operator method for the chromosomes
   # @param [Chromosome] chromosome, the chromosome to mutate
   # @return [Chromosome] the resulting chrmosome
   def self.mutate(chromosome)
@@ -96,7 +115,7 @@ class HTGA < BaseGA
     # snr = 0
     if smaller_the_better
       chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2.0 }.reduce(:+))
-    else
+    else # What happens when the gene is 0 ?
       chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
     end
   #  p "calculated SNR is #{snr}"
@@ -106,6 +125,7 @@ class HTGA < BaseGA
   # Method to perform crossover operation over chromosomes
   # @return [void]
   def cross_individuals
+    p "mutating individuals"
     m = @pop_size
     (0...m).each do
       r = @ran.rand(1.0)
@@ -128,6 +148,7 @@ class HTGA < BaseGA
   # Method to perform mutation operation over the chromosomes
   # @return [void]
   def mutate_individuals
+    p "=> mutating individuals"
     m = @chromosomes.size
     (0...m).each do
       r = @ran.rand(1.0)
@@ -141,6 +162,7 @@ class HTGA < BaseGA
   # Method that select the best M chromosomes for the next generation
   # @return [void]
   def select_next_generation
+    p "=> selecting next generation"
     # sort in decreasing order of fitness values
     @chromosomes.sort! do |left_chrom, right_chrom|
       right_chrom.fitness <=> left_chrom.fitness
@@ -191,7 +213,6 @@ class HTGA < BaseGA
     end
     # Calculate the effects of the various factors
     (0...experimental_matrix[0].size).each do |j|
-      p "Col #{j}"
       sum_lvl_1 = 0.0
       sum_lvl_2 = 0.0
       (0...experimental_matrix.size).each do |i|
@@ -213,6 +234,26 @@ class HTGA < BaseGA
     optimal_chromosome
   end
 
+  def generate_offspring_by_taguchi_method
+    expected_number = 0.5 * @pop_size * @cross_rate
+    p "=> generate_offspring_by_taguchi_method"
+    p "expected_number #{expected_number}"
+    n = 0
+    m = @chromosomes.size
+    while n < expected_number
+      loop do
+        x = rand(0...m)
+        y = rand(0...m)
+        next if x == y
+        chromosome_x = @chromosomes[x]
+        chromosome_y = @chromosomes[y]
+        opt_chromosome = generate_optimal_chromosome chromosome_x, chromosome_y
+        @chromosomes << opt_chromosome
+        break
+      end
+      n += 1
+    end
+  end
 
   # Auxiliar method to generate experiments matrix for the optimal crossovered
   # chromosome
@@ -238,6 +279,7 @@ class HTGA < BaseGA
   # Method to generate the initial population of chromosomes
   # @return [void]
   def init_population
+    p "initializing population"
     @ran = Random.new
     (0...@pop_size).each do
       chromosome = Chromosome.new

@@ -10,12 +10,12 @@ require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'helpers/roulette.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 
-
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
 # Mixin class for TGA, HTGA & CCHTGA
 class BaseGA
-  include Roulette, TestFunctions # Modules for Roulette selection operation and test functions
+  # Modules for Roulette selection operation and test functions
+  include Roulette, TestFunctions
 
   # @attr [Array] lower_bounds, lower bounds for the variables
   attr_reader :lower_bounds
@@ -27,6 +27,10 @@ class BaseGA
   attr_accessor :chromosomes
 
   attr_accessor :selected_func
+
+  attr_reader :generation
+
+  MAX_GENERATION = 100
 
   # @attr [Random] ran, variable for generation of random numbers
   @ran = Random.new
@@ -44,6 +48,7 @@ class BaseGA
   # Roulette selection operation method
   # @return [void]
   def roulette_select
+    p "=> roulette selection"
     @ran = Random.new
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
                                   is_negative_fit: @is_negative_fit
