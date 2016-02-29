@@ -45,10 +45,11 @@ class HTGA < BaseGA
   # Main method for the HTGA
   def execute
     @generation = 0
+    init_time = Time.now
     begin
       init_population
       while @generation <= @max_generation
-        p "****** generation #{@generation}" if @generation % 10 == 0
+        p "GENERATION #{@generation}" if @generation % 10 == 0
         roulette_select
         cross_individuals
         generate_offspring_by_taguchi_method
@@ -59,6 +60,8 @@ class HTGA < BaseGA
       end
       p "optimal chromosome #{@chromosomes[0]}"
       p "optimal fitness #{@chromosomes[0].fitness}"
+      p "function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @max_generation}"
+      p "Execution time: #{Time.now - init_time} sec"
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
