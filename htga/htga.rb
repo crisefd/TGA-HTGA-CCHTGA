@@ -9,6 +9,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
+require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
 # Dir[File.dirname(__FILE__) + './../base_ga/*.rb'].each do |file|
 # require File.basename(file, File.extname(file))
@@ -154,7 +155,7 @@ class HTGA < BaseGA
       r = @ran.rand(1.0)
       next if r > @mut_rate
       x = rand(0...m)
-      new_chrom = Chromosome.mutate(@chromosomes[x].clone)
+      new_chrom = HTGA.mutate(@chromosomes[x].clone)
       @chromosomes << new_chrom
     end
   end
@@ -163,7 +164,7 @@ class HTGA < BaseGA
   # @return [void]
   def select_next_generation
     p "=> selecting next generation"
-    if is_high_fit
+    if @is_high_fit
       # sort in decreasing order of fitness values
       @chromosomes.sort! do |left_chrom, right_chrom|
         right_chrom.fitness <=> left_chrom.fitness
@@ -318,7 +319,7 @@ if __FILE__ == $PROGRAM_NAME
                   cross_rate: 0.1,
                   mut_rate: 0.02,
                   num_genes: 7,
-                  continuous: true,
+                  continuous: false,
                   selected_func: 10,
                   is_negative_fit: false,
                   is_high_fit: false

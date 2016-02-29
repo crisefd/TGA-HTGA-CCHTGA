@@ -30,7 +30,7 @@ class BaseGA
 
   attr_reader :generation
 
-  MAX_GENERATION = 50
+  MAX_GENERATION = 100
 
   # @attr [Random] ran, variable for generation of random numbers
   @ran = Random.new
@@ -60,9 +60,4 @@ class BaseGA
       end
     end
   end
-
-end
-
-if __FILE__ == $PROGRAM_NAME
-
 end
