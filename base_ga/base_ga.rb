@@ -28,9 +28,11 @@ class BaseGA
 
   attr_accessor :selected_func
 
+  attr_writer :is_high_fit
+
   attr_reader :generation
 
-  MAX_GENERATION = 100
+  attr_writer :max_generation
 
   # @attr [Random] ran, variable for generation of random numbers
   @ran = Random.new

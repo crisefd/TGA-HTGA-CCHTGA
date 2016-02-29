@@ -15,6 +15,12 @@ Given(/^the fitness values for the chromosomes are:$/) do |table|
 end
 
 When(/^I sort the chromosomes by fitness in decreasing order and select the better M chromosomes$/) do
+  @htga.is_high_fit = true
+  @htga.select_next_generation
+end
+
+When(/^I sort the chromosomes by fitness in increasing order and select the better M chromosomes$/) do
+  @htga.is_high_fit = false
   @htga.select_next_generation
 end
 

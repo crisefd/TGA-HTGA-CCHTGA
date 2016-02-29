@@ -11,9 +11,9 @@ require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
-# Dir[File.dirname(__FILE__) + './../base_ga/*.rb'].each do |file|
-# require File.basename(file, File.extname(file))
-# end
+def pp(arg)
+  p arg
+end
 
 # require '/home/crisefd/Ruby/TGA-HTGA-CCHTGA/base_ga/base_ga'
 
@@ -39,6 +39,7 @@ class HTGA < BaseGA
     @is_high_fit = input[:is_high_fit]
     @is_negative_fit = false if @is_negative_fit.nil?
     @is_high_fit = false if @is_high_fit.nil?
+    @max_generation = input[:max_generation]
   end
 
   # Main method for the HTGA
@@ -46,8 +47,8 @@ class HTGA < BaseGA
     @generation = 0
     begin
       init_population
-      while @generation <= MAX_GENERATION
-        p "****** generation #{@generation}"
+      while @generation <= @max_generation
+        pp "****** generation #{@generation}"
         roulette_select
         cross_individuals
         generate_offspring_by_taguchi_method
@@ -55,11 +56,12 @@ class HTGA < BaseGA
         select_next_generation
         @generation += 1
       end
-      p "optimal chromosome #{@chromosomes[0]}"
-      p "optimal fitness #{@chromosomes[0].fitness}"
+      pp "optimal chromosome #{@chromosomes[0]}"
+      pp "optimal fitness #{@chromosomes[0].fitness}"
+      pp "wortst fitness #{@chromosomes[-1].fitness}"
     rescue StandardError => error
-      p error.message
-      p error.backtrace.inspect
+      pp error.message
+      pp error.backtrace.inspect
       exit
     end
   end
@@ -126,7 +128,7 @@ class HTGA < BaseGA
   # Method to perform crossover operation over chromosomes
   # @return [void]
   def cross_individuals
-    p "mutating individuals"
+    pp "=> crossing individuals"
     m = @pop_size
     (0...m).each do
       r = @ran.rand(1.0)
@@ -149,7 +151,7 @@ class HTGA < BaseGA
   # Method to perform mutation operation over the chromosomes
   # @return [void]
   def mutate_individuals
-    p "=> mutating individuals"
+    pp "=> mutating individuals"
     m = @chromosomes.size
     (0...m).each do
       r = @ran.rand(1.0)
@@ -163,14 +165,21 @@ class HTGA < BaseGA
   # Method that select the best M chromosomes for the next generation
   # @return [void]
   def select_next_generation
-    p "=> selecting next generation"
+    pp "=> selecting next generation"
+    # recalculate the fitness values
+    @chromosomes.map! do |chromosome|
+      chromosome.fitness = @selected_func.call chromosome
+      chromosome
+    end
     if @is_high_fit
+      pp "sort in decreasing order"
       # sort in decreasing order of fitness values
       @chromosomes.sort! do |left_chrom, right_chrom|
         right_chrom.fitness <=> left_chrom.fitness
       end
     else
       # sort in increasing order of fitness values
+      pp "sort in increasing order"
       @chromosomes.sort! do |left_chrom, right_chrom|
         left_chrom.fitness <=> right_chrom.fitness
       end
@@ -216,7 +225,7 @@ class HTGA < BaseGA
                                                        chromosome_y
     # Calculate fitness and SNR values
     experimental_matrix.each_index do |i|
-      experimental_matrix[i].fitness = @selected_func.call experimental_matrix[i]
+      # experimental_matrix[i].fitness = @selected_func.call experimental_matrix[i]
       HTGA.calculate_snr experimental_matrix[i]
     end
     # Calculate the effects of the various factors
@@ -244,8 +253,8 @@ class HTGA < BaseGA
 
   def generate_offspring_by_taguchi_method
     expected_number = 0.5 * @pop_size * @cross_rate
-    p "=> generate_offspring_by_taguchi_method"
-    p "expected_number #{expected_number}"
+    pp "=> generate_offspring_by_taguchi_method"
+    pp "expected_number #{expected_number}"
     n = 0
     m = @chromosomes.size
     while n < expected_number
@@ -287,7 +296,7 @@ class HTGA < BaseGA
   # Method to generate the initial population of chromosomes
   # @return [void]
   def init_population
-    p "initializing population"
+    pp "initializing population"
     @ran = Random.new
     (0...@pop_size).each do
       chromosome = Chromosome.new
@@ -305,7 +314,7 @@ class HTGA < BaseGA
           chromosome << gene.round
         end
       end
-      chromosome.fitness = @selected_func.call chromosome
+      chromosome.fitness = @selected_func.call chromosome.clone
       @chromosomes << chromosome
     end
   end
@@ -316,13 +325,14 @@ if __FILE__ == $PROGRAM_NAME
                   upper_bounds: [100, 100, 100, 100, 100, 100, 100],
                   lower_bounds: [-100, -100, -100, -100, -100, -100, -100],
                   pop_size: 200,
-                  cross_rate: 0.1,
-                  mut_rate: 0.02,
+                  cross_rate: 0.3,
+                  mut_rate: 0.1,
                   num_genes: 7,
                   continuous: false,
                   selected_func: 10,
                   is_negative_fit: false,
-                  is_high_fit: false
+                  is_high_fit: false,
+                  max_generation: 200
 
   htga.execute
 
