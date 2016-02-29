@@ -12,7 +12,7 @@ require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
 def pp(arg)
-  p arg
+  # p arg
 end
 
 # require '/home/crisefd/Ruby/TGA-HTGA-CCHTGA/base_ga/base_ga'
@@ -48,20 +48,20 @@ class HTGA < BaseGA
     begin
       init_population
       while @generation <= @max_generation
-        pp "****** generation #{@generation}"
+        p "****** generation #{@generation}" if @generation % 10 == 0
         roulette_select
         cross_individuals
         generate_offspring_by_taguchi_method
         mutate_individuals
+        calculate_fitness
         select_next_generation
         @generation += 1
       end
-      pp "optimal chromosome #{@chromosomes[0]}"
-      pp "optimal fitness #{@chromosomes[0].fitness}"
-      pp "wortst fitness #{@chromosomes[-1].fitness}"
+      p "optimal chromosome #{@chromosomes[0]}"
+      p "optimal fitness #{@chromosomes[0].fitness}"
     rescue StandardError => error
-      pp error.message
-      pp error.backtrace.inspect
+      p error.message
+      p error.backtrace.inspect
       exit
     end
   end
@@ -130,8 +130,9 @@ class HTGA < BaseGA
   def cross_individuals
     pp "=> crossing individuals"
     m = @pop_size
-    (0...m).each do
-      r = @ran.rand(1.0)
+    (0...m).each do |k|
+      # r = @ran.rand(1.0)
+      r = @chromosomes[k].prob
       next if r > @cross_rate
       loop do
         x = rand(0...@pop_size)
@@ -162,15 +163,18 @@ class HTGA < BaseGA
     end
   end
 
-  # Method that select the best M chromosomes for the next generation
-  # @return [void]
-  def select_next_generation
-    pp "=> selecting next generation"
+  def calculate_fitness
     # recalculate the fitness values
     @chromosomes.map! do |chromosome|
       chromosome.fitness = @selected_func.call chromosome
       chromosome
     end
+  end
+
+  # Method that select the best M chromosomes for the next generation
+  # @return [void]
+  def select_next_generation
+    pp "=> selecting next generation"
     if @is_high_fit
       pp "sort in decreasing order"
       # sort in decreasing order of fitness values
@@ -322,17 +326,17 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   htga = HTGA.new values: 'uniform distribution',
-                  upper_bounds: [100, 100, 100, 100, 100, 100, 100],
-                  lower_bounds: [-100, -100, -100, -100, -100, -100, -100],
+                  upper_bounds: [10, 10, 10, 10, 10, 10, 10],
+                  lower_bounds: [-10, -10, -10, -10, -10, -10, -10],
                   pop_size: 200,
                   cross_rate: 0.3,
                   mut_rate: 0.1,
                   num_genes: 7,
-                  continuous: false,
+                  continuous: true,
                   selected_func: 10,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 200
+                  max_generation: 160
 
   htga.execute
 

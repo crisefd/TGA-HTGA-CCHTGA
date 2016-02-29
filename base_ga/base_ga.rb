@@ -10,6 +10,11 @@ require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'helpers/roulette.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 
+
+def pp(arg)
+  # p arg
+end
+
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
 # Mixin class for TGA, HTGA & CCHTGA
@@ -26,7 +31,8 @@ class BaseGA
   # @attr [Array] chromosomes, the candidate solutions
   attr_accessor :chromosomes
 
-  attr_accessor :selected_func
+
+  attr_writer :selected_func
 
   attr_writer :is_high_fit
 
@@ -50,7 +56,7 @@ class BaseGA
   # Roulette selection operation method
   # @return [void]
   def roulette_select
-    p "=> roulette selection"
+    pp "=> roulette selection"
     @ran = Random.new
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
                                   is_negative_fit: @is_negative_fit
