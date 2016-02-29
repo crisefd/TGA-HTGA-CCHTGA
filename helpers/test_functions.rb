@@ -44,6 +44,16 @@ module TestFunctions
       left_term = -20 * Math.exp(-0.2 * Math.sqrt(sum_square_x))
       right_term = -1 * Math.exp(sum_cos)
       left_term + right_term
+    end,
+    nil, # function 3
+    nil, # function 4
+    nil, # function 5
+    nil, # function 6
+    nil, # function 7
+    nil, # function 8
+    nil, # function 9
+    lambda do |x| # function 10
+      x.inject(0){ |sum, z| sum + z**2 }
     end
 
   ]

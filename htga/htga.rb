@@ -163,9 +163,16 @@ class HTGA < BaseGA
   # @return [void]
   def select_next_generation
     p "=> selecting next generation"
-    # sort in decreasing order of fitness values
-    @chromosomes.sort! do |left_chrom, right_chrom|
-      right_chrom.fitness <=> left_chrom.fitness
+    if is_high_fit
+      # sort in decreasing order of fitness values
+      @chromosomes.sort! do |left_chrom, right_chrom|
+        right_chrom.fitness <=> left_chrom.fitness
+      end
+    else
+      # sort in increasing order of fitness values
+      @chromosomes.sort! do |left_chrom, right_chrom|
+        left_chrom.fitness <=> right_chrom.fitness
+      end
     end
     @chromosomes.slice!(@pop_size..@chromosomes.size)
   end
@@ -304,10 +311,19 @@ class HTGA < BaseGA
 end
 
 if __FILE__ == $PROGRAM_NAME
-=begin
-   htga = HTGA.new(selected_func: 0, values: 'uniform distribution',
-                 continuous: true, pop_size: 5, num_genes: 5,
-                  upper_bounds: [5,5,5,5,5], lower_bounds: [-5, -5, -5, -5, -5])
-  htga.init_population
-=end
+  htga = HTGA.new values: 'uniform distribution',
+                  upper_bounds: [100, 100, 100, 100, 100, 100, 100],
+                  lower_bounds: [-100, -100, -100, -100, -100, -100, -100],
+                  pop_size: 200,
+                  cross_rate: 0.1,
+                  mut_rate: 0.02,
+                  num_genes: 7,
+                  continuous: true,
+                  selected_func: 10,
+                  is_negative_fit: false,
+                  is_high_fit: false
+
+  htga.execute
+
+
 end

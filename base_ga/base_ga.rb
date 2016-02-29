@@ -14,7 +14,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 # @author Oscar Tigreros
 # Mixin class for TGA, HTGA & CCHTGA
 class BaseGA
-  # Modules for Roulette selection operation and test functions
+  # Modules for roulette selection operation and test functions
   include Roulette, TestFunctions
 
   # @attr [Array] lower_bounds, lower bounds for the variables
@@ -30,7 +30,7 @@ class BaseGA
 
   attr_reader :generation
 
-  MAX_GENERATION = 100
+  MAX_GENERATION = 50
 
   # @attr [Random] ran, variable for generation of random numbers
   @ran = Random.new
