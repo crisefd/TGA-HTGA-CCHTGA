@@ -48,12 +48,19 @@ module TestFunctions
     nil, # function 3
     nil, # function 4
     nil, # function 5
-    nil, # function 6
+    lambda do |x| # function 6
+      i = 1
+      r = x.inject(0) do |sum, xi|
+        sum + Math.sin(radians(xi)) * (Math.sin(radians(i * xi**2 / Math::PI)))**2
+        i += 1
+      end
+      r * -1
+    end,
     nil, # function 7
     nil, # function 8
     nil, # function 9
     lambda do |x| # function 10
-      x.inject(0){ |sum, z| sum + z**2 }
+      x.inject(0){ |sum, xi| sum + xi**2 }
     end
 
   ]

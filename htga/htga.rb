@@ -44,7 +44,7 @@ class HTGA < BaseGA
 
   # Main method for the HTGA
   def execute
-    @generation = 0
+    @generation = 1
     init_time = Time.now
     begin
       init_population
@@ -60,8 +60,8 @@ class HTGA < BaseGA
       end
       p "optimal chromosome #{@chromosomes[0]}"
       p "optimal fitness #{@chromosomes[0].fitness}"
-      p "function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @max_generation}"
-      p "Execution time: #{Time.now - init_time} sec"
+      p "function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @generation}"
+      p "Execution time (seconds): #{Time.now - init_time}"
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
@@ -124,8 +124,6 @@ class HTGA < BaseGA
     else # What happens when the gene is 0 ?
       chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
     end
-  #  p "calculated SNR is #{snr}"
-  #  snr
   end
 
   # Method to perform crossover operation over chromosomes
@@ -133,13 +131,13 @@ class HTGA < BaseGA
   def cross_individuals
     pp "=> crossing individuals"
     m = @pop_size
-    (0...m).each do |k|
+    (0...m).each do |x|
       # r = @ran.rand(1.0)
-      r = @chromosomes[k].prob
+      r = @chromosomes[x].prob
       next if r > @cross_rate
       loop do
-        x = rand(0...@pop_size)
-        y = rand(0...@pop_size)
+        # x = rand(0...m)
+        y = rand(0...m)
         next if x == y
         new_chrom_x, new_chrom_y =
                        HTGA.crossover(chromosome_x: @chromosomes[x].clone,
@@ -161,7 +159,7 @@ class HTGA < BaseGA
       r = @ran.rand(1.0)
       next if r > @mut_rate
       x = rand(0...m)
-      new_chrom = HTGA.mutate(@chromosomes[x].clone)
+      new_chrom = HTGA.mutate @chromosomes[x].clone
       @chromosomes << new_chrom
     end
   end
@@ -180,7 +178,7 @@ class HTGA < BaseGA
     pp "=> selecting next generation"
     if @is_high_fit
       pp "sort in decreasing order"
-      # sort in decreasing order of fitness values
+      # sort in decreasing order by fitness values
       @chromosomes.sort! do |left_chrom, right_chrom|
         right_chrom.fitness <=> left_chrom.fitness
       end
@@ -332,14 +330,14 @@ if __FILE__ == $PROGRAM_NAME
                   upper_bounds: [10, 10, 10, 10, 10, 10, 10],
                   lower_bounds: [-10, -10, -10, -10, -10, -10, -10],
                   pop_size: 200,
-                  cross_rate: 0.3,
-                  mut_rate: 0.1,
+                  cross_rate: 0.1,
+                  mut_rate: 0.02,
                   num_genes: 7,
                   continuous: true,
                   selected_func: 10,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 160
+                  max_generation: 200
 
   htga.execute
 

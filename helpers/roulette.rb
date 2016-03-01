@@ -79,7 +79,7 @@ module Roulette
       end
       prob_sum = chromosomes[i].prob
     end
-    # Ensure that the last individual is 1.0
+    # Ensure that the last individual' probability is 1.0
     chromosomes.last.prob = 1.0
 
   end

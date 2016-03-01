@@ -6,7 +6,7 @@
 # creation date: 2015-29-11
 
 Feature: select the better M chromosomes for the next generation
-  @test_select_nex_generation_max
+  @test_select_next_generation_max
   Scenario: Test the selection of the better M chromosomes to be parents of the next generation for a maximization problem
   Given a population size (M) of 6
   And the fitness values for the chromosomes are:
@@ -15,7 +15,7 @@ Feature: select the better M chromosomes for the next generation
   Then the fitness values of the parents for then next generation are:
   |12|11|9|4|3|-1|
 
-  @test_select_nex_generation_min
+  @test_select_next_generation_min
   Scenario: Test the selection of the better M chromosomes to be parents of the next generation for a mimization problem
   Given a population size (M) of 6
   And the fitness values for the chromosomes are:
