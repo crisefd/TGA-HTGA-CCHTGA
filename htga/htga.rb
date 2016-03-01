@@ -34,7 +34,7 @@ class HTGA < BaseGA
     @chromosomes = []
     @continuous = input[:continuous]
     input[:selected_func] = 0 if input[:selected_func].nil?
-    @selected_func = TEST_FUNCTIONS[input[:selected_func]]
+    @selected_func = TEST_FUNCTIONS[input[:selected_func] - 1]
     @is_negative_fit = input[:is_negative_fit]
     @is_high_fit = input[:is_high_fit]
     @is_negative_fit = false if @is_negative_fit.nil?
@@ -48,16 +48,21 @@ class HTGA < BaseGA
     init_time = Time.now
     begin
       init_population
+      select_taguchi_array
+      p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation <= @max_generation
+        break if @chromosomes[0].fitness < 1
         p "GENERATION #{@generation}" if @generation % 10 == 0
         roulette_select
         cross_individuals
         generate_offspring_by_taguchi_method
         mutate_individuals
-        calculate_fitness
+        recalculate_fitness
         select_next_generation
+        p "best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
         @generation += 1
       end
+      p '==================OUTPUT===================='
       p "optimal chromosome #{@chromosomes[0]}"
       p "optimal fitness #{@chromosomes[0].fitness}"
       p "function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @generation}"
@@ -84,8 +89,13 @@ class HTGA < BaseGA
     cut_point_y = chromosome_y[k]
     cut_point_x = cut_point_x + beta * (cut_point_y - cut_point_x)
     cut_point_y = lower_bounds[k] + beta * (upper_bounds[k] - lower_bounds[k])
-    chromosome_x[k] = cut_point_x
-    chromosome_y[k] = cut_point_y
+    if @continuous
+      chromosome_x[k] = cut_point_x
+      chromosome_y[k] = cut_point_y
+    else
+      chromosome_x[k] = cut_point_x.floor
+      chromosome_y[k] = cut_point_y.floor
+    end
     # swap right side of chromosomes x and y
     ((k + 1)...chromosome_y.size).each do |i|
       chromosome_x[i], chromosome_y[i] = chromosome_y[i], chromosome_x[i]
@@ -107,8 +117,13 @@ class HTGA < BaseGA
     end
     gene_i = chromosome[i]
     gene_k = chromosome[k]
-    chromosome[i] = (1 - beta) * gene_i + beta * gene_k
-    chromosome[k] = beta * gene_i + (1 - beta) * gene_k
+    if @continuous
+      chromosome[i] = (1 - beta) * gene_i + beta * gene_k
+      chromosome[k] = beta * gene_i + (1 - beta) * gene_k
+    else
+      chromosome[i] = ((1 - beta) * gene_i + beta * gene_k).floor
+      chromosome[k] = (beta * gene_i + (1 - beta) * gene_k).floor
+    end
     chromosome
   end
 
@@ -164,7 +179,7 @@ class HTGA < BaseGA
     end
   end
 
-  def calculate_fitness
+  def recalculate_fitness
     # recalculate the fitness values
     @chromosomes.map! do |chromosome|
       chromosome.fitness = @selected_func.call chromosome
@@ -194,28 +209,28 @@ class HTGA < BaseGA
 
   # Method that selects the most suitable Taguchi array
   # @param [Integer] chrom_size, the number of variables of the function
-  def select_taguchi_array(chrom_size)
+  def select_taguchi_array
     closest = 0
     [8, 16, 32, 64, 128].each do |n|
-      if chrom_size <= n - 1
+      if @num_genes <= n - 1
         closest = n
         break
       end
     end
     file_name = "L#{closest}"
-    load_array_from_file file_name, chrom_size
+    load_array_from_file file_name
   end
 
   # Auxiliar method for #select_taguchi_array, it loads the array from a file
   # @param [String] filename, the name of the file which contains the array
   # @param [Integer] chrom_size, the number of variables of the function
-  def load_array_from_file(filename, chrom_size)
+  def load_array_from_file(filename)
     @taguchi_array = []
     path_to_file = File.join(File.dirname(__FILE__), '..',
                              "taguchi_orthogonal_arrays/#{filename}")
     array_file = open(path_to_file, 'r')
     array_file.each_line do |line|
-      @taguchi_array << line.split(';')[0, chrom_size].map!(&:to_i)
+      @taguchi_array << line.split(';')[0, @num_genes].map!(&:to_i)
     end
     array_file.close
   end
@@ -224,7 +239,6 @@ class HTGA < BaseGA
   # @param [Chromosome] chromosome_x, the first chromosome
   # @param [Chromosome] chromosome_y, the second chromosome
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
-    select_taguchi_array chromosome_x.size
     optimal_chromosome = Chromosome.new
     experimental_matrix = generate_experimental_matrix chromosome_x,
                                                        chromosome_y
@@ -316,7 +330,7 @@ class HTGA < BaseGA
         if @continuous
           chromosome << gene
         else
-          chromosome << gene.round
+          chromosome << gene.floor
         end
       end
       chromosome.fitness = @selected_func.call chromosome.clone
@@ -326,19 +340,19 @@ class HTGA < BaseGA
 end
 
 if __FILE__ == $PROGRAM_NAME
-  dim = 30
+  dim = 7
   htga = HTGA.new values: 'uniform distribution',
                   upper_bounds: Array.new(dim, 100),
                   lower_bounds: Array.new(dim, -100),
                   pop_size: 200,
-                  cross_rate: 0.3,
-                  mut_rate: 0.05,
+                  cross_rate: 0.1,
+                  mut_rate: 0.02,
                   num_genes: dim,
-                  continuous: true,
-                  selected_func: 10,
+                  continuous: false,
+                  selected_func: 11,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 150
+                  max_generation: 1000
 
   htga.execute
 
