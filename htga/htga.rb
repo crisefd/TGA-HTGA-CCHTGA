@@ -326,18 +326,19 @@ class HTGA < BaseGA
 end
 
 if __FILE__ == $PROGRAM_NAME
+  dim = 30
   htga = HTGA.new values: 'uniform distribution',
-                  upper_bounds: [10, 10, 10, 10, 10, 10, 10],
-                  lower_bounds: [-10, -10, -10, -10, -10, -10, -10],
+                  upper_bounds: Array.new(dim, 100),
+                  lower_bounds: Array.new(dim, -100),
                   pop_size: 200,
                   cross_rate: 0.3,
                   mut_rate: 0.05,
-                  num_genes: 7,
+                  num_genes: dim,
                   continuous: true,
                   selected_func: 10,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 180
+                  max_generation: 150
 
   htga.execute
 
