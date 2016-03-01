@@ -330,14 +330,14 @@ if __FILE__ == $PROGRAM_NAME
                   upper_bounds: [10, 10, 10, 10, 10, 10, 10],
                   lower_bounds: [-10, -10, -10, -10, -10, -10, -10],
                   pop_size: 200,
-                  cross_rate: 0.1,
-                  mut_rate: 0.02,
+                  cross_rate: 0.3,
+                  mut_rate: 0.05,
                   num_genes: 7,
                   continuous: true,
                   selected_func: 10,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 200
+                  max_generation: 180
 
   htga.execute
 
