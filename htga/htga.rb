@@ -45,6 +45,8 @@ class HTGA < BaseGA
   # Main method for the HTGA
   def execute
     @generation = 1
+    t = 0
+    prev_best_fit = 0
     init_time = Time.now
     begin
       init_population
@@ -60,7 +62,18 @@ class HTGA < BaseGA
         mutate_individuals
         recalculate_fitness
         select_next_generation
-        p "best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
+        # p "best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
+        if prev_best_fit == @chromosomes[0].fitness
+          t += 1
+          if @generation > 0.5 * @max_generation && t > 4
+            p "PREMATURE CONVERGENCE DETECTED "
+            p "population: #{@chromosomes[0, 10]} "
+            break
+          end
+        else
+          t = 0
+        end
+        prev_best_fit = @chromosomes[0].fitness
         @generation += 1
       end
       p '==================OUTPUT===================='
@@ -348,7 +361,7 @@ if __FILE__ == $PROGRAM_NAME
                   lower_bounds: Array.new(dim, -10),
                   pop_size: 200,
                   cross_rate: 0.4,
-                  mut_rate: 0.1,
+                  mut_rate: 0.3,
                   num_genes: dim,
                   continuous: true,
                   selected_func: 11,
