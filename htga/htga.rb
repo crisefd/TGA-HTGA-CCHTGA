@@ -48,6 +48,7 @@ class HTGA < BaseGA
     init_time = Time.now
     begin
       init_population
+      p "init pop #{@chromosomes[0, 10]}"
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation <= @max_generation
@@ -133,7 +134,6 @@ class HTGA < BaseGA
   # @return [Float] the calculated SNR
   def self.calculate_snr(chromosome, smaller_the_better: true)
     n = chromosome.size.to_f
-    # snr = 0
     if smaller_the_better
       chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2.0 }.reduce(:+))
     else # What happens when the gene is 0 ?
@@ -342,17 +342,17 @@ end
 if __FILE__ == $PROGRAM_NAME
   dim = 7
   htga = HTGA.new values: 'uniform distribution',
-                  upper_bounds: Array.new(dim, 100),
-                  lower_bounds: Array.new(dim, -100),
+                  upper_bounds: Array.new(dim, 10),
+                  lower_bounds: Array.new(dim, -10),
                   pop_size: 200,
-                  cross_rate: 0.1,
-                  mut_rate: 0.02,
+                  cross_rate: 0.3,
+                  mut_rate: 0.05,
                   num_genes: dim,
                   continuous: false,
                   selected_func: 11,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 1000
+                  max_generation: 100
 
   htga.execute
 

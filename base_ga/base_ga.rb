@@ -39,6 +39,8 @@ class BaseGA
   # @attr [Integer] max_generation, the maximum allow number of generations
   attr_writer :max_generation
 
+  attr_accessor :num_genes
+
   # @attr [Random] ran, variable for generation of random numbers
   @ran = Random.new
 
