@@ -79,6 +79,7 @@ class HTGA < BaseGA
   # @param [Hash] args, argument hash list that includes chromosomes, lower and upper bounds
   # @return [Chromosome, Chromosome]  the resulting chromosomes.
   def self.crossover(**args)
+    continuous = args[:continuous]
     chromosome_x = args[:chromosome_x]
     chromosome_y = args[:chromosome_y]
     beta = rand(0..10) / 10.0
@@ -90,7 +91,7 @@ class HTGA < BaseGA
     cut_point_y = chromosome_y[k]
     cut_point_x = cut_point_x + beta * (cut_point_y - cut_point_x)
     cut_point_y = lower_bounds[k] + beta * (upper_bounds[k] - lower_bounds[k])
-    if @continuous
+    if continuous
       chromosome_x[k] = cut_point_x
       chromosome_y[k] = cut_point_y
     else
@@ -107,7 +108,7 @@ class HTGA < BaseGA
   # Mutation operator method for the chromosomes
   # @param [Chromosome] chromosome, the chromosome to mutate
   # @return [Chromosome] the resulting chrmosome
-  def self.mutate(chromosome)
+  def self.mutate(chromosome, continuous: true)
     beta = rand(0..10) / 10.0
     i = -1
     k = -1
@@ -118,7 +119,7 @@ class HTGA < BaseGA
     end
     gene_i = chromosome[i]
     gene_k = chromosome[k]
-    if @continuous
+    if continuous
       chromosome[i] = (1 - beta) * gene_i + beta * gene_k
       chromosome[k] = beta * gene_i + (1 - beta) * gene_k
     else
@@ -158,7 +159,8 @@ class HTGA < BaseGA
                        HTGA.crossover(chromosome_x: @chromosomes[x].clone,
                                       chromosome_y: @chromosomes[y].clone,
                                       upper_bounds: @upper_bounds,
-                                      lower_bounds: @lower_bounds)
+                                      lower_bounds: @lower_bounds,
+                                      continuous: @continuous)
         @chromosomes << new_chrom_x << new_chrom_y
         break
       end
@@ -174,7 +176,7 @@ class HTGA < BaseGA
       r = @ran.rand(1.0)
       next if r > @mut_rate
       x = rand(0...m)
-      new_chrom = HTGA.mutate @chromosomes[x].clone
+      new_chrom = HTGA.mutate @chromosomes[x].clone, continuous: @continuous
       @chromosomes << new_chrom
     end
   end

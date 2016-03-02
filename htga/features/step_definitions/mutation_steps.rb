@@ -18,7 +18,7 @@ Given(/^the chromosome:$/) do |table|
 end
 
 When(/^mutation is apply on two genes of the chromosome$/) do
-  @mutated_chromosome = HTGA.mutate @chromosome.clone
+  @mutated_chromosome = HTGA.mutate @chromosome.clone, continuous: false
 end
 
 Then(/^the changed genes must be closer stepwise in the resulting chromosome$/) do
