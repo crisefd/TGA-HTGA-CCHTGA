@@ -45,6 +45,7 @@ Given(/^the lower bounds are:$/) do |table|
 end
 
 When(/^we apply crossover on the chromosomes$/) do
+  args[:continuous] = true
   @crossed_chromosome_x, @crossed_chromosome_y = HTGA.crossover args
 end
 
