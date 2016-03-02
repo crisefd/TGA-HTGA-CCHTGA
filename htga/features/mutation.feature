@@ -10,7 +10,7 @@
 
 Feature: Mutation operation
   @test_mutation_non_continuous
-  Scenario: Test the mutation operation derived from convex set theory with non continuous variables
+  Scenario: Test the mutation operation derived from convex set theory with continuous variables
     Given the chromosome:
     |1|1|-1|0|1|1|1|
     When mutation is apply on two genes of the chromosome

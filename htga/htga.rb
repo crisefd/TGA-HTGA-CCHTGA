@@ -48,7 +48,7 @@ class HTGA < BaseGA
     init_time = Time.now
     begin
       init_population
-      p "init pop #{@chromosomes[0, 10]}"
+      # p "init pop #{@chromosomes[0, 10]}"
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation <= @max_generation
@@ -108,7 +108,7 @@ class HTGA < BaseGA
   # Mutation operator method for the chromosomes
   # @param [Chromosome] chromosome, the chromosome to mutate
   # @return [Chromosome] the resulting chrmosome
-  def self.mutate(chromosome, continuous: true)
+  def self.mutate(chromosome, continuous: true) # Does not work for discrete functions
     beta = rand(0..10) / 10.0
     i = -1
     k = -1
@@ -347,14 +347,14 @@ if __FILE__ == $PROGRAM_NAME
                   upper_bounds: Array.new(dim, 10),
                   lower_bounds: Array.new(dim, -10),
                   pop_size: 200,
-                  cross_rate: 0.3,
-                  mut_rate: 0.05,
+                  cross_rate: 0.4,
+                  mut_rate: 0.1,
                   num_genes: dim,
-                  continuous: false,
+                  continuous: true,
                   selected_func: 11,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 100
+                  max_generation: 200
 
   htga.execute
 

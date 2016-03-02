@@ -18,7 +18,7 @@ Given(/^the chromosome:$/) do |table|
 end
 
 When(/^mutation is apply on two genes of the chromosome$/) do
-  @mutated_chromosome = HTGA.mutate @chromosome.clone, continuous: false
+  @mutated_chromosome = HTGA.mutate @chromosome.clone, continuous: true
 end
 
 Then(/^the changed genes must be closer stepwise in the resulting chromosome$/) do
@@ -36,5 +36,6 @@ Then(/^the changed genes must be closer stepwise in the resulting chromosome$/) 
   end
   prev_distance = (@chromosome[i] - @chromosome[k]).abs
   new_distance = (@mutated_chromosome[i] - @mutated_chromosome[k]).abs
+  p "prev_distance = #{prev_distance} new_distance = #{new_distance}"
   expect(new_distance).to be <= prev_distance
 end
