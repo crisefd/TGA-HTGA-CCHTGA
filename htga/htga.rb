@@ -54,7 +54,7 @@ class HTGA < BaseGA
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation <= @max_generation
-        break if @chromosomes[0].fitness < 1
+         break if @chromosomes[0].fitness <= 0.001
         p "GENERATION #{@generation}" if @generation % 10 == 0
         roulette_select
         cross_individuals
@@ -62,12 +62,12 @@ class HTGA < BaseGA
         mutate_individuals
         recalculate_fitness
         select_next_generation
-        # p "best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
+        p "best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
         if prev_best_fit == @chromosomes[0].fitness
           t += 1
-          if @generation > 0.5 * @max_generation && t > 4
+         if  t >= 10
             p "PREMATURE CONVERGENCE DETECTED "
-            p "population: #{@chromosomes[0, 10]} "
+            p "population: #{@chromosomes[0, 3]} "
             break
           end
         else
@@ -164,10 +164,10 @@ class HTGA < BaseGA
       # r = @ran.rand(1.0)
       r = @chromosomes[x].prob
       next if r > @cross_rate
-      loop do
+      (0...m).each do |y|
         # x = rand(0...m)
-        y = rand(0...m)
-        next if x == y
+        s = @chromosomes[y].prob
+        next if s > @cross_rate || x == y
         new_chrom_x, new_chrom_y =
                        HTGA.crossover(chromosome_x: @chromosomes[x].clone,
                                       chromosome_y: @chromosomes[y].clone,
@@ -355,19 +355,19 @@ class HTGA < BaseGA
 end
 
 if __FILE__ == $PROGRAM_NAME
-  dim = 7
-  htga = HTGA.new values: 'uniform distribution',
-                  upper_bounds: Array.new(dim, 10),
-                  lower_bounds: Array.new(dim, -10),
+  dim = 30
+  htga = HTGA.new values: 'discrete',
+                  upper_bounds: Array.new(dim, 100),
+                  lower_bounds: Array.new(dim, -100),
                   pop_size: 200,
-                  cross_rate: 0.4,
-                  mut_rate: 0.3,
+                  cross_rate: 0.1,
+                  mut_rate: 0.02,
                   num_genes: dim,
                   continuous: true,
                   selected_func: 11,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 200
+                  max_generation: 10000
 
   htga.execute
 
