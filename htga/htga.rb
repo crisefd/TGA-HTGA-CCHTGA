@@ -50,30 +50,19 @@ class HTGA < BaseGA
     init_time = Time.now
     begin
       init_population
-      # p "init pop #{@chromosomes[0, 10]}"
+      p "population initialized"
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation <= @max_generation
-        break if @chromosomes[0].fitness <= 0.001
+        break if @chromosomes[0].fitness == 0.0
         p "GENERATION #{@generation}" if @generation % 10 == 0
-        roulette_select
-        cross_individuals
+        selected_offset = roulette_select
+        cross_individuals selected_offset
         generate_offspring_by_taguchi_method
         mutate_individuals
         recalculate_fitness
         select_next_generation
         p "best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
-        if prev_best_fit == @chromosomes[0].fitness
-          t += 1
-          if  t >= 10
-            p "PREMATURE CONVERGENCE DETECTED "
-            p "population: #{@chromosomes[0, 3]} "
-            break
-          end
-        else
-          t = 0
-        end
-        prev_best_fit = @chromosomes[0].fitness
         @generation += 1
       end
       p '==================OUTPUT===================='
@@ -145,7 +134,7 @@ class HTGA < BaseGA
   # Method to perfom SNR calculation used in the HTGA
   # @param [Chromosome] chromosome, the chromosome
   # @param [Boolean] smaller_the_better, true if SNR is for minization or false otherwise
-  # @return [Float] the calculated SNR
+  # @return [void]
   def self.calculate_snr(chromosome, smaller_the_better: true)
     n = chromosome.size.to_f
     if smaller_the_better
@@ -157,15 +146,17 @@ class HTGA < BaseGA
 
   # Method to perform crossover operation over chromosomes
   # @return [void]
-  def cross_individuals
+  def cross_individuals(selected_offset)
     pp "=> crossing individuals"
-    m = @chromosomes.size
+    # ran = Random.new
+    m = selected_offset
+    m += 1 if m == 1
     (0...m).each do |x|
-      r = @ran.rand(1.0)
+      r = Random.rand(1.0)
       # r = @chromosomes[x].prob
       next if r > @cross_rate
       (0...m).each do |y|
-        s = @ran.rand(1.0)
+        s = Random.rand(1.0)
         # s = @chromosomes[y].prob
         next if s > @cross_rate || x == y
         new_chrom_x, new_chrom_y =
@@ -184,9 +175,10 @@ class HTGA < BaseGA
   # @return [void]
   def mutate_individuals
     pp "=> mutating individuals"
+    # ran = Random.new
     m = @chromosomes.size
     (0...m).each do
-      r = @ran.rand(1.0)
+      r = Random.rand(1.0)
       next if r > @mut_rate
       x = rand(0...m)
       new_chrom = HTGA.mutate @chromosomes[x].clone, continuous: @continuous
@@ -331,14 +323,14 @@ class HTGA < BaseGA
   # @return [void]
   def init_population
     pp "initializing population"
-    @ran = Random.new
+    # ran = Random.new
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @values == 'discrete'
           beta = (Array.new(11) { |k| k / 10.0 }).sample
         elsif @values == 'uniform distribution'
-          beta = @ran.rand(1.0)
+          beta = Random.rand(1.0)
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
                                                  @lower_bounds[i])
@@ -356,7 +348,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   dim = 30
-  htga = HTGA.new values: 'discrete',
+  htga = HTGA.new values: 'uniform distribution',
                   upper_bounds: Array.new(dim, 100),
                   lower_bounds: Array.new(dim, -100),
                   pop_size: 200,
@@ -367,7 +359,7 @@ if __FILE__ == $PROGRAM_NAME
                   selected_func: 11,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 10000
+                  max_generation: 1000
 
   htga.execute
 

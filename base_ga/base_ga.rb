@@ -10,11 +10,6 @@ require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'helpers/roulette.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 
-
-def pp(arg)
-  # p arg
-end
-
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
 # Mixin class for TGA, HTGA & CCHTGA
@@ -42,7 +37,7 @@ class BaseGA
   attr_accessor :num_genes
 
   # @attr [Random] ran, variable for generation of random numbers
-  @ran = Random.new
+  # ran = Random.new
 
   # @param [Hash] input, hash list for construction parameters
   def initialize(**input)
@@ -56,17 +51,26 @@ class BaseGA
 
   # Roulette selection operation method
   # @return [void]
-  def roulette_select
+  def roulette_select # This method can be optimize
     pp "=> roulette selection"
-    @ran = Random.new
+    fail "pop size incorrect, expected #{pop_size} found #{@chromosomes.size}" unless @pop_size == @chromosomes.size
+    # ran = Random.new # Dismiss the use of attribute
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
                                   is_negative_fit: @is_negative_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
-    (0...@pop_size).each do
-      r = @ran.rand(1.0)
-      copied_chromosomes.each_index do |i|
-        @chromosomes << copied_chromosomes[i] if r < copied_chromosomes[i].prob
+    r = Random.rand(1.0)
+    rejected_chromosomes = []
+    (0...@pop_size).each do |i|
+      if r < copied_chromosomes[i].prob # This validation here, can be optimize
+        @chromosomes << copied_chromosomes[i]
+      else
+        rejected_chromosomes << copied_chromosomes[i]
       end
     end
+    fail "pop size after selection incorrect, expected #{@chromosomes.size} <= #{pop_size}" unless @pop_size >= @chromosomes.size
+    selected_offset = @chromosomes.size
+    # selected_offset -= 1
+    @chromosomes += rejected_chromosomes
+    selected_offset
   end
 end

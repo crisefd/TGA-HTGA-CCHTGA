@@ -55,19 +55,15 @@ module Roulette
                    # probability
                    # in the population
 
-    best_fit = nil # Only used if is_high_fit is false
+    max_fit = nil # use only  for minimization (is_high_fit=false)
 
-    # Get fitness sum and best fitness
+    # Get fitness sum and maximum fitness
     chromosomes.each do |chromosome|
       fit_sum += chromosome.fitness
-      if is_high_fit
-        best_fit = chromosome.fitness if best_fit.nil? || chromosome.fitness > best_fit
-      else
-        best_fit = chromosome.fitness if best_fit.nil? || chromosome.fitness < best_fit
-      end
+      max_fit = chromosome.fitness if max_fit.nil? || chromosome.fitness > max_fit
     end
 
-    best_fit += 1 # So that we don't get best_fit=0
+    max_fit += 1 # So that we don't get best_fit=0
 
     # Get probabilities
     chromosomes.each_index do |i|
@@ -75,9 +71,10 @@ module Roulette
       if is_high_fit
         chromosomes[i].prob = prob_sum + (f / fit_sum)
       else
-        chromosomes[i].prob = (f != 0) ? (prob_sum + ((best_fit - f) / fit_sum)) : 0.0
+        chromosomes[i].prob = (f != 0) ? (prob_sum + ((max_fit - f) / fit_sum)) : 0.0
       end
-      prob_sum = chromosomes[i].prob
+      fail 'negative probability' unless chromosomes[i].prob >= 0
+      prob_sum += chromosomes[i].prob
     end
     # Ensure that the last individual' probability is 1.0
     chromosomes.last.prob = 1.0
