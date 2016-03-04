@@ -33,11 +33,8 @@ class BaseGA
   attr_reader :generation
   # @attr [Integer] max_generation, the maximum allow number of generations
   attr_writer :max_generation
-
+  # @attr [Integer] num_genes, the length of the chromosomes
   attr_accessor :num_genes
-
-  # @attr [Random] ran, variable for generation of random numbers
-  # ran = Random.new
 
   # @param [Hash] input, hash list for construction parameters
   def initialize(**input)
@@ -52,11 +49,10 @@ class BaseGA
   # Roulette selection operation method
   # @return [void]
   def roulette_select # This method can be optimize
-    pp "=> roulette selection"
+    pp '=> roulette selection'
     fail "pop size incorrect, expected #{pop_size} found #{@chromosomes.size}" unless @pop_size == @chromosomes.size
-    # ran = Random.new # Dismiss the use of attribute
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
-                                  is_negative_fit: @is_negative_fit
+                                      is_negative_fit: @is_negative_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
     r = Random.rand(1.0)
     rejected_chromosomes = []
@@ -69,8 +65,7 @@ class BaseGA
     end
     fail "pop size after selection incorrect, expected #{@chromosomes.size} <= #{pop_size}" unless @pop_size >= @chromosomes.size
     selected_offset = @chromosomes.size
-    # selected_offset -= 1
-    @chromosomes += rejected_chromosomes
+    @chromosomes += rejected_chromosomes.reverse!
     selected_offset
   end
 end

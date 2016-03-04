@@ -147,8 +147,7 @@ class HTGA < BaseGA
   # Method to perform crossover operation over chromosomes
   # @return [void]
   def cross_individuals(selected_offset)
-    pp "=> crossing individuals"
-    # ran = Random.new
+    pp '=> crossing individuals'
     m = selected_offset
     m += 1 if m == 1
     (0...m).each do |x|
@@ -174,8 +173,7 @@ class HTGA < BaseGA
   # Method to perform mutation operation over the chromosomes
   # @return [void]
   def mutate_individuals
-    pp "=> mutating individuals"
-    # ran = Random.new
+    pp '=> mutating individuals'
     m = @chromosomes.size
     (0...m).each do
       r = Random.rand(1.0)
@@ -186,8 +184,9 @@ class HTGA < BaseGA
     end
   end
 
+  # Recalculate the fitness values
+  # @return [void]
   def recalculate_fitness
-    # recalculate the fitness values
     @chromosomes.map! do |chromosome|
       chromosome.fitness = @selected_func.call chromosome
       chromosome
@@ -231,6 +230,7 @@ class HTGA < BaseGA
   # Auxiliar method for #select_taguchi_array, it loads the array from a file
   # @param [String] filename, the name of the file which contains the array
   # @param [Integer] chrom_size, the number of variables of the function
+  # @return [void]
   def load_array_from_file(filename)
     @taguchi_array = []
     path_to_file = File.join(File.dirname(__FILE__), '..',
@@ -245,6 +245,7 @@ class HTGA < BaseGA
   # Method to generate the optimal crossovered chromosome
   # @param [Chromosome] chromosome_x, the first chromosome
   # @param [Chromosome] chromosome_y, the second chromosome
+  # @return [Chromosome] the optimal chromosome
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
     optimal_chromosome = Chromosome.new
     experimental_matrix = generate_experimental_matrix chromosome_x,
@@ -252,7 +253,7 @@ class HTGA < BaseGA
     # Calculate fitness and SNR values
     experimental_matrix.each_index do |i|
       # experimental_matrix[i].fitness = @selected_func.call experimental_matrix[i]
-      HTGA.calculate_snr experimental_matrix[i]
+      HTGA.calculate_snr experimental_matrix[i], smaller_the_better: !@is_high_fit
     end
     # Calculate the effects of the various factors
     (0...experimental_matrix[0].size).each do |j|
@@ -279,7 +280,7 @@ class HTGA < BaseGA
 
   def generate_offspring_by_taguchi_method
     expected_number = 0.5 * @pop_size * @cross_rate
-    pp "=> generate_offspring_by_taguchi_method"
+    pp '=> generate_offspring_by_taguchi_method'
     pp "expected_number #{expected_number}"
     n = 0
     m = @chromosomes.size
@@ -322,8 +323,7 @@ class HTGA < BaseGA
   # Method to generate the initial population of chromosomes
   # @return [void]
   def init_population
-    pp "initializing population"
-    # ran = Random.new
+    pp "=>initializing population"
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
