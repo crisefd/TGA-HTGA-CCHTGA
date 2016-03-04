@@ -54,7 +54,7 @@ class HTGA < BaseGA
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation <= @max_generation
-         break if @chromosomes[0].fitness <= 0.001
+        break if @chromosomes[0].fitness <= 0.001
         p "GENERATION #{@generation}" if @generation % 10 == 0
         roulette_select
         cross_individuals
@@ -65,7 +65,7 @@ class HTGA < BaseGA
         p "best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
         if prev_best_fit == @chromosomes[0].fitness
           t += 1
-         if  t >= 10
+          if  t >= 10
             p "PREMATURE CONVERGENCE DETECTED "
             p "population: #{@chromosomes[0, 3]} "
             break
@@ -159,14 +159,14 @@ class HTGA < BaseGA
   # @return [void]
   def cross_individuals
     pp "=> crossing individuals"
-    m = @pop_size
+    m = @chromosomes.size
     (0...m).each do |x|
-      # r = @ran.rand(1.0)
-      r = @chromosomes[x].prob
+      r = @ran.rand(1.0)
+      # r = @chromosomes[x].prob
       next if r > @cross_rate
       (0...m).each do |y|
-        # x = rand(0...m)
-        s = @chromosomes[y].prob
+        s = @ran.rand(1.0)
+        # s = @chromosomes[y].prob
         next if s > @cross_rate || x == y
         new_chrom_x, new_chrom_y =
                        HTGA.crossover(chromosome_x: @chromosomes[x].clone,
