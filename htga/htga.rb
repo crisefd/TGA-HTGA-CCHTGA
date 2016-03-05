@@ -70,6 +70,7 @@ class HTGA < BaseGA
         @generation += 1
       end
       p '==================OUTPUT===================='
+      p "generations #{@generation}"
       p "first chromosome of last gen #{@chromosomes[0]}"
       p "first fitness of last gen #{@chromosomes[0].fitness}"
       p "best fitness #{best_fit}"
@@ -353,9 +354,10 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   dim = 30
-  htga = HTGA.new values: 'uniform distribution',
-                  upper_bounds: Array.new(dim, 1.28),
-                  lower_bounds: Array.new(dim, -1.28),
+  bound = 1.28
+  htga = HTGA.new values: 'discrete',
+                  upper_bounds: Array.new(dim, bound),
+                  lower_bounds: Array.new(dim, -1 * bound),
                   pop_size: 200,
                   cross_rate: 0.1,
                   mut_rate: 0.02,
