@@ -35,6 +35,7 @@ class HTGA < BaseGA
     @continuous = input[:continuous]
     input[:selected_func] = 0 if input[:selected_func].nil?
     @selected_func = TEST_FUNCTIONS[input[:selected_func] - 1]
+    @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
     @is_negative_fit = input[:is_negative_fit]
     @is_high_fit = input[:is_high_fit]
     @is_negative_fit = false if @is_negative_fit.nil?
@@ -45,24 +46,21 @@ class HTGA < BaseGA
   # Main method for the HTGA
   def execute
     @generation = 1
-    t = 0
-    prev_best_fit = 0
     init_time = Time.now
     begin
       init_population
-      p "population initialized"
+      p 'population initialized'
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation <= @max_generation
-        break if @chromosomes[0].fitness == 0.0
-        p "GENERATION #{@generation}" if @generation % 10 == 0
         selected_offset = roulette_select
         cross_individuals selected_offset
         generate_offspring_by_taguchi_method
         mutate_individuals
         recalculate_fitness
         select_next_generation
-        p "best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
+        p "GENERATION #{@generation} best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
+        break if @chromosomes.first.fitness == @optimal_func_val
         @generation += 1
       end
       p '==================OUTPUT===================='
