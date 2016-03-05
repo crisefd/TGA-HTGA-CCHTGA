@@ -74,7 +74,7 @@ module Roulette
         chromosomes[i].prob = (f != 0) ? (prob_sum + ((max_fit - f) / fit_sum)) : 0.0
       end
       fail 'negative probability' unless chromosomes[i].prob >= 0
-      prob_sum += chromosomes[i].prob
+      prob_sum = chromosomes[i].prob
     end
     # Ensure that the last individual' probability is 1.0
     chromosomes.last.prob = 1.0

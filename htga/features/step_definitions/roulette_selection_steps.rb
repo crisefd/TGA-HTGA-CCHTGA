@@ -17,7 +17,7 @@ Given(/^the positive fitness values of some chromosomes:$/) do |table|
 end
 
 When(/^I execute the roulette selection operation for maximization of positive fitness values$/) do
-  Roulette.calc_probs(@chromosomes, is_negative_fit: false)
+  Roulette.calc_probs @chromosomes, is_negative_fit: false
 end
 
 Then(/^The calculated probabilities must be:$/) do |table|
@@ -26,6 +26,7 @@ Then(/^The calculated probabilities must be:$/) do |table|
   i = 0
   table.each do |item|
     expect(@chromosomes[i].prob.round(10)).to eq(item.to_f.round(10))
+    # p "expected #{@chromosomes.prob.round(10)} calculated #{item.to_f.round(10)}"
     i += 1
   end
 end
