@@ -27,6 +27,8 @@ class BaseGA
   attr_accessor :chromosomes
   # @attr [Proc] selected_func, the selected function to optimize
   attr_writer :selected_func
+  # @attr [Float], the optimal function value for the selected function
+  attr_writer :optimal_func_val
   # @attr [Boolean] is_high_fit, a flag indicating if what is sought is a high fitness
   attr_writer :is_high_fit
   # @attr [Integer] generation, the counting variables of the number of generations

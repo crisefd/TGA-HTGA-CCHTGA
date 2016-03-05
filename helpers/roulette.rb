@@ -40,7 +40,6 @@ module Roulette
   # numbers, you will have to normalize the population first before using
   # this.
   # @param [Array<Chromosome>] chromosomes, list of chromosomes
-  # @param [Boolean] pop_fit, array of each individual's fitness in the population
   # @param [Boolean] is_high_fit, true if high fitness is best or false if low fitness is best
   # @param [Boolean] is_negative_fit, true if there are negative fitness and false otherwise
   # @return [void]
@@ -63,7 +62,7 @@ module Roulette
       max_fit = chromosome.fitness if max_fit.nil? || chromosome.fitness > max_fit
     end
 
-    max_fit += 1 # So that we don't get best_fit=0
+    max_fit += 1 # So that we don't get max_fit=0
 
     # Get probabilities
     chromosomes.each_index do |i|
