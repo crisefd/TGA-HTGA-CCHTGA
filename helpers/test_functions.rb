@@ -80,7 +80,9 @@ module TestFunctions
     lambda do |x| # function 11
       x.inject(0){ |sum, xi| sum + xi**2 }
     end,
-    nil, # function 12
+    lambda do |x| # function 12
+      x.inject(0){ |sum, xi| sum + xi**4 + rand(0...10) / 10.0 }
+    end,
     nil, # function 13
     nil, # function 14
     nil # function 15

@@ -46,6 +46,7 @@ class HTGA < BaseGA
   # Main method for the HTGA
   def execute
     @generation = 1
+    best_fit = nil
     init_time = Time.now
     begin
       init_population
@@ -59,13 +60,19 @@ class HTGA < BaseGA
         mutate_individuals
         recalculate_fitness
         select_next_generation
-        p "GENERATION #{@generation} best fitness #{@chromosomes[0].fitness}" if @generation % 10 == 0
+        p "GENERATION #{@generation} fitness #{@chromosomes.first.fitness}" if @generation % 10 == 0
+        if @is_high_fit
+          best_fit = @chromosomes.first.fitness if best_fit.nil? || @chromosomes.first.fitness > best_fit
+        else
+          best_fit = @chromosomes.first.fitness if best_fit.nil? || @chromosomes.first.fitness < best_fit
+        end
         break if @chromosomes.first.fitness == @optimal_func_val
         @generation += 1
       end
       p '==================OUTPUT===================='
-      p "optimal chromosome #{@chromosomes[0]}"
-      p "optimal fitness #{@chromosomes[0].fitness}"
+      p "first chromosome of last gen #{@chromosomes[0]}"
+      p "first fitness of last gen #{@chromosomes[0].fitness}"
+      p "best fitness #{best_fit}"
       p "function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @generation}"
       p "Execution time (seconds): #{Time.now - init_time}"
     rescue StandardError => error
@@ -347,14 +354,14 @@ end
 if __FILE__ == $PROGRAM_NAME
   dim = 30
   htga = HTGA.new values: 'uniform distribution',
-                  upper_bounds: Array.new(dim, 100),
-                  lower_bounds: Array.new(dim, -100),
+                  upper_bounds: Array.new(dim, 1.28),
+                  lower_bounds: Array.new(dim, -1.28),
                   pop_size: 200,
                   cross_rate: 0.1,
                   mut_rate: 0.02,
                   num_genes: dim,
                   continuous: true,
-                  selected_func: 11,
+                  selected_func: 12,
                   is_negative_fit: false,
                   is_high_fit: false,
                   max_generation: 1000
