@@ -41,6 +41,11 @@ class HTGA < BaseGA
     @is_negative_fit = false if @is_negative_fit.nil?
     @is_high_fit = false if @is_high_fit.nil?
     @max_generation = input[:max_generation]
+    @num_evaluations = 0
+    @num_evals_taguchi = 0
+    @num_evals_init_pop  = 0
+    @num_evals_cross = 0
+    @num_evals_mut = 0
   end
 
   # Main method for the HTGA
@@ -58,7 +63,6 @@ class HTGA < BaseGA
         cross_individuals selected_offset
         generate_offspring_by_taguchi_method
         mutate_individuals
-        recalculate_fitness
         select_next_generation
         p "GENERATION #{@generation} fitness #{@chromosomes.first.fitness}" if @generation % 10 == 0
         if @is_high_fit
@@ -71,10 +75,15 @@ class HTGA < BaseGA
       end
       p '==================OUTPUT===================='
       p "generations #{@generation}"
-      p "first chromosome of last gen #{@chromosomes[0]}"
+      # p "first chromosome of last gen #{@chromosomes[0]}"
       p "first fitness of last gen #{@chromosomes[0].fitness}"
       p "best fitness #{best_fit}"
-      p "function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @generation}"
+      p "expected number of function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @generation}"
+      p "function evaluations #{@num_evaluations}"
+      p "cross evals #{@num_evals_cross}"
+      p "mut evals #{@num_evals_mut}"
+      p "init pop evals #{@num_evals_init_pop}"
+      p "taguchi evals #{@num_evals_taguchi}"
       p "Execution time (seconds): #{Time.now - init_time}"
     rescue StandardError => error
       p error.message
@@ -150,6 +159,11 @@ class HTGA < BaseGA
     end
   end
 
+  def evaluate_chromosome(chromosome)
+    chromosome.fitness = @selected_func.call chromosome
+    @num_evaluations += 1
+  end
+
   # Method to perform crossover operation over chromosomes
   # @return [void]
   def cross_individuals(selected_offset)
@@ -170,7 +184,10 @@ class HTGA < BaseGA
                                       upper_bounds: @upper_bounds,
                                       lower_bounds: @lower_bounds,
                                       continuous: @continuous)
+        evaluate_chromosome new_chrom_x
+        evaluate_chromosome new_chrom_y
         @chromosomes << new_chrom_x << new_chrom_y
+        @num_evals_cross += 2
         break
       end
     end
@@ -186,18 +203,13 @@ class HTGA < BaseGA
       next if r > @mut_rate
       x = rand(0...m)
       new_chrom = HTGA.mutate @chromosomes[x].clone, continuous: @continuous
+      evaluate_chromosome new_chrom
       @chromosomes << new_chrom
+      @num_evals_mut += 1
     end
   end
 
-  # Recalculate the fitness values
-  # @return [void]
-  def recalculate_fitness
-    @chromosomes.map! do |chromosome|
-      chromosome.fitness = @selected_func.call chromosome
-      chromosome
-    end
-  end
+
 
   # Method that select the best M chromosomes for the next generation
   # @return [void]
@@ -279,7 +291,7 @@ class HTGA < BaseGA
       end
     end
     # Find the optimal fitness value
-    optimal_chromosome.fitness = @selected_func.call optimal_chromosome
+    evaluate_chromosome optimal_chromosome
     # Return the optimal chromosome
     optimal_chromosome
   end
@@ -298,6 +310,7 @@ class HTGA < BaseGA
         chromosome_x = @chromosomes[x]
         chromosome_y = @chromosomes[y]
         opt_chromosome = generate_optimal_chromosome chromosome_x, chromosome_y
+        @num_evals_taguchi += 1
         @chromosomes << opt_chromosome
         break
       end
@@ -346,7 +359,8 @@ class HTGA < BaseGA
           chromosome << gene.floor
         end
       end
-      chromosome.fitness = @selected_func.call chromosome.clone
+      evaluate_chromosome chromosome
+      @num_evals_init_pop += 1
       @chromosomes << chromosome
     end
   end
@@ -354,7 +368,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   dim = 30
-  bound = 1.28
+  bound = 100
   htga = HTGA.new values: 'discrete',
                   upper_bounds: Array.new(dim, bound),
                   lower_bounds: Array.new(dim, -1 * bound),
@@ -363,7 +377,7 @@ if __FILE__ == $PROGRAM_NAME
                   mut_rate: 0.02,
                   num_genes: dim,
                   continuous: true,
-                  selected_func: 12,
+                  selected_func: 11,
                   is_negative_fit: false,
                   is_high_fit: false,
                   max_generation: 1000
