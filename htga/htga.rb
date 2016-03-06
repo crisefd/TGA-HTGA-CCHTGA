@@ -42,10 +42,6 @@ class HTGA < BaseGA
     @is_high_fit = false if @is_high_fit.nil?
     @max_generation = input[:max_generation]
     @num_evaluations = 0
-    @num_evals_taguchi = 0
-    @num_evals_init_pop  = 0
-    @num_evals_cross = 0
-    @num_evals_mut = 0
   end
 
   # Main method for the HTGA
@@ -76,15 +72,10 @@ class HTGA < BaseGA
       p '==================OUTPUT===================='
       p "generations #{@generation}"
       # p "first chromosome of last gen #{@chromosomes[0]}"
-      p "first fitness of last gen #{@chromosomes[0].fitness}"
-      p "best fitness #{best_fit}"
+      p "best fitness of last gen #{@chromosomes[0].fitness}"
+      p "best fitness overall #{best_fit}"
       p "expected number of function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @generation}"
       p "function evaluations #{@num_evaluations}"
-      p "cross evals #{@num_evals_cross}"
-      p "mut evals #{@num_evals_mut}"
-      p "init pop evals #{@num_evals_init_pop}"
-      p "taguchi evals #{@num_evals_taguchi}"
-      p "Execution time (seconds): #{Time.now - init_time}"
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
@@ -170,28 +161,27 @@ class HTGA < BaseGA
     pp '=> crossing individuals'
     m = selected_offset
     m += 1 if m == 1
-    (0...m).each do |x|
+    (0...m).each do
       r = Random.rand(1.0)
-      # r = @chromosomes[x].prob
-      next if r > @cross_rate
-      (0...m).each do |y|
-        s = Random.rand(1.0)
-        # s = @chromosomes[y].prob
-        next if s > @cross_rate || x == y
-        new_chrom_x, new_chrom_y =
-                       HTGA.crossover(chromosome_x: @chromosomes[x].clone,
-                                      chromosome_y: @chromosomes[y].clone,
-                                      upper_bounds: @upper_bounds,
-                                      lower_bounds: @lower_bounds,
-                                      continuous: @continuous)
-        evaluate_chromosome new_chrom_x
-        evaluate_chromosome new_chrom_y
-        @chromosomes << new_chrom_x << new_chrom_y
-        @num_evals_cross += 2
-        break
+      x = -1
+      y = -1
+      loop do
+        x = rand(0...m)
+        y = rand(0...m)
+        break if x != y
       end
+      next if r > @cross_rate
+      new_chrom_x, new_chrom_y =
+                     HTGA.crossover(chromosome_x: @chromosomes[x].clone,
+                                    chromosome_y: @chromosomes[y].clone,
+                                    upper_bounds: @upper_bounds,                                      lower_bounds: @lower_bounds,
+                                    continuous: @continuous)
+      evaluate_chromosome new_chrom_x
+      evaluate_chromosome new_chrom_y
+      @chromosomes << new_chrom_x << new_chrom_y
     end
   end
+
 
   # Method to perform mutation operation over the chromosomes
   # @return [void]
@@ -205,7 +195,6 @@ class HTGA < BaseGA
       new_chrom = HTGA.mutate @chromosomes[x].clone, continuous: @continuous
       evaluate_chromosome new_chrom
       @chromosomes << new_chrom
-      @num_evals_mut += 1
     end
   end
 
@@ -310,7 +299,6 @@ class HTGA < BaseGA
         chromosome_x = @chromosomes[x]
         chromosome_y = @chromosomes[y]
         opt_chromosome = generate_optimal_chromosome chromosome_x, chromosome_y
-        @num_evals_taguchi += 1
         @chromosomes << opt_chromosome
         break
       end
@@ -360,7 +348,6 @@ class HTGA < BaseGA
         end
       end
       evaluate_chromosome chromosome
-      @num_evals_init_pop += 1
       @chromosomes << chromosome
     end
   end
@@ -368,7 +355,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   dim = 30
-  bound = 100
+  bound = 1.28
   htga = HTGA.new values: 'discrete',
                   upper_bounds: Array.new(dim, bound),
                   lower_bounds: Array.new(dim, -1 * bound),
@@ -377,7 +364,7 @@ if __FILE__ == $PROGRAM_NAME
                   mut_rate: 0.02,
                   num_genes: dim,
                   continuous: true,
-                  selected_func: 11,
+                  selected_func: 12,
                   is_negative_fit: false,
                   is_high_fit: false,
                   max_generation: 1000
