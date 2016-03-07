@@ -33,7 +33,7 @@ class TGA << BaseGA
 
   #Main methon for TGA
 
-  def exec
+  def execute
     @generation = 1
     best_fit = nil
     init_time = Time.now
