@@ -4,7 +4,6 @@
 # author: Cristhian Fuertes & Oscar Tigreros
 # email:  cristhian.fuertes@correounivalle.edu.co
 # creation date: 2015-15-11
-
 require 'rubygems'
 require 'bundler/setup'
 
@@ -21,7 +20,7 @@ module Roulette
     least_fit = (chromosomes.min_by(&:fitness)).fitness
     chromosomes.map! do |chromosome|
       if chromosome.fitness != 0
-        chromosome.fitness += least_fit * -1 # Correct?
+        chromosome.norm_fitness = chromosome.fitness + least_fit * -1 # Correct?
       end
       chromosome
     end
@@ -58,19 +57,34 @@ module Roulette
 
     # Get fitness sum and maximum fitness
     chromosomes.each do |chromosome|
-      fit_sum += chromosome.fitness
-      max_fit = chromosome.fitness if max_fit.nil? || chromosome.fitness > max_fit
+      if is_negative_fit
+        fit_sum += chromosome.norm_fitness
+        max_fit = chromosome.norm_fitness if max_fit.nil? || chromosome.norm_fitness > max_fit
+      else
+        fit_sum += chromosome.fitness
+        max_fit = chromosome.fitness if max_fit.nil? || chromosome.fitness > max_fit
+      end
+
     end
 
     max_fit += 1 # So that we don't get max_fit=0
 
     # Get probabilities
     chromosomes.each_index do |i|
-      f = chromosomes[i].fitness
-      if is_high_fit
-        chromosomes[i].prob = prob_sum + (f / fit_sum)
+      if is_negative_fit
+        f = chromosomes[i].norm_fitness
+        if is_high_fit
+          chromosomes[i].prob = prob_sum + (f / fit_sum)
+        else
+          chromosomes[i].prob = (f != 0) ? (prob_sum + ((max_fit - f) / fit_sum)) : 0.0
+        end
       else
-        chromosomes[i].prob = (f != 0) ? (prob_sum + ((max_fit - f) / fit_sum)) : 0.0
+        f = chromosomes[i].fitness
+        if is_high_fit
+          chromosomes[i].prob = prob_sum + (f / fit_sum)
+        else
+          chromosomes[i].prob = (f != 0) ? (prob_sum + ((max_fit - f) / fit_sum)) : 0.0
+        end
       end
       fail 'negative probability' unless chromosomes[i].prob >= 0
       prob_sum = chromosomes[i].prob
