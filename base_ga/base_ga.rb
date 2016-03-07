@@ -70,4 +70,28 @@ class BaseGA
     @chromosomes += rejected_chromosomes.reverse!
     selected_offset
   end
+  # Method to generate the initial population of chromosomes
+  # @return [void]
+  def init_population
+    pp "=>initializing population"
+    (0...@pop_size).each do
+      chromosome = Chromosome.new
+      (0...@num_genes).each do |i|
+        if @values == 'discrete'
+          beta = (Array.new(11) { |k| k / 10.0 }).sample
+        elsif @values == 'uniform distribution'
+          beta = Random.rand(1.0)
+        end
+        gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
+                                                 @lower_bounds[i])
+        if @continuous
+          chromosome << gene
+        else
+          chromosome << gene.floor
+        end
+      end
+      evaluate_chromosome chromosome
+      @chromosomes << chromosome
+    end
+  end
 end
