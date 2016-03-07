@@ -42,4 +42,8 @@ class TGA << BaseGA
     end
   end
 
-  def 
+#Method to generate the initial population
+#@rertun [void]
+  def ama
+
+    end
