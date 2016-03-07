@@ -36,11 +36,9 @@ module TestFunctions
 
   TEST_FUNCTIONS = [
     lambda do |x| # function 1
-      r = 0.0
-      x.each_index do |i|
-        r += -1 * x[i] * Math.sin(Math.sqrt(radians(x[i].abs)))
+      x.inject(0) do |sum, xi|
+        sum + -1 * xi * Math.sin(Math.sqrt(xi.abs))
       end
-      r
     end,
     lambda do |x| # function 2
       r = 0.0

@@ -52,6 +52,7 @@ class HTGA < BaseGA
     begin
       init_population
       p 'population initialized'
+      p @chromosomes.first
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation <= @max_generation
@@ -76,6 +77,7 @@ class HTGA < BaseGA
       p "best fitness overall #{best_fit}"
       p "expected number of function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @generation}"
       p "function evaluations #{@num_evaluations}"
+      p "Execution time (seconds): #{Time.now - init_time}"
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
@@ -355,7 +357,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   dim = 30
-  bound = 1.28
+  bound = 500
   htga = HTGA.new values: 'discrete',
                   upper_bounds: Array.new(dim, bound),
                   lower_bounds: Array.new(dim, -1 * bound),
@@ -364,10 +366,10 @@ if __FILE__ == $PROGRAM_NAME
                   mut_rate: 0.02,
                   num_genes: dim,
                   continuous: true,
-                  selected_func: 12,
-                  is_negative_fit: false,
+                  selected_func: 1,
+                  is_negative_fit: true,
                   is_high_fit: false,
-                  max_generation: 1000
+                  max_generation: 10000
 
   htga.execute
 
