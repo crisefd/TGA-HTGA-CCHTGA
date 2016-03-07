@@ -6,6 +6,7 @@
 #        oscar.tigreros@correounivalle.edu.co
 # Creation date: 2015-10-05
 
+
 require 'rubygems'
 require 'bundler/setup'
 
@@ -15,6 +16,8 @@ require 'bundler/setup'
 class Chromosome < Array
   # @attr [Float] fitness, the fitness value for the chromosome
   attr_accessor :fitness
+
+  attr_accessor :norm_fitness
   # @attr [Float] prob, the probability value for the chromosome
   attr_accessor :prob
   # @attr [Float] snr, the value of the SNR
