@@ -33,11 +33,9 @@ class TGA << BaseGA
 
   #Main methon for TGA
 
-<<<<<<< HEAD
+
   def execute
-=======
-  def exec
->>>>>>> bee90bbcd820e829f658386fb939301dc2fe1352
+
     @generation = 1
     best_fit = nil
     init_time = Time.now
