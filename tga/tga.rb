@@ -47,7 +47,7 @@ class TGA << BaseGA
 
 #Method to select chromosomes by tournamet default  k=2
 #@rertun [void]
-  def tournamet
+  def tournament
     k = 2
     temp_k = k
     mating_pool = []
@@ -78,14 +78,11 @@ class TGA << BaseGA
     mating_pool
   end
 
+end
 
 
+if __FILE__ == $PROGRAM_NAME
 
-
-
-
-
-
-
-
+  tga = TGA.new
+  tga.execute
 end
