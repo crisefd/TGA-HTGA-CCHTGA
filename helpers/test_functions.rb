@@ -86,7 +86,13 @@ module TestFunctions
       sum * -1
     end,
     nil, # function 8
-    nil, # function 9
+    lambda do |x| # function 9
+      sum = 0.0
+      x.each do |xi|
+        sum += xi**4 - 16 * xi**2 + 5 * xi
+      end
+      sum * 1.0 / x.size
+    end,
     nil, # function 10
     lambda do |x| # function 11
       sum = 0.0
