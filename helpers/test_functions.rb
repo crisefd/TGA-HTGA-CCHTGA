@@ -36,22 +36,26 @@ module TestFunctions
 
   TEST_FUNCTIONS = [
     lambda do |x| # function 1
-      x.inject(0) do |sum, xi|
-        sum + -1 * xi * Math.sin(Math.sqrt(xi.abs))
+      sum = 0.0
+      x.each do |xi|
+        sum += -1 * xi * Math.sin(Math.sqrt(xi.abs))
       end
+      sum
     end,
     lambda do |x| # function 2
-      x.inject(0)do |sum, xi|
-        sum + xi**2 -10 * Math.cos(2 * Math::PI * xi) + 10
+      sum = 0.0
+      x.each do |xi|
+        sum += xi**2 -10 * Math.cos(2 * Math::PI * xi) + 10
       end
+      sum
     end,
 
     lambda do |x| # function 3
       sum_square_x = 0.0
       sum_cos = 0.0
-      x.each_index do |i|
-        sum_square_x += x[i]**2
-        sum_cos += Math.cos(2 * Math::PI * x[i])
+      x.each do |xi|
+        sum_square_x += xi**2
+        sum_cos += Math.cos(2 * Math::PI * xi)
       end
       sum_square_x *= 1.0 / x.size
       sum_cos *= 1.0 / x.size
@@ -65,7 +69,7 @@ module TestFunctions
       i = 1
       x.each do |xi|
         sum += xi**2
-        prod *= (Math.cos(xi / Math.sqrt(i)) + 1)
+        prod *= (Math.cos(xi / Math.sqrt(i)) + 1) # Correct ?
         i += 1
       end
       ((1.0 / 4000) * sum) - prod
@@ -74,22 +78,39 @@ module TestFunctions
     nil, # function 6
     lambda do |x| # function 7
       i = 1
-      r = x.inject(0) do |sum, xi|
-        sum + Math.sin(xi) * (Math.sin(i * xi**2 / Math::PI))**2
+      sum = 0.0
+      x.each do |xi|
+        sum += Math.sin(xi) * Math.sin(i * xi**2 / Math::PI)**20
         i += 1
       end
-      r * -1
+      sum * -1
     end,
     nil, # function 8
     nil, # function 9
     nil, # function 10
     lambda do |x| # function 11
-      x.inject(0){ |sum, xi| sum + xi**2 }
+      sum = 0.0
+      x.each do |xi|
+        sum + xi**2
+      end
+      sum
     end,
     lambda do |x| # function 12
-      x.inject(0){ |sum, xi| sum + xi**4 + rand(0...10) / 10.0 }
+      sum = 0.0
+      x.each do |xi|
+        sum += xi**4 + rand(0...10) / 10.0
+      end
+      sum
     end,
-    nil, # function 13
+    lambda do |x| # function 13
+      sum = 0.0
+      prod = 0.0
+      x.each do |xi|
+        sum += xi.abs
+        prod *= xi.abs
+      end
+      sum + prod
+    end,
     nil, # function 14
     nil # function 15
 

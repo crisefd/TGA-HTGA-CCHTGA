@@ -364,18 +364,18 @@ class HTGA < BaseGA
 end
 
 if __FILE__ == $PROGRAM_NAME
-  dim = 100
-  bound = 600.0
+  dim = 30
+  bound = 10.0
   htga = HTGA.new values: 'discrete',
-                  upper_bounds: Array.new(dim, Math::PI),
-                  lower_bounds: Array.new(dim, 0.0),
+                  upper_bounds: Array.new(dim, bound),
+                  lower_bounds: Array.new(dim, -1 * bound),
                   pop_size: 200,
                   cross_rate: 0.1,
                   mut_rate: 0.02,
                   num_genes: dim,
                   continuous: true,
-                  selected_func: 7,
-                  is_negative_fit: true,
+                  selected_func: 13,
+                  is_negative_fit: false,
                   is_high_fit: false,
                   max_generation: 10000
 
