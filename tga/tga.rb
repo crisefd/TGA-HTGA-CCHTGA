@@ -41,6 +41,7 @@ class TGA << BaseGA
     init_time = Time.now
     begin
       init_population
+      tournamet
     end
   end
 
@@ -73,6 +74,8 @@ class TGA << BaseGA
             temp_k += 1
       break if temp_k <= 0
     end
+    #return the chromosomes to mutate and cross
+    mating_pool
   end
 
 
