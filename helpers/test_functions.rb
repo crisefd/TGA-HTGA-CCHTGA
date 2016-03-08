@@ -17,7 +17,7 @@ module TestFunctions
   public
 
   OPTIMAL_FUNCTION_VALUES = [
-    -125_69.5, # value 1
+    -125_69.4600, # value 1
     0, # value 2
     0, # value 3
     0, # value 4
@@ -41,11 +41,9 @@ module TestFunctions
       end
     end,
     lambda do |x| # function 2
-      r = 0.0
-      x.each_index do |i|
-        r += x[i]**2 * -10 * Math.cos(radians(2 * Math::PI * x[i])) + 10
+      x.inject(0)do |sum, xi|
+        sum + xi**2 -10 * Math.cos(2 * Math::PI * xi) + 10
       end
-      r
     end,
 
     lambda do |x| # function 3
@@ -53,21 +51,31 @@ module TestFunctions
       sum_cos = 0.0
       x.each_index do |i|
         sum_square_x += x[i]**2
-        sum_cos += Math.cos(radians(2 * Math::PI * x[i]))
+        sum_cos += Math.cos(2 * Math::PI * x[i])
       end
       sum_square_x *= 1.0 / x.size
       sum_cos *= 1.0 / x.size
-      left_term = -20 * Math.exp(-0.2 * Math.sqrt(sum_square_x))
-      right_term = -1 * Math.exp(sum_cos)
-      left_term + right_term
+      first_term = -20 * Math.exp(-0.2 * Math.sqrt(sum_square_x))
+      second_term = -1 * Math.exp(sum_cos)
+      first_term + second_term + 20 + Math.exp(1)
     end,
-    nil, # function 4
+    lambda do |x| # function 4
+      sum = 0.0
+      prod = 0.0
+      i = 1
+      x.each do |xi|
+        sum += xi**2
+        prod *= (Math.cos(xi / Math.sqrt(i)) + 1)
+        i += 1
+      end
+      ((1.0 / 4000) * sum) - prod
+    end,
     nil, # function 5
     nil, # function 6
     lambda do |x| # function 7
       i = 1
       r = x.inject(0) do |sum, xi|
-        sum + Math.sin(radians(xi)) * (Math.sin(radians(i * xi**2 / Math::PI)))**2
+        sum + Math.sin(xi) * (Math.sin(i * xi**2 / Math::PI))**2
         i += 1
       end
       r * -1

@@ -67,7 +67,8 @@ class HTGA < BaseGA
         else
           best_fit = @chromosomes.first.fitness if best_fit.nil? || @chromosomes.first.fitness < best_fit
         end
-        break if @chromosomes.first.fitness == @optimal_func_val
+        break if best_fit == @optimal_func_val
+        # break if fit_optimal? best_fit
         @generation += 1
       end
       p '==================OUTPUT===================='
@@ -83,6 +84,13 @@ class HTGA < BaseGA
       p error.backtrace.inspect
       exit
     end
+  end
+
+  def fit_optimal?(best_fit)
+    res = false
+    # s = (best_fit - @optimal_func_val).abs / (1.0 * @optimal_func_val.abs)
+    res = true if best_fit.round(2) == @optimal_func_val
+    res
   end
 
   # Crossover operator method use in HTGA
@@ -356,17 +364,17 @@ class HTGA < BaseGA
 end
 
 if __FILE__ == $PROGRAM_NAME
-  dim = 30
-  bound = 500
+  dim = 100
+  bound = 600.0
   htga = HTGA.new values: 'discrete',
-                  upper_bounds: Array.new(dim, bound),
-                  lower_bounds: Array.new(dim, -1 * bound),
+                  upper_bounds: Array.new(dim, Math::PI),
+                  lower_bounds: Array.new(dim, 0.0),
                   pop_size: 200,
                   cross_rate: 0.1,
                   mut_rate: 0.02,
                   num_genes: dim,
                   continuous: true,
-                  selected_func: 1,
+                  selected_func: 7,
                   is_negative_fit: true,
                   is_high_fit: false,
                   max_generation: 10000
