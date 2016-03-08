@@ -44,8 +44,45 @@ class TGA << BaseGA
     end
   end
 
-#Method to generate the initial population
+#Method to select chromosomes by tournamet default  k=2
 #@rertun [void]
-  def ama
-
+  def tournamet
+    k = 2
+    temp_k = k
+    mating_pool = []
+    x = -1
+    y = -1
+    prev_chromo = -1
+    loop do
+      temp_k -= 1
+      loop do
+          x = rand(0...m)
+          y = rand(0...m)
+          break if x != y
+        end
+        if ((@chromosomes[x] < @chromosomes[y]) && (y != prev_chromo))
+          mating_pool << @chromosomes[y]
+          prev_chromo = y
+        elsif((@chromosomes[y] < @chromosomes[x]) && (x != prev_chromo))
+          mating_pool << @chromosomes[x]
+          prev_chromo = x
+        else
+          if (temp_k += 1) > k
+            temp_k = k
+          else
+            temp_k += 1
+      break if temp_k <= 0
     end
+  end
+
+
+
+
+
+
+
+
+
+
+
+end
