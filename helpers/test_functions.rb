@@ -111,7 +111,17 @@ module TestFunctions
       end
       sum + prod
     end,
-    nil, # function 14
+    lambda do |x| # function 14
+      sum_i = 0.0
+      (0...x.size).each do |i|
+        sum_j = 0.0
+        (0...i).each do |j|
+          sum_j += x[j]
+        end
+        sum_i += sum_j**2
+      end
+      sum_i
+    end,
     lambda do |x| # function 15
       max = nil
       x.each do |xi|

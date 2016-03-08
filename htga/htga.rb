@@ -374,7 +374,7 @@ if __FILE__ == $PROGRAM_NAME
                   mut_rate: 0.02,
                   num_genes: dim,
                   continuous: true,
-                  selected_func: 15,
+                  selected_func: 14,
                   is_negative_fit: false,
                   is_high_fit: false,
                   max_generation: 10000
