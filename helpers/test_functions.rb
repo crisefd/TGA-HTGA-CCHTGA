@@ -112,7 +112,12 @@ module TestFunctions
       sum + prod
     end,
     nil, # function 14
-    nil # function 15
-
+    lambda do |x| # function 15
+      max = nil
+      x.each do |xi|
+        max = xi.abs if max.nil? || xi.abs > max
+      end
+      max
+    end
   ]
 end
