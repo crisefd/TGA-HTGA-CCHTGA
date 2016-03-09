@@ -26,7 +26,13 @@ module TestFunctions
     -99.2784, # value 7
     0, # value 8
     -78.33236, # value 9
-    0, # value 10
+    lambda do |x| # value 10
+      sum = 0.0
+      (0...(x.size - 1)).each do |j|
+        sum += 100.0 * (x[j]**2 - x[j + 1])**2 + (x[j] - 1)**2
+      end
+      sum
+    end,
     0, # value 11
     0, # value 12
     0, # value 13
