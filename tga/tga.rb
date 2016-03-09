@@ -28,7 +28,7 @@ class TGA << BaseGA
     @is_negative_fit = false if @is_negative_fit.nil?
     @is_high_fit = false if @is_high_fit.nil?
     @max_generation = input[:max_generation]
-    @num_evaluations = 0
+    
   end
 
   #Main methon for TGA
@@ -46,7 +46,7 @@ class TGA << BaseGA
   end
 
 #Method to select chromosomes by tournamet default  k=2
-#@rertun [void]
+# @return [void]
   def tournament
     k = 2
     temp_k = k
@@ -83,6 +83,13 @@ end
 
 if __FILE__ == $PROGRAM_NAME
 
-  tga = TGA.new
+  tga = TGA.new values: 'discrete',
+                  pop_size: 200,
+                  num_genes: dim,
+                  continuous: true,
+                  selected_func: 12,
+                  is_negative_fit: false,
+                  is_high_fit: false,
+                  max_generation: 1000
   tga.execute
 end
