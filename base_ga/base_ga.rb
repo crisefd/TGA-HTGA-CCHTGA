@@ -46,12 +46,13 @@ class BaseGA
     @is_negative_fit = false if @is_negative_fit.nil?
     @is_high_fit = input[:is_high_fit]
     @is_high_fit = false if @is_high_fit.nil?
+    @num_evaluations = 0
   end
 
   # Roulette selection operation method
   # @return [void]
   def roulette_select # This method can be optimize
-    pp '=> roulette selection'
+    p '=> roulette selection'
     fail "pop size incorrect, expected #{pop_size} found #{@chromosomes.size}" unless @pop_size == @chromosomes.size
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
                                       is_negative_fit: @is_negative_fit
@@ -74,8 +75,9 @@ class BaseGA
   # Method to generate the initial population of chromosomes
   # @return [void]
   def init_population
-    pp "=>initializing population"
-    (0...@pop_size).each do
+    p "=>initializing population"
+
+    (0...@pop_sizes).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @values == 'discrete'
@@ -95,4 +97,9 @@ class BaseGA
       @chromosomes << chromosome
     end
   end
+  def evaluate_chromosome(chromosome)
+    chromosome.fitness =  @selected_func.call chromosome
+    @num_evaluations += 1
+  end
+
 end
