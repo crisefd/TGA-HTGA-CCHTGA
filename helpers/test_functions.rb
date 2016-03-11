@@ -67,18 +67,18 @@ module TestFunctions
       sum_cos *= 1.0 / x.size
       first_term = -20 * Math.exp(-0.2 * Math.sqrt(sum_square_x))
       second_term = -1 * Math.exp(sum_cos)
-      first_term + second_term + 20 + Math.exp(1)
+      first_term + second_term + 20.0 + Math.exp(1)
     end,
     lambda do |x| # function 4
       sum = 0.0
-      prod = 0.0
+      prod = 1.0
       i = 1
       x.each do |xi|
         sum += xi**2
-        prod *= (Math.cos(xi / Math.sqrt(i)) + 1) # Correct ?
+        prod *= Math.cos(xi / Math.sqrt(i))
         i += 1
       end
-      ((1.0 / 4000) * sum) - prod
+      ((1.0 / 4000) * sum) - prod + 1
     end,
     nil, # function 5
     nil, # function 6
@@ -110,13 +110,13 @@ module TestFunctions
     lambda do |x| # function 12
       sum = 0.0
       x.each do |xi|
-        sum += xi**4 + rand(0...10) / 10.0
+        sum += xi**4 + Random.rand(1.0).round(1)
       end
       sum
     end,
     lambda do |x| # function 13
       sum = 0.0
-      prod = 0.0
+      prod = 1.0
       x.each do |xi|
         sum += xi.abs
         prod *= xi.abs
