@@ -33,6 +33,7 @@ class TGA < BaseGA
     @is_high_fit = false if @is_high_fit.nil?
     @max_generation = input[:max_generation]
     @mating_pool = []
+    @new_gen = []
     @num_evaluations = 0
 
   end
@@ -47,7 +48,14 @@ class TGA < BaseGA
     init_time = Time.now
     begin
       init_population
-      tournament
+
+      #while @generation <= @max_generation
+        tournament
+        #mutate_matingpool
+        cross_mating_pool
+      #end
+      #break if @chromosomes.first.fitness == @optimal_func_val
+      #@generation += 1
     end
   end
 
@@ -65,11 +73,11 @@ class TGA < BaseGA
 
 
 
-
+# @return [void]
   def tournament
     k = 2
     temp_k = k
-    mating_pool = []
+
     x = -1
     y = -1
     prev_chromo = -1
@@ -81,10 +89,10 @@ class TGA < BaseGA
           break if x != y
         end
         if ((@chromosomes[x].fitness < @chromosomes[y].fitness) && (y != prev_chromo))
-          mating_pool << @chromosomes[y]
+          @mating_pool << @chromosomes[y]
           prev_chromo = y
         elsif((@chromosomes[y].fitness < @chromosomes[x].fitness) && (x != prev_chromo))
-          mating_pool << @chromosomes[x]
+          @mating_pool << @chromosomes[x]
           prev_chromo = x
         else
           if (temp_k += 1) > k
@@ -95,11 +103,60 @@ class TGA < BaseGA
         end
       break if temp_k <= 0
     end
-    #return the chromosomes to mutate and cross
-    mating_pool
+#    p @mating_pool
   end
 
-#=end
+
+
+  #uniform cross 1 gen
+  def cross_mating_pool
+    cut_point = rand(0...@num_genes)
+    chromosome_x = @mating_pool[0]
+    chromosome_y = @mating_pool[1]
+    gen_x = chromosome_x[cut_point]
+    gen_y = chromosome_y[cut_point]
+    chromosome_x[cut_point] = gen_y
+    chromosome_y[cut_point] = gen_x
+  end
+
+  #uniform cross 1 cut point
+  def cross_cut_point_mating_pool
+    cut_point = rand(0...@num_genes)
+    chromosome_x = @mating_pool[0]
+    chromosome_y = @mating_pool[1]
+    temp_cut_x = -1
+    temp_cut_y = -1
+    (cut_point...@num_genes).each do |i|
+      temp_cut_x = chromosome_x[i]
+      temp_cut_y = chromosome_y[i]
+      chromosome_x[i] = temp_cut_y
+      chromosome_y[i] = temp_cut_x
+    end
+    @new_gen << chromosome_y
+    @new_gen << chromosome_x
+  end
+  #TO DO HERE
+  def mutate_matingpool
+    mutate_point = rand(0...@num_genes)
+
+
+  end
+  def insert_new_generation
+
+  end
+  def recalculate_fitness
+    @chromosomes.map! do |chromosome|
+      chromosome.fitness = @selected_func.call chromosome
+      chromosome
+    end
+  end
+
+#TO DO END HERE
+
+
+
+
+
 end
 if __FILE__ == $PROGRAM_NAME
   dim = 30
