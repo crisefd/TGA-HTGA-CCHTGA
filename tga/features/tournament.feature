@@ -7,6 +7,6 @@
 Feature: Tournament selection
 
   Scenario: Select two chromosomes to apply the reproduction operators
-    Given a population of chromosomes
-    When tournament is apply on the population select two chromosomes
-    Then add the two differents chromosomes to the mating pool
+    Given a population of  20 chromosomes
+    When tournament is apply on the population select two diferents chromosomes at random
+    Then re

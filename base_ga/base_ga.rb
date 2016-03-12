@@ -72,8 +72,7 @@ class BaseGA
     selected_offset
   end
 
-  # Method to generate the initial population of chromosomes
-  # @return [void]
+
   def init_population
     p "=>initializing population"
 
