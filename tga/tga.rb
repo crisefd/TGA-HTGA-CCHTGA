@@ -16,7 +16,6 @@ class TGA < BaseGA
   def initialize(**input)
     @values = input[:values]
     @pop_size = input[:pop_size]
-    p @pop_size
     @upper_bounds = input[:upper_bounds]
     @lower_bounds = input[:lower_bounds]
     @num_genes = input[:num_genes]
@@ -32,21 +31,21 @@ class TGA < BaseGA
     @mating_pool = []
     @new_gen = []
     @num_evaluations = 0
+    @best_fit = nil
   end
   # Main methon for TGA
   def execute
     @generation = 1
-    best_fit = nil
     init_time = Time.now
     begin
       init_population
-      #while @generation <= @max_generation
+      while @generation <= @max_generation
         tournament
-        #mutate_matingpool
-        #d cross_mating_pool
-      #end
-      #break if @chromosomes.first.fitness == @optimal_func_val
-      #@generation += 1
+        cross_cut_point_mating_pool
+        mutate_matingpool
+        insert_new_generation
+        break if best_fit == @optimal_func_val
+      end
     end
   end
 
@@ -109,28 +108,8 @@ class TGA < BaseGA
     @new_gen << chromosome_y
     @new_gen << chromosome_x
   end
-  # TO DO HERE
-=begin
-MUTATE FOR 2 CHROMOSOMES POOL
-  def mutate_matingpool
-    mutate_point_x = rand(0...@num_genes)
-    mutate_point_y = rand(0...@num_genes)
-    chromosome_x = @mating_pool[0]
-    chromosome_y = @mating_pool[1]
-    if @continuous
-      gene_x = rand(lower_bounds[i].to_i..upper_bounds[i].to_i)
-      gene_y = rand(lower_bounds[i].to_i..upper_bounds[i].to_i)
-    else
-      gene_x = rand(lower_bounds[i].to_f..upper_bounds[i].to_f)
-      gene_y = rand(lower_bounds[i].to_f..upper_bounds[i].to_f)
-    end
-    chromosome_x[mutate_point_x] = gene_x
-    chromosome_y[mutate_point_y] = gene_y
-    @new_gen << chromosome_x
-    @new_gen << chromosome_y
-  end
-=end
-  #GENERAL MUTATE FOR n CHROMOSOMES POOL
+
+  # GENERAL MUTATE FOR n CHROMOSOMES POOL
   def mutate_matingpool
     (0...@mating_pool.size).each do |i|
       mutate_point = rand(0...@num_genes)
@@ -145,24 +124,35 @@ MUTATE FOR 2 CHROMOSOMES POOL
     end
   end
 
+  # Insert the new chromosomes into the population
   def insert_new_generation
+    calculate_fitness @new_gen
     (0...4).each do
       x = rand(0...@chromosomes.size)
       @chromosomes.delete_at(x)
     end
     (0...@new_gen.size).each do |x|
+      is_best_fit @new_gen[x]
       @chromosomes << @new_gen[x]
     end
   end
 
-  def recalculate_fitness
-    @chromosomes.map! do |chromosome|
+  # Verify if the chromosome has a better fitness
+  def is_best_fit(chromosome)
+    if @is_high_fit
+      @best_fit = chromosome.fitness if @best_fit.nil? || chromosome.fitness > @best_fit
+    else
+      @best_fit = chromosome.fitness if @best_fit.nil? || chromosome.fitness < @best_fit
+    end
+  end
+
+  # calculate the fitness of bunch of chromosomes
+  def calculate_fitness (chromosomes_clust)
+    chromosomes_clust.map! do |chromosome|
       chromosome.fitness = @selected_func.call chromosome
       @num_evaluations += 1
     end
   end
-
-          #TO DO END HERE
 
   # Method to generate the initial population of chromosomes
   # @return [void]
@@ -178,6 +168,10 @@ MUTATE FOR 2 CHROMOSOMES POOL
         chromosome << gene
       end
       @chromosomes << chromosome
+    end
+    calculate_fitness @Chromosomes
+    (0...@Chromosomes.size).each do |i|
+      is_best_fit @Chromosomes[i]
     end
   end
 end
