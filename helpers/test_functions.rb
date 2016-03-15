@@ -80,7 +80,37 @@ module TestFunctions
       end
       ((1.0 / 4000) * sum) - prod + 1
     end,
-    nil, # function 5
+    lambda do |x| # function 5
+      yi = lambda do |xi|
+        1.0 + (xi + 1) / 4.0
+      end
+      u = lambda do |xi, a, k, m|
+        r = case xi
+            when xi > a
+              k * (xi - a)**m
+            when (-1 * a)..a
+              0.0
+            else
+              -1.0 * k * (xi + a)**m
+            end
+        r
+      end
+      y1 = yi.call x[1]
+      yn = yi.call x[-1]
+      res = 10.0 * Math.sin(Math::PI * y1)**2
+      sum1 = 0.0
+      (0...(x.size - 1)).each do |i|
+        sum1 += (yi(x[i]) - 1)**2 * (1 + 10.0 * Math.sin(Math::PI * yi(x[i + 1]))**2)
+      end
+      sum2 = 0.0
+      x.each do |xi|
+        sum2 += u.call(xi, 10, 100, 4)
+      end
+      res += sum1 + (yn - 1)**2
+      res *= Math::PI / x.size
+      res += sum2
+      res
+    end,
     nil, # function 6
     lambda do |x| # function 7
       i = 1
