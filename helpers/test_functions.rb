@@ -44,7 +44,7 @@ module TestFunctions
     lambda do |x| # function 1
       sum = 0.0
       x.each do |xi|
-        sum += -1 * xi * Math.sin(Math.sqrt(xi.abs))
+        sum += -1.0 * xi * Math.sin(Math.sqrt(xi.abs))
       end
       sum
     end,
