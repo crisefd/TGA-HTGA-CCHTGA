@@ -95,12 +95,12 @@ module TestFunctions
             end
         r
       end
-      y1 = yi.call x[1]
+      y1 = yi.call x[0]
       yn = yi.call x[-1]
       res = 10.0 * Math.sin(Math::PI * y1)**2
       sum1 = 0.0
       (0...(x.size - 1)).each do |i|
-        sum1 += (yi(x[i]) - 1)**2 * (1 + 10.0 * Math.sin(Math::PI * yi(x[i + 1]))**2)
+        sum1 += (yi.call(x[i]) - 1)**2 * (1 + 10.0 * Math.sin(Math::PI * yi.call(x[i + 1]))**2)
       end
       sum2 = 0.0
       x.each do |xi|
