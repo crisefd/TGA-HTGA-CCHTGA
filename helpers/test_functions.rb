@@ -26,13 +26,7 @@ module TestFunctions
     -99.2784, # value 7
     0, # value 8
     -78.33236, # value 9
-    lambda do |x| # value 10
-      sum = 0.0
-      (0...(x.size - 1)).each do |j|
-        sum += 100.0 * (x[j]**2 - x[j + 1])**2 + (x[j] - 1)**2
-      end
-      sum
-    end,
+    0, # value 10
     0, # value 11
     0, # value 12
     0, # value 13
@@ -111,7 +105,32 @@ module TestFunctions
       res += sum2
       res
     end,
-    nil, # function 6
+    lambda do |x| # function 6
+      u = lambda do |xi, a, k, m|
+        r = 0.0
+        if xi > a
+          r = k * (xi - a)**m
+        elsif (-1 * a) >= xi && xi <= a
+          r = 0.0
+        elsif xi < (-1 * a)
+          r = k * ((-1 * xi) - a)**m
+        end
+        r
+      end
+      res = Math.sin(3 * Math::PI * x[0])**2
+      sum1 = 0.0
+      (0...(x.size - 1)).each do |i|
+        sum1 += (x[i] - 1)**2 * (1 + Math.sin(3 * Math::PI * x[i + 1])**2)
+      end
+      res += sum1 + (x[-1] - 1)**2 * (1 + Math.sin(2 * Math::PI * x[-1])**2)
+      res /= 10.0
+      sum2 = 0.0
+      x.each do |xi|
+        sum2 += u.call(xi, 5, 100, 4)
+      end
+      res += sum2
+      res
+    end,
     lambda do |x| # function 7
       i = 1
       sum = 0.0
@@ -146,7 +165,14 @@ module TestFunctions
       end
       sum * 1.0 / x.size
     end,
-    nil, # function 10
+    lambda do |x| # function 10
+      res = 0.0
+      (0...(x.size - 1)).each do |j|
+        res += (100 * (x[j]**2 - x[j + 1])**2 ) + (x[j] - 1)**2
+      end
+      fail 'negative f10' unless res >= 0
+      res
+    end,
     lambda do |x| # function 11
       sum = 0.0
       x.each do |xi|
