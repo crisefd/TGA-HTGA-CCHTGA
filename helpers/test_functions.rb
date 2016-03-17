@@ -85,14 +85,14 @@ module TestFunctions
         1.0 + (xi + 1) / 4.0
       end
       u = lambda do |xi, a, k, m|
-        r = case xi
-            when xi > a
-              k * (xi - a)**m
-            when (-1 * a)..a
-              0.0
-            else
-              -1.0 * k * (xi + a)**m
-            end
+        r = 0.0
+        if xi > a
+          r = k * (xi - a)**m
+        elsif (-1 * a) >= xi && xi <= a
+          r = 0.0
+        elsif xi < (-1 * a)
+          r = k * ((-1 * xi) - a)**m
+        end
         r
       end
       y1 = yi.call x[0]
