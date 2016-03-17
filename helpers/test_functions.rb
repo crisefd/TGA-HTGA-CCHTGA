@@ -168,7 +168,7 @@ module TestFunctions
     lambda do |x| # function 10
       res = 0.0
       (0...(x.size - 1)).each do |j|
-        res += (100 * (x[j]**2 - x[j + 1])**2 ) + (x[j] - 1)**2
+        res += (100 * (x[j]**2 - x[j + 1])**2) + (x[j] - 1)**2
       end
       fail 'negative f10' unless res >= 0
       res
