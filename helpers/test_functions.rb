@@ -121,7 +121,28 @@ module TestFunctions
       end
       sum * -1
     end,
-    nil, # function 8
+    lambda do |x| # function 8
+      outer_sum = 0.0
+      left_inner_sum = 0.0
+      right_inner_sum = 0.0
+      (0...x.size).each do |i|
+        chi = rand(-100..100) # Correct ?
+        psi = rand(-100..100)
+
+        (0...x.size).each do |j|
+          omega = rand((-1 * Math::PI)..Math::PI)
+          left_inner_sum += chi * Math.sin(omega) + psi * Math.cos(omega)
+        end
+
+        (0...x.size).each do |j|
+          right_inner_sum += chi * Math.sin(x[j]) + psi * Math.cos(x[j])
+        end
+
+        outer_sum += (left_inner_sum - right_inner_sum)**2
+
+      end
+
+    end,
     lambda do |x| # function 9
       sum = 0.0
       x.each do |xi|
