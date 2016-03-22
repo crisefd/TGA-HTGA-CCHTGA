@@ -524,5 +524,175 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 466832"
 # "Execution time (seconds): 1614.534575738"
 
+# f8
+
+# htga = HTGA.new values: 'discrete',
+#                 upper_bounds: Array.new(100, Math::PI),
+#                 lower_bounds: Array.new(100, -1 * Math::PI),
+#                 pop_size: 200,
+#                 cross_rate: 0.1,
+#                 mut_rate: 0.02,
+#                 num_genes: 100,
+#                 continuous: true,
+#                 selected_func: 8,
+#                 is_negative_fit: false,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
+
+# f9
+
+# htga = HTGA.new values: 'discrete',
+#                 upper_bounds: Array.new(100, 5),
+#                 lower_bounds: Array.new(100, -5),
+#                 pop_size: 200,
+#                 cross_rate: 0.1,
+#                 mut_rate: 0.02,
+#                 num_genes: 100,
+#                 continuous: true,
+#                 selected_func: 9,
+#                 is_negative_fit: true,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
+
+# RESULTS
+# "best fitness overall -78.33233140753973"
+# "generation of best fitness 10000"
+# "function evaluations of best fitness 523372"
+# "Execution time (seconds): 1633.606771202"
+
+# f10
+
+# htga = HTGA.new values: 'discrete',
+#                 upper_bounds: Array.new(100, 10),
+#                 lower_bounds: Array.new(100, -5),
+#                 pop_size: 200,
+#                 cross_rate: 0.1,
+#                 mut_rate: 0.02,
+#                 num_genes: 100,
+#                 continuous: true,
+#                 selected_func: 10,
+#                 is_negative_fit: false,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
+
+# RESULTS
+# "best fitness overall 98.98255812317848"
+# "generation of best fitness 9978"
+# "function evaluations of best fitness 150245"
+# "Execution time (seconds): 1598.60769294
+
+# f11
+
+# htga = HTGA.new values: 'discrete',
+#                 upper_bounds: Array.new(30, 100),
+#                 lower_bounds: Array.new(30, -100),
+#                 pop_size: 200,
+#                 cross_rate: 0.1,
+#                 mut_rate: 0.02,
+#                 num_genes: 30,
+#                 continuous: true,
+#                 selected_func: 11,
+#                 is_negative_fit: false,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
+
+# RESULTS
+# "best fitness overall 0.0"
+# "generation of best fitness 1"
+# "function evaluations of best fitness 214"
+# "Execution time (seconds): 0.094560799"
+
+# f12
+
+# htga = HTGA.new values: 'discrete',
+#                 upper_bounds: Array.new(30, 1.28),
+#                 lower_bounds: Array.new(30, -1.28),
+#                 pop_size: 200,
+#                 cross_rate: 0.1,
+#                 mut_rate: 0.02,
+#                 num_genes: 30,
+#                 continuous: true,
+#                 selected_func: 12,
+#                 is_negative_fit: false,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
+
+# RESULTS
+# "best fitness overall 8.1"
+# "generation of best fitness 6171"
+# "function evaluations of best fitness 110423"
+# "Execution time (seconds): 171.532931005"
+
+# f13
+
+# htga = HTGA.new values: 'discrete',
+#                 upper_bounds: Array.new(30, 10),
+#                 lower_bounds: Array.new(30, -10),
+#                 pop_size: 200,
+#                 cross_rate: 0.1,
+#                 mut_rate: 0.02,
+#                 num_genes: 30,
+#                 continuous: true,
+#                 selected_func: 13,
+#                 is_negative_fit: false,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
+
+# RESULTS
+# "best fitness overall 0.0"
+# "generation of best fitness 36"
+# "function evaluations of best fitness 1004"
+# "Execution time (seconds): 0.672913684"
+
+# f14
+
+# htga = HTGA.new values: 'discrete',
+#                 upper_bounds: Array.new(30, 100),
+#                 lower_bounds: Array.new(30, -100),
+#                 pop_size: 200,
+#                 cross_rate: 0.1,
+#                 mut_rate: 0.02,
+#                 num_genes: 30,
+#                 continuous: true,
+#                 selected_func: 14,
+#                 is_negative_fit: false,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
+
+# RESULTS
+# "best fitness overall 0.0"
+# "generation of best fitness 53"
+# "function evaluations of best fitness 2069"
+# "Execution time (seconds): 1.128410878"
+
+# f15
+
+# htga = HTGA.new values: 'discrete',
+#                 upper_bounds: Array.new(30, 100),
+#                 lower_bounds: Array.new(30, -100),
+#                 pop_size: 200,
+#                 cross_rate: 0.1,
+#                 mut_rate: 0.02,
+#                 num_genes: 30,
+#                 continuous: true,
+#                 selected_func: 15,
+#                 is_negative_fit: false,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
+
+# RESULTS
+# "best fitness overall 0.0"
+# "generation of best fitness 39"
+# "function evaluations of best fitness 1005"
+# "Execution time (seconds): 0.671060716"
+
 
 end
