@@ -371,7 +371,7 @@ class HTGA < BaseGA
 end
 
 if __FILE__ == $PROGRAM_NAME
-  # f1
+  # f1 se acerco al valor reportado
 
   # htga = HTGA.new values: 'discrete',
   #                 upper_bounds: Array.new(30, 500),
@@ -393,7 +393,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations 400393"
 # "Execution time (seconds): 176.504894135"
 
-# f2
+# f2 se acerco al valor reportado
 
   # htga = HTGA.new values: 'discrete',
   #                 upper_bounds: Array.new(30, 5.12),
@@ -415,7 +415,8 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations 1195"
 # "Execution time (seconds): 0.628910283"
 
-# f3
+# f3 se acerco al valor reportado
+
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(30, 32),
 #                 lower_bounds: Array.new(30, -32),
@@ -436,7 +437,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 780"
 # "Execution time (seconds): 188.342336139"
 
-# f4
+# f4 se acerco al valor reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(30, 600),
@@ -458,7 +459,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 1303"
 # "Execution time (seconds): 0.697401036"
 
-# f5
+# f5 se acerco, pero no  segun lo reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(30, 50),
@@ -480,7 +481,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 359311"
 # "Execution time (seconds): 208.23771955"
 
-# f6
+# f6 se acerco al valor reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(30, 50),
@@ -502,7 +503,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 498975"
 # "Execution time (seconds): 193.669437994"
 
-# f7
+# f7 se acerco al valor reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(100, Math::PI),
@@ -524,7 +525,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 466832"
 # "Execution time (seconds): 1614.534575738"
 
-# f8
+# f8 funcion muy costosa
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(100, Math::PI),
@@ -540,7 +541,7 @@ if __FILE__ == $PROGRAM_NAME
 #                 max_generation: 10000
 # htga.execute
 
-# f9
+# f9 se acerco al valor reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(100, 5),
@@ -562,21 +563,21 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 523372"
 # "Execution time (seconds): 1633.606771202"
 
-# f10
+# f10 no se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
-#                 upper_bounds: Array.new(100, 10),
-#                 lower_bounds: Array.new(100, -5),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 100,
-#                 continuous: true,
-#                 selected_func: 10,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+htga = HTGA.new values: 'discrete',
+                upper_bounds: Array.new(100, 10),
+                lower_bounds: Array.new(100, -5),
+                pop_size: 200,
+                cross_rate: 0.1,
+                mut_rate: 0.02,
+                num_genes: 100,
+                continuous: true,
+                selected_func: 10,
+                is_negative_fit: false,
+                is_high_fit: false,
+                max_generation: 10000
+htga.execute
 
 # RESULTS
 # "best fitness overall 98.98255812317848"
@@ -584,7 +585,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 150245"
 # "Execution time (seconds): 1598.60769294
 
-# f11
+# f11 se acerco al valor reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(30, 100),
@@ -606,7 +607,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 214"
 # "Execution time (seconds): 0.094560799"
 
-# f12
+# f12 se acerco al valor reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(30, 1.28),
@@ -623,12 +624,13 @@ if __FILE__ == $PROGRAM_NAME
 # htga.execute
 
 # RESULTS
-# "best fitness overall 8.1"
-# "generation of best fitness 6171"
-# "function evaluations of best fitness 110423"
-# "Execution time (seconds): 171.532931005"
+# "best fitness overall 3.5203227273239435e-06"
+# "generation of best fitness 1454"
+# "function evaluations of best fitness 79425"
+# "Execution time (seconds): 190.778915494"
 
-# f13
+
+# f13 se acerco al valor reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(30, 10),
@@ -650,7 +652,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 1004"
 # "Execution time (seconds): 0.672913684"
 
-# f14
+# f14 se acerco al valor reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(30, 100),
@@ -672,7 +674,7 @@ if __FILE__ == $PROGRAM_NAME
 # "function evaluations of best fitness 2069"
 # "Execution time (seconds): 1.128410878"
 
-# f15
+# f15 se acerco al valor reportado
 
 # htga = HTGA.new values: 'discrete',
 #                 upper_bounds: Array.new(30, 100),

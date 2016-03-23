@@ -166,12 +166,12 @@ module TestFunctions
       sum * 1.0 / x.size
     end,
     lambda do |x| # function 10
-      res = 0.0
+      sum = 0.0
       (0...(x.size - 1)).each do |j|
-        res += (100 * (x[j]**2 - x[j + 1])**2) + (x[j] - 1)**2
+        sum += (100.0 * (x[j]**2 - x[j + 1])**2) + (x[j] - 1)**2
       end
-      fail 'negative f10' unless res >= 0
-      res
+      fail 'negative f10' unless sum >= 0
+      sum
     end,
     lambda do |x| # function 11
       sum = 0.0
@@ -183,8 +183,9 @@ module TestFunctions
     lambda do |x| # function 12
       sum = 0.0
       x.each do |xi|
-        sum += xi**4 + Random.rand(1.0).round(1)
+        sum += xi**4
       end
+      sum += rand(0.0...1.0)
       sum
     end,
     lambda do |x| # function 13
