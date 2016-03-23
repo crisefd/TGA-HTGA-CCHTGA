@@ -24,7 +24,7 @@ class HTGA < BaseGA
 
   # @param [Hash] input, hash list for the initialization of the HTGA
   def initialize(**input)
-    @values = input[:values]
+    @beta_values = input[:beta_values]
     @upper_bounds = input[:upper_bounds]
     @lower_bounds = input[:lower_bounds]
     @pop_size = input[:pop_size]
@@ -99,24 +99,18 @@ class HTGA < BaseGA
     end
   end
 
-
   # Crossover operator method use in HTGA
   # @param [Hash] args, argument hash list that includes chromosomes, lower and upper bounds
   # @return [Chromosome, Chromosome]  the resulting chromosomes.
-  def self.crossover(**args)
-    continuous = args[:continuous]
-    chromosome_x = args[:chromosome_x]
-    chromosome_y = args[:chromosome_y]
+  def crossover(chromosome_x, chromosome_y)
     beta = rand(0..10) / 10.0
     k = rand(0...chromosome_y.size)
-    upper_bounds = args[:upper_bounds]
-    lower_bounds = args[:lower_bounds]
     # new values for kth genes x and y
     cut_point_x = chromosome_x[k]
     cut_point_y = chromosome_y[k]
     cut_point_x = cut_point_x + beta * (cut_point_y - cut_point_x)
-    cut_point_y = lower_bounds[k] + beta * (upper_bounds[k] - lower_bounds[k])
-    if continuous
+    cut_point_y = lower_bounds[k] + beta * (@upper_bounds[k] - @lower_bounds[k])
+    if @continuous
       chromosome_x[k] = cut_point_x
       chromosome_y[k] = cut_point_y
     else
@@ -133,7 +127,7 @@ class HTGA < BaseGA
   # Mutation operator method for the chromosomes
   # @param [Chromosome] chromosome, the chromosome to mutate
   # @return [Chromosome] the resulting chrmosome
-  def self.mutate(chromosome, continuous: true) # Does not work for discrete functions
+  def mutate(chromosome) # Does not work for discrete functions
     beta = rand(0..10) / 10.0
     i = -1
     k = -1
@@ -144,7 +138,7 @@ class HTGA < BaseGA
     end
     gene_i = chromosome[i]
     gene_k = chromosome[k]
-    if continuous
+    if @continuous
       chromosome[i] = (1 - beta) * gene_i + beta * gene_k
       chromosome[k] = beta * gene_i + (1 - beta) * gene_k
     else
@@ -156,15 +150,15 @@ class HTGA < BaseGA
 
   # Method to perfom SNR calculation used in the HTGA
   # @param [Chromosome] chromosome, the chromosome
-  # @param [Boolean] smaller_the_better, true if SNR is for minization or false otherwise
   # @return [void]
-  def self.calculate_snr(chromosome, smaller_the_better: true)
+  def calculate_snr(chromosome)
     n = chromosome.size.to_f
-    if smaller_the_better
-      chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2.0 }.reduce(:+))
-    else # What happens when the gene is 0 ?
+    if @is_high_fit # What happens when the gene is 0 ?
       chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
+    else
+      chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2.0 }.reduce(:+))
     end
+    # fail 'snr error' unless chromosone
   end
 
   def evaluate_chromosome(chromosome)
@@ -179,7 +173,7 @@ class HTGA < BaseGA
     m = selected_offset
     m += 1 if m == 1
     (0...m).each do
-      r = Random.rand(1.0)
+      r = rand(0.0..1.0)
       x = -1
       y = -1
       loop do
@@ -189,10 +183,8 @@ class HTGA < BaseGA
       end
       next if r > @cross_rate
       new_chrom_x, new_chrom_y =
-                     HTGA.crossover(chromosome_x: @chromosomes[x].clone,
-                                    chromosome_y: @chromosomes[y].clone,
-                                    upper_bounds: @upper_bounds,                                      lower_bounds: @lower_bounds,
-                                    continuous: @continuous)
+                     crossover @chromosomes[x].clone, @chromosomes[y].clone
+
       evaluate_chromosome new_chrom_x
       evaluate_chromosome new_chrom_y
       @chromosomes << new_chrom_x << new_chrom_y
@@ -206,10 +198,10 @@ class HTGA < BaseGA
     pp '=> mutating individuals'
     m = @chromosomes.size
     (0...m).each do
-      r = Random.rand(1.0)
+      r = rand(0.0..1.0)
       next if r > @mut_rate
       x = rand(0...m)
-      new_chrom = HTGA.mutate @chromosomes[x].clone, continuous: @continuous
+      new_chrom = mutate @chromosomes[x].clone
       evaluate_chromosome new_chrom
       @chromosomes << new_chrom
     end
@@ -277,7 +269,7 @@ class HTGA < BaseGA
     # Calculate fitness and SNR values
     experimental_matrix.each_index do |i|
       # experimental_matrix[i].fitness = @selected_func.call experimental_matrix[i]
-      HTGA.calculate_snr experimental_matrix[i], smaller_the_better: !@is_high_fit
+      calculate_snr experimental_matrix[i]
     end
     # Calculate the effects of the various factors
     (0...experimental_matrix[0].size).each do |j|
@@ -351,9 +343,9 @@ class HTGA < BaseGA
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
-        if @values == 'discrete'
-          beta = (Array.new(11) { |k| k / 10.0 }).sample
-        elsif @values == 'uniform distribution'
+        if @beta_values == 'discrete'
+          beta = rand(0..10) / 10.0
+        elsif @beta_values == 'uniform distribution'
           beta = Random.rand(1.0)
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
@@ -373,7 +365,7 @@ end
 if __FILE__ == $PROGRAM_NAME
   # f1 se acerco al valor reportado
 
-  # htga = HTGA.new values: 'discrete',
+  # htga = HTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(30, 500),
   #                 lower_bounds: Array.new(30, -500),
   #                 pop_size: 200,
@@ -395,7 +387,7 @@ if __FILE__ == $PROGRAM_NAME
 
 # f2 se acerco al valor reportado
 
-  # htga = HTGA.new values: 'discrete',
+  # htga = HTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(30, 5.12),
   #                 lower_bounds: Array.new(30, -5.12),
   #                 pop_size: 200,
@@ -417,7 +409,7 @@ if __FILE__ == $PROGRAM_NAME
 
 # f3 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(30, 32),
 #                 lower_bounds: Array.new(30, -32),
 #                 pop_size: 200,
@@ -439,7 +431,7 @@ if __FILE__ == $PROGRAM_NAME
 
 # f4 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(30, 600),
 #                 lower_bounds: Array.new(30, -600),
 #                 pop_size: 200,
@@ -461,19 +453,19 @@ if __FILE__ == $PROGRAM_NAME
 
 # f5 se acerco, pero no  segun lo reportado
 
-htga = HTGA.new values: 'discrete',
-                upper_bounds: Array.new(30, 50),
-                lower_bounds: Array.new(30, -50),
-                pop_size: 200,
-                cross_rate: 0.1,
-                mut_rate: 0.02,
-                num_genes: 30,
-                continuous: true,
-                selected_func: 5,
-                is_negative_fit: false,
-                is_high_fit: false,
-                max_generation: 10000
-htga.execute
+# htga = HTGA.new beta_values: 'discrete',
+#                 upper_bounds: Array.new(30, 50),
+#                 lower_bounds: Array.new(30, -50),
+#                 pop_size: 200,
+#                 cross_rate: 0.1,
+#                 mut_rate: 0.02,
+#                 num_genes: 30,
+#                 continuous: true,
+#                 selected_func: 5,
+#                 is_negative_fit: false,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
 
 # RESULTS
 # "best fitness overall 0.010480449136671111"
@@ -483,7 +475,7 @@ htga.execute
 
 # f6 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(30, 50),
 #                 lower_bounds: Array.new(30, -50),
 #                 pop_size: 200,
@@ -505,7 +497,7 @@ htga.execute
 
 # f7 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(100, Math::PI),
 #                 lower_bounds: Array.new(100, 0),
 #                 pop_size: 200,
@@ -527,7 +519,7 @@ htga.execute
 
 # f8 funcion muy costosa
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(100, Math::PI),
 #                 lower_bounds: Array.new(100, -1 * Math::PI),
 #                 pop_size: 200,
@@ -543,7 +535,7 @@ htga.execute
 
 # f9 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(100, 5),
 #                 lower_bounds: Array.new(100, -5),
 #                 pop_size: 200,
@@ -565,7 +557,7 @@ htga.execute
 
 # f10 no se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(100, 10),
 #                 lower_bounds: Array.new(100, -5),
 #                 pop_size: 200,
@@ -587,7 +579,7 @@ htga.execute
 
 # f11 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(30, 100),
 #                 lower_bounds: Array.new(30, -100),
 #                 pop_size: 200,
@@ -609,7 +601,7 @@ htga.execute
 
 # f12 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(30, 1.28),
 #                 lower_bounds: Array.new(30, -1.28),
 #                 pop_size: 200,
@@ -632,7 +624,7 @@ htga.execute
 
 # f13 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(30, 10),
 #                 lower_bounds: Array.new(30, -10),
 #                 pop_size: 200,
@@ -654,7 +646,7 @@ htga.execute
 
 # f14 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(30, 100),
 #                 lower_bounds: Array.new(30, -100),
 #                 pop_size: 200,
@@ -676,7 +668,7 @@ htga.execute
 
 # f15 se acerco al valor reportado
 
-# htga = HTGA.new values: 'discrete',
+# htga = HTGA.new beta_values: 'discrete',
 #                 upper_bounds: Array.new(30, 100),
 #                 lower_bounds: Array.new(30, -100),
 #                 pop_size: 200,

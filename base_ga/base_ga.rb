@@ -18,9 +18,9 @@ class BaseGA
   include Roulette, TestFunctions
 
   # @attr [Array] lower_bounds, lower bounds for the variables
-  attr_reader :lower_bounds
+  attr_accessor :lower_bounds
   # @attr [Array] upper_bounds, upper bounds for the variables
-  attr_reader :upper_bounds
+  attr_accessor :upper_bounds
   # @attr [Array] pop_size, the number of chromosomes
   attr_writer :pop_size
   # @attr [Array] chromosomes, the candidate solutions
@@ -37,6 +37,8 @@ class BaseGA
   attr_writer :max_generation
   # @attr [Integer] num_genes, the length of the chromosomes
   attr_accessor :num_genes
+
+  attr_accessor :continuous
 
   # @param [Hash] input, hash list for construction parameters
   def initialize(**input)

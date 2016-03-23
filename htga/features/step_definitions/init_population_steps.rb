@@ -37,7 +37,7 @@ Given(/^the lower bounds are$/) do |table|
 end
 
 Given(/^the values for beta are "([^"]*)"$/) do |arg1|
-  input[:values] = arg1
+  input[:beta_values] = arg1
 end
 
 
