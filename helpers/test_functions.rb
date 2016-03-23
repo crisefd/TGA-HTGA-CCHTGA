@@ -166,12 +166,14 @@ module TestFunctions
       sum * 1.0 / x.size
     end,
     lambda do |x| # function 10
-      sum = 0.0
+      first_term = 0.0
+      second_term = 0.0
       (0...(x.size - 1)).each do |j|
-        sum += (100.0 * (x[j]**2 - x[j + 1])**2) + (x[j] - 1)**2
+        first_term += ((x[j]**2 - x[j + 1])**2) * 100
+        second_term += (x[j] - 1)**2
       end
-      fail 'negative f10' unless sum >= 0
-      sum
+      fail 'wrong size of chrome' unless x.size == 100
+      first_term + second_term
     end,
     lambda do |x| # function 11
       sum = 0.0

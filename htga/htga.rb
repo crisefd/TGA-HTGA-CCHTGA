@@ -1,7 +1,7 @@
 # language: english
 # encoding: utf-8
 # Program: htga.rb
-# Authors: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
+# Authors: Cristhian Fuertes,  Oscar Tigreros
 # Email: cristhian.fuertes@correounivalle.edu.co,
 #        oscar.tigreros@correounivalle.edu.co
 # Creation date: 2015-10-05
@@ -461,19 +461,19 @@ if __FILE__ == $PROGRAM_NAME
 
 # f5 se acerco, pero no  segun lo reportado
 
-# htga = HTGA.new values: 'discrete',
-#                 upper_bounds: Array.new(30, 50),
-#                 lower_bounds: Array.new(30, -50),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 5,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+htga = HTGA.new values: 'discrete',
+                upper_bounds: Array.new(30, 50),
+                lower_bounds: Array.new(30, -50),
+                pop_size: 200,
+                cross_rate: 0.1,
+                mut_rate: 0.02,
+                num_genes: 30,
+                continuous: true,
+                selected_func: 5,
+                is_negative_fit: false,
+                is_high_fit: false,
+                max_generation: 10000
+htga.execute
 
 # RESULTS
 # "best fitness overall 0.010480449136671111"
@@ -565,19 +565,19 @@ if __FILE__ == $PROGRAM_NAME
 
 # f10 no se acerco al valor reportado
 
-htga = HTGA.new values: 'discrete',
-                upper_bounds: Array.new(100, 10),
-                lower_bounds: Array.new(100, -5),
-                pop_size: 200,
-                cross_rate: 0.1,
-                mut_rate: 0.02,
-                num_genes: 100,
-                continuous: true,
-                selected_func: 10,
-                is_negative_fit: false,
-                is_high_fit: false,
-                max_generation: 10000
-htga.execute
+# htga = HTGA.new values: 'discrete',
+#                 upper_bounds: Array.new(100, 10),
+#                 lower_bounds: Array.new(100, -5),
+#                 pop_size: 200,
+#                 cross_rate: 0.2,
+#                 mut_rate: 0.02,
+#                 num_genes: 100,
+#                 continuous: true,
+#                 selected_func: 10,
+#                 is_negative_fit: false,
+#                 is_high_fit: false,
+#                 max_generation: 10000
+# htga.execute
 
 # RESULTS
 # "best fitness overall 98.98255812317848"
