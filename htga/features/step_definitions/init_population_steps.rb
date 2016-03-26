@@ -21,7 +21,7 @@ end
 Given(/^the upper bounds are$/) do |table|
   table = table.raw
   upper_bounds = []
-  table.each do |item|
+  table[0].each do |item|
     upper_bounds << item[0].to_f
   end
   input[:upper_bounds] = upper_bounds
@@ -30,7 +30,7 @@ end
 Given(/^the lower bounds are$/) do |table|
   table = table.raw
   lower_bounds = []
-  table.each do |item|
+  table[0].each do |item|
     lower_bounds << item[0].to_f
   end
   input[:lower_bounds] = lower_bounds

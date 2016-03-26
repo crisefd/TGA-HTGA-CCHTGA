@@ -8,14 +8,6 @@
 
 # @author Cristhian Fuertes
 module TestFunctions
-  private
-
-  def self.radians(x)
-    x * Math::PI / 180
-  end
-
-  public
-
   OPTIMAL_FUNCTION_VALUES = [
     -125_69.4600, # value 1
     0, # value 2
@@ -45,11 +37,10 @@ module TestFunctions
     lambda do |x| # function 2
       sum = 0.0
       x.each do |xi|
-        sum += xi**2 -10 * Math.cos(2 * Math::PI * xi) + 10
+        sum += xi**2 - 10 * Math.cos(2 * Math::PI * xi) + 10
       end
       sum
     end,
-
     lambda do |x| # function 3
       sum_square_x = 0.0
       sum_cos = 0.0
@@ -172,13 +163,12 @@ module TestFunctions
         first_term += ((x[j]**2 - x[j + 1])**2) * 100
         second_term += (x[j] - 1)**2
       end
-      fail 'wrong size of chrome' unless x.size == 100
       first_term + second_term
     end,
     lambda do |x| # function 11
       sum = 0.0
       x.each do |xi|
-        sum + xi**2
+        sum += xi**2
       end
       sum
     end,

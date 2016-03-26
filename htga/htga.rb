@@ -11,15 +11,11 @@ require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
-def pp(arg)
-  # p arg
-end
-
-# require '/home/crisefd/Ruby/TGA-HTGA-CCHTGA/base_ga/base_ga'
-
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
 class HTGA < BaseGA
+  # @!attribute [taguchi_array] the selected Taguchi array for matrix
+  # experiments
   attr_accessor :taguchi_array
 
   # @param [Hash] input, hash list for the initialization of the HTGA
@@ -54,7 +50,6 @@ class HTGA < BaseGA
     begin
       init_population
       p 'population initialized'
-      # p @chromosomes.first
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation <= @max_generation
@@ -80,16 +75,11 @@ class HTGA < BaseGA
           end
         end
         break if best_fit == @optimal_func_val
-        # break if fit_optimal? best_fit
         @generation += 1
       end
       p '==================OUTPUT===================='
-      # p "generations #{@generation}"
-      # p "first chromosome of last gen #{@chromosomes[0]}"
-      # p "best fitness of last gen #{@chromosomes[0].fitness}"
       p "best fitness overall #{best_fit}"
       p "generation of best fitness #{gen_of_best_fit}"
-      # p "expected number of function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @generation}"
       p "function evaluations of best fitness #{func_evals_of_best_fit}"
       p "Execution time (seconds): #{Time.now - init_time}"
     rescue StandardError => error
@@ -100,8 +90,9 @@ class HTGA < BaseGA
   end
 
   # Crossover operator method use in HTGA
-  # @param [Hash] args, argument hash list that includes chromosomes, lower and upper bounds
-  # @return [Chromosome, Chromosome]  the resulting chromosomes.
+  # @param [Chromosome] chromosome_x
+  # @param [Chromosome] chromosome_y
+  # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.
   def crossover(chromosome_x, chromosome_y)
     beta = rand(0..10) / 10.0
     k = rand(0...chromosome_y.size)
@@ -110,7 +101,7 @@ class HTGA < BaseGA
     cut_point_y = chromosome_y[k]
     cut_point_x = cut_point_x + beta * (cut_point_y - cut_point_x)
     cut_point_y = lower_bounds[k] + beta * (@upper_bounds[k] - @lower_bounds[k])
-    if @continuous
+    if @continuous # Doesn't work with discrete functions
       chromosome_x[k] = cut_point_x
       chromosome_y[k] = cut_point_y
     else
@@ -126,7 +117,7 @@ class HTGA < BaseGA
 
   # Mutation operator method for the chromosomes
   # @param [Chromosome] chromosome, the chromosome to mutate
-  # @return [Chromosome] the resulting chrmosome
+  # @return [Chromosome] the resulting mutated chromosome
   def mutate(chromosome) # Does not work for discrete functions
     beta = rand(0..10) / 10.0
     i = -1
@@ -138,7 +129,7 @@ class HTGA < BaseGA
     end
     gene_i = chromosome[i]
     gene_k = chromosome[k]
-    if @continuous
+    if @continuous # Doesn't work for discrete functions
       chromosome[i] = (1 - beta) * gene_i + beta * gene_k
       chromosome[k] = beta * gene_i + (1 - beta) * gene_k
     else
@@ -154,22 +145,27 @@ class HTGA < BaseGA
   def calculate_snr(chromosome)
     n = chromosome.size.to_f
     if @is_high_fit # What happens when the gene is 0 ?
-      chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
+      chromosome.snr = -10.0 * Math.log10((1.0 / n) *
+                        chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
     else
-      chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2.0 }.reduce(:+))
+      chromosome.snr = -10.0 * Math.log10((1.0 / n) *
+                        chromosome.map { |gene| gene**2.0 }.reduce(:+))
     end
-    # fail 'snr error' unless chromosone
   end
 
+  # Method to evaluate an assign a fitness value to a chromosome
+  # @param [Chromosome] chromosome
+  # @note fitness equals the function value
   def evaluate_chromosome(chromosome)
     chromosome.fitness = @selected_func.call chromosome
     @num_evaluations += 1
   end
 
   # Method to perform crossover operation over chromosomes
+  # @param [Integer] offset for the selected chromosomes by the #roulette_select
+  # method
   # @return [void]
   def cross_individuals(selected_offset)
-    pp '=> crossing individuals'
     m = selected_offset
     m += 1 if m == 1
     (0...m).each do
@@ -195,7 +191,6 @@ class HTGA < BaseGA
   # Method to perform mutation operation over the chromosomes
   # @return [void]
   def mutate_individuals
-    pp '=> mutating individuals'
     m = @chromosomes.size
     (0...m).each do
       r = rand(0.0..1.0)
@@ -207,21 +202,16 @@ class HTGA < BaseGA
     end
   end
 
-
-
   # Method that select the best M chromosomes for the next generation
   # @return [void]
   def select_next_generation
-    pp "=> selecting next generation"
     if @is_high_fit
-      pp "sort in decreasing order"
       # sort in decreasing order by fitness values
       @chromosomes.sort! do |left_chrom, right_chrom|
         right_chrom.fitness <=> left_chrom.fitness
       end
     else
       # sort in increasing order of fitness values
-      pp "sort in increasing order"
       @chromosomes.sort! do |left_chrom, right_chrom|
         left_chrom.fitness <=> right_chrom.fitness
       end
@@ -264,22 +254,20 @@ class HTGA < BaseGA
   # @return [Chromosome] the optimal chromosome
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
     optimal_chromosome = Chromosome.new
-    experimental_matrix = generate_experimental_matrix chromosome_x,
-                                                       chromosome_y
+    experiment_matrix = generate_experiment_matrix chromosome_x, chromosome_y
     # Calculate fitness and SNR values
-    experimental_matrix.each_index do |i|
-      # experimental_matrix[i].fitness = @selected_func.call experimental_matrix[i]
-      calculate_snr experimental_matrix[i]
+    experiment_matrix.each_index do |i|
+      calculate_snr experiment_matrix[i]
     end
     # Calculate the effects of the various factors
-    (0...experimental_matrix[0].size).each do |j|
+    (0...experiment_matrix[0].size).each do |j|
       sum_lvl_1 = 0.0
       sum_lvl_2 = 0.0
-      (0...experimental_matrix.size).each do |i|
+      (0...experiment_matrix.size).each do |i|
         if @taguchi_array[i][j] == 1
-          sum_lvl_2 += experimental_matrix[i].snr
+          sum_lvl_2 += experiment_matrix[i].snr
         else
-          sum_lvl_1 += experimental_matrix[i].snr
+          sum_lvl_1 += experiment_matrix[i].snr
         end
       end
       if sum_lvl_1 > sum_lvl_2
@@ -294,10 +282,11 @@ class HTGA < BaseGA
     optimal_chromosome
   end
 
+
+  # Method to generate offspring using the Taguchi method
+  # @return [void]
   def generate_offspring_by_taguchi_method
     expected_number = 0.5 * @pop_size * @cross_rate
-    pp '=> generate_offspring_by_taguchi_method'
-    pp "expected_number #{expected_number}"
     n = 0
     m = @chromosomes.size
     while n < expected_number
@@ -319,8 +308,9 @@ class HTGA < BaseGA
   # chromosome
   # @param [Chromosome] chromosome_x, the first chromosome
   # @param [Chromosome] chromosome_y, the second chromosome
-  def generate_experimental_matrix(chromosome_x, chromosome_y)
-    experimental_matrix = []
+  # @param [Array<Chromosome>] an array of chromosomes
+  def generate_experiment_matrix(chromosome_x, chromosome_y)
+    experiment_matrix = []
     (0...@taguchi_array.size).each do |i|
       row_chromosome = Chromosome.new
       (0...@taguchi_array[0].size).each do |j|
@@ -330,27 +320,25 @@ class HTGA < BaseGA
           row_chromosome << chromosome_y[j]
         end
       end
-      experimental_matrix << row_chromosome
+      experiment_matrix << row_chromosome
     end
-    experimental_matrix
+    experiment_matrix
   end
-
 
   # Method to generate the initial population of chromosomes
   # @return [void]
   def init_population
-    pp "=>initializing population"
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @beta_values == 'discrete'
           beta = rand(0..10) / 10.0
         elsif @beta_values == 'uniform distribution'
-          beta = Random.rand(1.0)
+          beta = rand(0.0..1.0)
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
                                                  @lower_bounds[i])
-        if @continuous
+        if @continuous # Wrong for discrete functions
           chromosome << gene
         else
           chromosome << gene.floor
@@ -595,9 +583,9 @@ if __FILE__ == $PROGRAM_NAME
 
 # RESULTS
 # "best fitness overall 0.0"
-# "generation of best fitness 1"
-# "function evaluations of best fitness 214"
-# "Execution time (seconds): 0.094560799"
+# "generation of best fitness 34"
+# "function evaluations of best fitness 1232"
+# "Execution time (seconds): 0.57755215"
 
 # f12 se acerco al valor reportado
 
