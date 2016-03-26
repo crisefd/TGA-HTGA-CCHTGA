@@ -187,7 +187,6 @@ class HTGA < BaseGA
     end
   end
 
-
   # Method to perform mutation operation over the chromosomes
   # @return [void]
   def mutate_individuals
