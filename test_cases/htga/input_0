@@ -1,12 +1,12 @@
 function: 1
 minimization: yes
 continuous: yes
-population size: 200
-number of genes: 30
+population size: 10
+number of genes: 3
 mutation rate: 0.02
 crossover rate: 0.1
 beta values: discrete
 max number of generations: 1000
+upper bounds: [5, 5, 5]
+lower bounds: [-5, -5, -5]
 number of runs: 50
-upper bounds: []
-lower bounds: []

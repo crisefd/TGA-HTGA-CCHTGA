@@ -21,11 +21,14 @@ class TestRunner
     file = open(path_to_input_test_file, 'r')
     file.each_line do |line|
       splitted_line = line.split(':')
-      first_word = splitted_line[1].gsub(/\A\p{Space}*|\p{Space}*\z/, '')
-      second_word = splitted_line[0].gsub(/\A\p{Space}*|\p{Space}*\z/,
+      second_word = splitted_line[1].gsub(/\A\p{Space}*|\p{Space}*\z/, '')
+      first_word = splitted_line[0].gsub(/\A\p{Space}*|\p{Space}*\z/,
                                           '').gsub(/\s+/, ' ')
-      @hash_input.merge return_hash(first_word, second_word)
+      # p "first_word #{first_word} - second_word #{second_word}"
+      @hash_input.merge! return_hash(first_word, second_word)
     end
+    p "hash_input #{@hash_input}"
+    p "num_runs #{@num_runs}"
     file.close
   end
 
@@ -60,20 +63,21 @@ class TestRunner
       hash = { cross_rate: second_word.to_f }
     when 'beta values'
       fail "Invalid beta values #{second_word}" unless second_word == 'discrete' || second_word == 'uniform distribution'
-      hash = { beta_values:  second_word }
+      hash = { beta_values:  second_word.to_s }
     when 'max number of generations'
       hash = { max_generation: second_word.to_i }
     when 'upper bounds'
       begin
-        bound = second_word.to_f
+        bound = Float second_word
         hash = { upper_bounds: Array.new(@hash_input[:num_genes], bound) }
       rescue
         bound = second_word.gsub(/[\[\] ]/, '').split(',').map!(&:to_f)
+        p 'XX'
         hash = { upper_bounds: bound }
       end
     when 'lower bounds'
       begin
-        bound = second_word.to_f
+        bound = Float second_word
         hash = { lower_bounds: Array.new(@hash_input[:num_genes], bound) }
       rescue
         bound = second_word.gsub(/[\[\] ]/, '').split(',').map!(&:to_f)
