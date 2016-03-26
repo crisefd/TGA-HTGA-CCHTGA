@@ -17,49 +17,44 @@ class BaseGA
   # Modules for roulette selection operation and test functions
   include Roulette, TestFunctions
 
-  # @attr [Array] lower_bounds, lower bounds for the variables
-  attr_reader :lower_bounds
-  # @attr [Array] upper_bounds, upper bounds for the variables
-  attr_reader :upper_bounds
-  # @attr [Array] pop_size, the number of chromosomes
+  # @!attribute [Array] lower_bounds, lower bounds for the variables
+  attr_accessor :lower_bounds
+  # @!attribute [Array] upper_bounds, upper bounds for the variables
+  attr_accessor :upper_bounds
+  # @!attribute [Array] pop_size, the number of chromosomes
   attr_writer :pop_size
-  # @attr [Array] chromosomes, the candidate solutions
+  # @!attribute [Array] chromosomes, the candidate solutions
   attr_accessor :chromosomes
-  # @attr [Proc] selected_func, the selected function to optimize
+  # @!attribute [Proc] selected_func, the selected function to optimize
   attr_writer :selected_func
-  # @attr [Float], the optimal function value for the selected function
+  # @!attribute [Float], the optimal function value for the selected function
   attr_writer :optimal_func_val
-  # @attr [Boolean] is_high_fit, a flag indicating if what is sought is a high fitness
+  # @!attribute [Boolean] is_high_fit, a flag indicating if what is sought is a
+  # high fitness
   attr_writer :is_high_fit
-  # @attr [Integer] generation, the counting variables of the number of generations
+  # @!attribute [Integer] generation, the counting variables of the number of
+  # generations
   attr_reader :generation
-  # @attr [Integer] max_generation, the maximum allow number of generations
+  # @!attribute [Integer] max_generation, the maximum allow number of
+  # generations
   attr_writer :max_generation
-  # @attr [Integer] num_genes, the length of the chromosomes
+  # @!attribute [Integer] num_genes, the length of the chromosome
   attr_accessor :num_genes
-
-  # @param [Hash] input, hash list for construction parameters
-  def initialize(**input)
-    @chromosomes = input[:chromosomes]
-    @pop_size = input[:pop_size]
-    @is_negative_fit = input[:is_negative_fit]
-    @is_negative_fit = false if @is_negative_fit.nil?
-    @is_high_fit = input[:is_high_fit]
-    @is_high_fit = false if @is_high_fit.nil?
-  end
+  # @!attribute [Boolean] continuous, flag to signal if functions is discrete or
+  # continuous
+  attr_accessor :continuous
 
   # Roulette selection operation method
-  # @return [void]
-  def roulette_select # This method can be optimize
-    pp '=> roulette selection'
+  # @return [Integer] offset of the selected chromosomes
+  def roulette_select
     fail "pop size incorrect, expected #{pop_size} found #{@chromosomes.size}" unless @pop_size == @chromosomes.size
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
                                       is_negative_fit: @is_negative_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
-    r = Random.rand(1.0)
+    r = rand(0.0..1.0)
     rejected_chromosomes = []
     (0...@pop_size).each do |i|
-      if r < copied_chromosomes[i].prob # This validation here, can be optimize
+      if r < copied_chromosomes[i].prob
         @chromosomes << copied_chromosomes[i]
       else
         rejected_chromosomes << copied_chromosomes[i]
@@ -69,30 +64,5 @@ class BaseGA
     selected_offset = @chromosomes.size
     @chromosomes += rejected_chromosomes.reverse!
     selected_offset
-  end
-
-  # Method to generate the initial population of chromosomes
-  # @return [void]
-  def init_population
-    pp "=>initializing population"
-    (0...@pop_size).each do
-      chromosome = Chromosome.new
-      (0...@num_genes).each do |i|
-        if @values == 'discrete'
-          beta = (Array.new(11) { |k| k / 10.0 }).sample
-        elsif @values == 'uniform distribution'
-          beta = Random.rand(1.0)
-        end
-        gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
-                                                 @lower_bounds[i])
-        if @continuous
-          chromosome << gene
-        else
-          chromosome << gene.floor
-        end
-      end
-      evaluate_chromosome chromosome
-      @chromosomes << chromosome
-    end
   end
 end
