@@ -42,7 +42,8 @@ class HTGA < BaseGA
 
   # Main method for the HTGA
   def execute
-    @generation = 1
+    output_hash = {}
+    @generation = 0
     best_fit = nil
     gen_of_best_fit = 0
     func_evals_of_best_fit = 0
@@ -52,40 +53,44 @@ class HTGA < BaseGA
       p 'population initialized'
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
-      while @generation <= @max_generation
+      while @generation < @max_generation
         selected_offset = roulette_select
         cross_individuals selected_offset
         generate_offspring_by_taguchi_method
         mutate_individuals
         select_next_generation
         if @generation % 10 == 0
-          p "GENERATION #{@generation} fitness #{@chromosomes.first.fitness}"
+          p "Generation: #{@generation}-Fitness: #{@chromosomes.first.fitness}"
+          p "Execution time (seconds): #{Time.now - init_time}"
         end
-        if @is_high_fit
-          if best_fit.nil? || @chromosomes.first.fitness > best_fit
-            best_fit = @chromosomes.first.fitness
-            gen_of_best_fit = @generation
-            func_evals_of_best_fit = @num_evaluations
-          end
-        else
-          if best_fit.nil? || @chromosomes.first.fitness < best_fit
-            best_fit = @chromosomes.first.fitness
-            gen_of_best_fit = @generation
-            func_evals_of_best_fit = @num_evaluations
-          end
-        end
+        update_output_variables best_fit, gen_of_best_fit,
+                                func_evals_of_best_fit
         break if best_fit == @optimal_func_val
         @generation += 1
       end
-      p '==================OUTPUT===================='
-      p "best fitness overall #{best_fit}"
-      p "generation of best fitness #{gen_of_best_fit}"
-      p "function evaluations of best fitness #{func_evals_of_best_fit}"
-      p "Execution time (seconds): #{Time.now - init_time}"
+      output_hash.merge! best_fit: best_fit, gen_of_best_fit: gen_of_best_fit,
+                         func_evals_of_best_fit: func_evals_of_best_fit
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
       exit
+    end
+    output_hash
+  end
+
+  def update_output_variables(best_fit, gen_of_best_fit, func_evals_of_best_fit)
+    if @is_high_fit
+      if best_fit.nil? || @chromosomes.first.fitness > best_fit
+        best_fit = @chromosomes.first.fitness
+        gen_of_best_fit = @generation
+        func_evals_of_best_fit = @num_evaluations
+      end
+    else
+      if best_fit.nil? || @chromosomes.first.fitness < best_fit
+        best_fit = @chromosomes.first.fitness
+        gen_of_best_fit = @generation
+        func_evals_of_best_fit = @num_evaluations
+      end
     end
   end
 

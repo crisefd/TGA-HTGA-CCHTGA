@@ -1,6 +1,7 @@
 function: 1
 minimization: yes
 continuous: yes
+negative fitnesses: no
 population size: 10
 number of genes: 3
 mutation rate: 0.02

@@ -6,30 +6,59 @@
 #        oscar.tigreros@correounivalle.edu.co
 # Creation date: 2016-03-25
 
+require_relative 'htga/htga'
+
+
 # Manager class for running tests
 class TestRunner
 
-  def initialize(path_to_input_test_file)
-    load_input_test_file path_to_input_test_file
+  def initialize(all_tests: true)
+    @all_tests = all_tests
   end
 
-  def execute
+  def execute(path_to_input_test_file)
+    if @all_tests
+      ;
+    else
+      input_hash = load_input_test_file path_to_input_test_file
+      1.upto(@num_runs) do |run|
+        htga = HTGA.new input_hash
+        output_hash = htga.execute
+        write_ouput_file output_hash, path_to_input_test_file, run
+      end
+    end
   end
 
   def load_input_test_file(path_to_input_test_file)
-    @hash_input = {}
-    file = open(path_to_input_test_file, 'r')
+    input_hash = {}
+    file = open path_to_input_test_file, 'r'
     file.each_line do |line|
       splitted_line = line.split(':')
       second_word = splitted_line[1].gsub(/\A\p{Space}*|\p{Space}*\z/, '')
       first_word = splitted_line[0].gsub(/\A\p{Space}*|\p{Space}*\z/,
-                                          '').gsub(/\s+/, ' ')
-      # p "first_word #{first_word} - second_word #{second_word}"
-      @hash_input.merge! return_hash(first_word, second_word)
+                                         '').gsub(/\s+/, ' ')
+      input_hash.merge! return_hash(first_word, second_word)
     end
-    p "hash_input #{@hash_input}"
+    p "input_hash #{input_hash}"
     p "num_runs #{@num_runs}"
     file.close
+    input_hash
+  end
+
+  def write_ouput_file(output_hash, path_to_input_test_file, run)
+    splitted_path = path_to_input_test_file.split '/'
+    test_dir = splitted_path.first
+    input_file_name = splitted_path.last
+    path_to_output_file = "#{test_dir}/#{input_file_name}-OUTPUT.csv"
+    file = open path_to_output_file, 'a'
+    if run == 1
+      file.puts "best fitness,generation of best fitness,function evaluations of
+                 best fitness"
+    end
+    file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},
+               #{output_hash[:func_evals_of_best_fit]}"
+    file.close
+
   end
 
   def return_hash(first_word, second_word)
@@ -53,6 +82,14 @@ class TestRunner
       else
         fail '#continuous bad keyword, expected yes or no'
       end
+    when 'negative fitnesses'
+      if second_word == 'yes'
+        hash = { is_negative_fit: true }
+      elsif second_word == 'no'
+        hash = { is_negative_fit: false }
+      else
+        fail '#negative_fitness bad keyword, expected yes or no'
+      end
     when 'population size'
       hash = { pop_size: second_word.to_i }
     when 'number of genes'
@@ -69,16 +106,15 @@ class TestRunner
     when 'upper bounds'
       begin
         bound = Float second_word
-        hash = { upper_bounds: Array.new(@hash_input[:num_genes], bound) }
+        hash = { upper_bounds: Array.new(@input_hash[:num_genes], bound) }
       rescue
         bound = second_word.gsub(/[\[\] ]/, '').split(',').map!(&:to_f)
-        p 'XX'
         hash = { upper_bounds: bound }
       end
     when 'lower bounds'
       begin
         bound = Float second_word
-        hash = { lower_bounds: Array.new(@hash_input[:num_genes], bound) }
+        hash = { lower_bounds: Array.new(@input_hash[:num_genes], bound) }
       rescue
         bound = second_word.gsub(/[\[\] ]/, '').split(',').map!(&:to_f)
         hash = { lower_bounds: bound }
@@ -91,7 +127,8 @@ class TestRunner
 end
 
 if __FILE__ == $PROGRAM_NAME
-  path_to_input_test_file = ARGV[0].to_s
-  tr = TestRunner.new path_to_input_test_file
-  tr.execute
+  arg = ARGV[0].to_s
+  path_to_input_test_file = "test_cases/#{arg}"
+  tr = TestRunner.new all_tests: false
+  tr.execute path_to_input_test_file
 end
