@@ -12,19 +12,15 @@ require_relative 'htga/htga'
 # Manager class for running tests
 class TestRunner
 
-  def initialize(all_tests: true)
-    @all_tests = all_tests
-  end
-
-  def execute(path_to_input_test_file)
-    if @all_tests
-      ;
-    else
-      input_hash = load_input_test_file path_to_input_test_file
+  def execute(paths_to_input_test_files)
+    p "paths_to_input_test_files #{paths_to_input_test_files}"
+    paths_to_input_test_files.each do |path|
+      p "path #{path}"
+      input_hash = load_input_test_file path
       1.upto(@num_runs) do |run|
         htga = HTGA.new input_hash
         output_hash = htga.execute
-        write_ouput_file output_hash, path_to_input_test_file, run
+        write_ouput_file output_hash, path, run
       end
     end
   end
@@ -39,8 +35,6 @@ class TestRunner
                                          '').gsub(/\s+/, ' ')
       input_hash.merge! return_hash(first_word, second_word, input_hash)
     end
-    p "input_hash #{input_hash}"
-    # p "num_runs #{@num_runs}"
     file.close
     input_hash
   end
@@ -48,16 +42,16 @@ class TestRunner
   def write_ouput_file(output_hash, path_to_input_test_file, run)
     splitted_path = path_to_input_test_file.split '/'
     test_dir = splitted_path[1]
-    input_file_name = splitted_path[2]
+    input_file_name = splitted_path[2].split('.')[0]
     path_to_output_file = "test_cases/#{test_dir}/#{input_file_name}-OUTPUT.csv"
-    File.delete path_to_output_file if File.exist? path_to_output_file
+    File.delete path_to_output_file if File.exist?(path_to_output_file) &&
+                                       run == 1
     file = open path_to_output_file, 'a'
     if run == 1
       file.puts "best fitness,generation of best fitness,function evaluations of best fitness"
     end
     file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},#{output_hash[:func_evals_of_best_fit]}"
     file.close
-
   end
 
   def return_hash(first_word, second_word, input_hash)
@@ -127,12 +121,13 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   arg = ARGV[0].to_s
+  paths_to_input_test_files = []
   if arg == 'htga' || arg == 'tga' || arg == 'cchtga'
-    ;
+    paths_to_input_test_files += Dir["test_cases/#{arg}/*.ini"]
   else
-    path_to_input_test_file = "test_cases/#{arg}"
-    tr = TestRunner.new all_tests: false
-    tr.execute path_to_input_test_file
+    paths_to_input_test_files << "test_cases/#{arg}"
   end
+  tr = TestRunner.new
+  tr.execute paths_to_input_test_files
 
 end
