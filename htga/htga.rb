@@ -63,8 +63,21 @@ class HTGA < BaseGA
           p "Generation: #{@generation}-Fitness: #{@chromosomes.first.fitness}"
           p "Execution time (seconds): #{Time.now - init_time}"
         end
-        update_output_variables best_fit, gen_of_best_fit,
-                                func_evals_of_best_fit
+        if @is_high_fit
+          if best_fit.nil? || @chromosomes.first.fitness > best_fit
+            best_fit = @chromosomes.first.fitness
+            gen_of_best_fit = @generation
+            func_evals_of_best_fit = @num_evaluations
+          end
+        else
+          if best_fit.nil? || @chromosomes.first.fitness < best_fit
+            best_fit = @chromosomes.first.fitness
+            gen_of_best_fit = @generation
+            func_evals_of_best_fit = @num_evaluations
+          end
+        end
+        # update_output_variables best_fit, gen_of_best_fit,
+        #                         func_evals_of_best_fit
         break if best_fit == @optimal_func_val
         @generation += 1
       end

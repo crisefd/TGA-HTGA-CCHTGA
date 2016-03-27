@@ -37,31 +37,30 @@ class TestRunner
       second_word = splitted_line[1].gsub(/\A\p{Space}*|\p{Space}*\z/, '')
       first_word = splitted_line[0].gsub(/\A\p{Space}*|\p{Space}*\z/,
                                          '').gsub(/\s+/, ' ')
-      input_hash.merge! return_hash(first_word, second_word)
+      input_hash.merge! return_hash(first_word, second_word, input_hash)
     end
     p "input_hash #{input_hash}"
-    p "num_runs #{@num_runs}"
+    # p "num_runs #{@num_runs}"
     file.close
     input_hash
   end
 
   def write_ouput_file(output_hash, path_to_input_test_file, run)
     splitted_path = path_to_input_test_file.split '/'
-    test_dir = splitted_path.first
-    input_file_name = splitted_path.last
-    path_to_output_file = "#{test_dir}/#{input_file_name}-OUTPUT.csv"
+    test_dir = splitted_path[1]
+    input_file_name = splitted_path[2]
+    path_to_output_file = "test_cases/#{test_dir}/#{input_file_name}-OUTPUT.csv"
+    File.delete path_to_output_file if File.exist? path_to_output_file
     file = open path_to_output_file, 'a'
     if run == 1
-      file.puts "best fitness,generation of best fitness,function evaluations of
-                 best fitness"
+      file.puts "best fitness,generation of best fitness,function evaluations of best fitness"
     end
-    file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},
-               #{output_hash[:func_evals_of_best_fit]}"
+    file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},#{output_hash[:func_evals_of_best_fit]}"
     file.close
 
   end
 
-  def return_hash(first_word, second_word)
+  def return_hash(first_word, second_word, input_hash)
     hash = {}
     case first_word
     when 'function'
@@ -106,7 +105,7 @@ class TestRunner
     when 'upper bounds'
       begin
         bound = Float second_word
-        hash = { upper_bounds: Array.new(@input_hash[:num_genes], bound) }
+        hash = { upper_bounds: Array.new(input_hash[:num_genes], bound) }
       rescue
         bound = second_word.gsub(/[\[\] ]/, '').split(',').map!(&:to_f)
         hash = { upper_bounds: bound }
@@ -114,7 +113,7 @@ class TestRunner
     when 'lower bounds'
       begin
         bound = Float second_word
-        hash = { lower_bounds: Array.new(@input_hash[:num_genes], bound) }
+        hash = { lower_bounds: Array.new(input_hash[:num_genes], bound) }
       rescue
         bound = second_word.gsub(/[\[\] ]/, '').split(',').map!(&:to_f)
         hash = { lower_bounds: bound }
@@ -128,7 +127,12 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   arg = ARGV[0].to_s
-  path_to_input_test_file = "test_cases/#{arg}"
-  tr = TestRunner.new all_tests: false
-  tr.execute path_to_input_test_file
+  if arg == 'htga' || arg == 'tga' || arg == 'cchtga'
+    ;
+  else
+    path_to_input_test_file = "test_cases/#{arg}"
+    tr = TestRunner.new all_tests: false
+    tr.execute path_to_input_test_file
+  end
+
 end
