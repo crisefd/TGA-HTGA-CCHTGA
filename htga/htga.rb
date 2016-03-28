@@ -35,6 +35,7 @@ class HTGA < BaseGA
     @is_negative_fit = input[:is_negative_fit]
     @is_high_fit = input[:is_high_fit]
     @is_negative_fit = false if @is_negative_fit.nil?
+    p "HTGA is_negative_fit #{@is_negative_fit}"
     @is_high_fit = false if @is_high_fit.nil?
     @max_generation = input[:max_generation]
     @num_evaluations = 0
@@ -81,8 +82,11 @@ class HTGA < BaseGA
         break if best_fit == @optimal_func_val
         @generation += 1
       end
+      relative_error = (((best_fit + 1) / (@optimal_func_val + 1)) - 1).abs
       output_hash.merge! best_fit: best_fit, gen_of_best_fit: gen_of_best_fit,
-                         func_evals_of_best_fit: func_evals_of_best_fit
+                         func_evals_of_best_fit: func_evals_of_best_fit,
+                         optimal_func_val: @optimal_func_val,
+                         relative_error: relative_error
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect

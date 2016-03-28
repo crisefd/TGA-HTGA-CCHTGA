@@ -13,11 +13,10 @@ require_relative 'htga/htga'
 class TestRunner
 
   def execute(paths_to_input_test_files)
-    p "paths_to_input_test_files #{paths_to_input_test_files}"
     paths_to_input_test_files.each do |path|
-      p "path #{path}"
       input_hash = load_input_test_file path
       1.upto(@num_runs) do |run|
+        p "========== RUN #{run} ============="
         htga = HTGA.new input_hash
         output_hash = htga.execute
         write_ouput_file output_hash, path, run
@@ -48,9 +47,9 @@ class TestRunner
                                        run == 1
     file = open path_to_output_file, 'a'
     if run == 1
-      file.puts "best fitness,generation of best fitness,function evaluations of best fitness"
+      file.puts "best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error"
     end
-    file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},#{output_hash[:func_evals_of_best_fit]}"
+    file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},#{output_hash[:func_evals_of_best_fit]},#{output_hash[:optimal_func_val]},#{output_hash[:relative_error]}"
     file.close
   end
 
@@ -98,6 +97,11 @@ class TestRunner
       hash = { max_generation: second_word.to_i }
     when 'upper bounds'
       begin
+        if second_word == 'pi'
+          second_word = Math::PI.to_s
+        elsif second_word == '-pi'
+          second_word = (-1 * Math::PI).to_s
+        end
         bound = Float second_word
         hash = { upper_bounds: Array.new(input_hash[:num_genes], bound) }
       rescue
@@ -106,9 +110,19 @@ class TestRunner
       end
     when 'lower bounds'
       begin
+        if second_word == 'pi'
+          second_word = Math::PI.to_s
+        elsif second_word == '-pi'
+          second_word = (-1 * Math::PI).to_s
+        end
         bound = Float second_word
         hash = { lower_bounds: Array.new(input_hash[:num_genes], bound) }
       rescue
+        if second_word == 'pi'
+          second_word = Math::PI.to_s
+        elsif second_word == '-pi'
+          second_word = (-1 * Math::PI).to_s
+        end
         bound = second_word.gsub(/[\[\] ]/, '').split(',').map!(&:to_f)
         hash = { lower_bounds: bound }
       end

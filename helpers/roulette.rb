@@ -13,7 +13,8 @@ require 'bundler/setup'
 module Roulette
   private
 
-  # Method that normalizes an array that potentially contains negative numbers by shifting
+  # Method that normalizes an array that potentially contains negative numbers
+  # by shifting
   # all of them up to be positive (0 is left alone).
   # @param [Array<Chromosome>] chromosomes, list of chromosomes to normalize
   # @return [Array<Chromosome>] the normalized chromosomes
@@ -44,7 +45,7 @@ module Roulette
   # @param [Boolean] is_negative_fit, true if there are negative fitness and false otherwise
   # @return [void]
   def self.calc_probs(chromosomes, is_high_fit: true, is_negative_fit: true)
-    norm_pop chromosomes if is_negative_fit
+    Roulette.norm_pop chromosomes if is_negative_fit
     fit_sum  = 0.0 # Sum of each individual's fitness in the population
     prob_sum = 0.0 # You can think of this in 2 ways; either...
                    # 1) Current sum of each individual's probability in the
@@ -58,7 +59,9 @@ module Roulette
 
     # Get fitness sum and maximum fitness
     chromosomes.each do |chromosome|
+      fail 'nil fit_sum' unless !fit_sum.nil?
       if is_negative_fit
+        fail 'nil norm_fitness' unless !chromosome.norm_fitness.nil?
         fit_sum += chromosome.norm_fitness
         max_fit = chromosome.norm_fitness if max_fit.nil? || chromosome.norm_fitness > max_fit
       else
