@@ -11,6 +11,7 @@ require 'bundler/setup'
 # @author Cristhian Fuertes
 # Module for roulette selection operation
 module Roulette
+  @@flag = false
   private
 
   # Method that normalizes an array that potentially contains negative numbers
@@ -22,6 +23,7 @@ module Roulette
     least_fit = (chromosomes.min_by(&:fitness)).fitness
     chromosomes.map! do |chromosome|
       if chromosome.fitness != 0
+        @@flag = true
         chromosome.norm_fitness = chromosome.fitness + least_fit * -1 # Correct?
       end
       chromosome
@@ -45,6 +47,7 @@ module Roulette
   # @param [Boolean] is_negative_fit, true if there are negative fitness and false otherwise
   # @return [void]
   def self.calc_probs(chromosomes, is_high_fit: true, is_negative_fit: true)
+    @@flag = false
     Roulette.norm_pop chromosomes if is_negative_fit
     fit_sum  = 0.0 # Sum of each individual's fitness in the population
     prob_sum = 0.0 # You can think of this in 2 ways; either...
@@ -61,7 +64,7 @@ module Roulette
     chromosomes.each do |chromosome|
       fail 'nil fit_sum' unless !fit_sum.nil?
       if is_negative_fit
-        fail 'nil norm_fitness' unless !chromosome.norm_fitness.nil?
+        fail "nil norm_fitness. Flag #{@@flag}" unless !chromosome.norm_fitness.nil?
         fit_sum += chromosome.norm_fitness
         max_fit = chromosome.norm_fitness if max_fit.nil? || chromosome.norm_fitness > max_fit
       else
