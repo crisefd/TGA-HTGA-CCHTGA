@@ -65,4 +65,13 @@ class BaseGA
     @chromosomes += rejected_chromosomes.reverse!
     selected_offset
   end
+
+  # Method to evaluate an assign a fitness value to a chromosome
+  # @param [Chromosome] chromosome
+  # @note fitness equals the function value
+  def evaluate_chromosome(chromosome)
+    chromosome.fitness = @selected_func.call chromosome
+    @num_evaluations += 1
+  end
+
 end

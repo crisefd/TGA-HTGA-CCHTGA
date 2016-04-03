@@ -175,13 +175,7 @@ class HTGA < BaseGA
     end
   end
 
-  # Method to evaluate an assign a fitness value to a chromosome
-  # @param [Chromosome] chromosome
-  # @note fitness equals the function value
-  def evaluate_chromosome(chromosome)
-    chromosome.fitness = @selected_func.call chromosome
-    @num_evaluations += 1
-  end
+  
 
   # Method to perform crossover operation over chromosomes
   # @param [Integer] offset for the selected chromosomes by the #roulette_select
