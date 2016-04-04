@@ -10,6 +10,7 @@ require 'rubygems'
 require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'htga/htga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
+require File.join(File.dirname(__FILE__), '..', 'helpers/subsystem.rb')
 
 # @author Cristhian Fuertes
 # Main class for the Cooperative Coevolutive Hybrid-Taguchi Genetic Algorithm
@@ -22,6 +23,7 @@ class CCHTGA < HTGA
 
   # @param [Hash] input, hash list for the initialization of the HTGA
   def initialize(**input)
+    @best_chromosome = nil
     @beta_values = input[:beta_values]
     @upper_bounds = input[:upper_bounds]
     @lower_bounds = input[:lower_bounds]
@@ -43,6 +45,8 @@ class CCHTGA < HTGA
     @num_evaluations = 0
   end
 
+  # Method to calculate a list of divisors for n = number of variables
+  # @return [Array<Integer>]
   def calculate_divisors
     divisors = []
     n = Math.sqrt(@num_genes).round
@@ -55,13 +59,19 @@ class CCHTGA < HTGA
     divisors
   end
 
+  # Method to divide the variables in K subsystems
+  # @note A random value s in chosen from the a list of divisor
+  # (see #calculate_divisors), then K = n / s. Where n is the number of
+  # variables
   def divide_variables
     divisors = calculate_divisors
     s = divisors.sample
-    num_subsystems = @num_genes / s
-    @subsystems = Array.new(num_subsystems) { [] }
+    k = @num_genes / s
+    @subsystems = Array.new(k) { Subsystem.new }
   end
 
+  # Method to perform random grouping
+  # @return [void]
   def random_grouping
     (0...@num_genes).each do |g|
       j = rand(0...@subsystems.size)
@@ -129,4 +139,42 @@ class CCHTGA < HTGA
     end
     gene
   end
+
+  # Method to generate the initial population of chromosomes
+  # @return [void]
+  # @note It also initialize the best experiences for chromosomes and the best
+  # chromosome
+  def init_population
+    (0...@pop_size).each do
+      chromosome = Chromosome.new
+      (0...@num_genes).each do |i|
+        if @beta_values == 'discrete'
+          beta = rand(0..10) / 10.0
+        elsif @beta_values == 'uniform distribution'
+          beta = rand(0.0..1.0)
+        end
+        gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
+                                                 @lower_bounds[i])
+        if @continuous # Wrong for discrete functions
+          chromosome << gene
+        else
+          chromosome << gene.floor
+        end
+      end
+      evaluate_chromosome chromosome
+      @chromosomes << chromosome
+      @best_chromosomes_experiences << chromosome
+      if @is_high_fit
+        @best_chromosome = chromosome.clone if @best_chromosome.nil? ||
+                                               chromosome.fitness >
+                                               @best_chromosome.fitness
+      else
+        @best_chromosome = chromosome.clone if @best_chromosome.nil? ||
+                                               chromosome.fitness <
+                                               @best_chromosome.fitness
+      end
+
+    end
+  end
+
 end
