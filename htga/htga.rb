@@ -95,7 +95,7 @@ class HTGA < BaseGA
     output_hash
   end
 
-  def update_output_variables(best_fit, gen_of_best_fit, func_evals_of_best_fit)
+  def update_output_variables(best_fit, _gen_of_best_fit, _func_evals_of_best_fit)
     if @is_high_fit
       if best_fit.nil? || @chromosomes.first.fitness > best_fit
         best_fit = @chromosomes.first.fitness
@@ -121,7 +121,7 @@ class HTGA < BaseGA
     # new values for kth genes x and y
     cut_point_x = chromosome_x[k]
     cut_point_y = chromosome_y[k]
-    cut_point_x = cut_point_x + beta * (cut_point_y - cut_point_x)
+    cut_point_x += beta * (cut_point_y - cut_point_x)
     cut_point_y = lower_bounds[k] + beta * (@upper_bounds[k] - @lower_bounds[k])
     if @continuous # Doesn't work with discrete functions
       chromosome_x[k] = cut_point_x
@@ -134,7 +134,7 @@ class HTGA < BaseGA
     ((k + 1)...chromosome_y.size).each do |i|
       chromosome_x[i], chromosome_y[i] = chromosome_y[i], chromosome_x[i]
     end
-    return chromosome_x, chromosome_y
+    [chromosome_x, chromosome_y]
   end
 
   # Mutation operator method for the chromosomes
@@ -174,8 +174,6 @@ class HTGA < BaseGA
                         chromosome.map { |gene| gene**2.0 }.reduce(:+))
     end
   end
-
-  
 
   # Method to perform crossover operation over chromosomes
   # @param [Integer] offset for the selected chromosomes by the #roulette_select
@@ -297,7 +295,6 @@ class HTGA < BaseGA
     optimal_chromosome
   end
 
-
   # Method to generate offspring using the Taguchi method
   # @return [void]
   def generate_offspring_by_taguchi_method
@@ -382,13 +379,13 @@ if __FILE__ == $PROGRAM_NAME
   #                 max_generation: 10000
   # htga.execute
 
-# RESULTS
-# "best fitness overall -12568.655014100983"
-# "generation of best fitness 9996"
-# "function evaluations 400393"
-# "Execution time (seconds): 176.504894135"
+  # RESULTS
+  # "best fitness overall -12568.655014100983"
+  # "generation of best fitness 9996"
+  # "function evaluations 400393"
+  # "Execution time (seconds): 176.504894135"
 
-# f2 se acerco al valor reportado
+  # f2 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(30, 5.12),
@@ -404,292 +401,290 @@ if __FILE__ == $PROGRAM_NAME
   #                 max_generation: 10000
   # htga.execute
 
-# RESULTS
-# "best fitness overall 0.0"
-# "generation of best fitness 33"
-# "function evaluations 1195"
-# "Execution time (seconds): 0.628910283"
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 33"
+  # "function evaluations 1195"
+  # "Execution time (seconds): 0.628910283"
 
-# f3 se acerco al valor reportado
+  # f3 se acerco al valor reportado
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(30, 32),
-#                 lower_bounds: Array.new(30, -32),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 3,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 32),
+  #                 lower_bounds: Array.new(30, -32),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 3,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# RESULTS
-# "best fitness overall 4.440892098500626e-16"
-# "generation of best fitness 30"
-# "function evaluations of best fitness 780"
-# "Execution time (seconds): 188.342336139"
+  # RESULTS
+  # "best fitness overall 4.440892098500626e-16"
+  # "generation of best fitness 30"
+  # "function evaluations of best fitness 780"
+  # "Execution time (seconds): 188.342336139"
 
-# f4 se acerco al valor reportado
+  # f4 se acerco al valor reportado
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(30, 600),
-#                 lower_bounds: Array.new(30, -600),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 4,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 600),
+  #                 lower_bounds: Array.new(30, -600),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 4,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# RESULTS
-# "best fitness overall 0.0"
-# "generation of best fitness 36"
-# "function evaluations of best fitness 1303"
-# "Execution time (seconds): 0.697401036"
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 36"
+  # "function evaluations of best fitness 1303"
+  # "Execution time (seconds): 0.697401036"
 
-# f5 se acerco, pero no  segun lo reportado
+  # f5 se acerco, pero no  segun lo reportado
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(30, 50),
-#                 lower_bounds: Array.new(30, -50),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 5,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 50),
+  #                 lower_bounds: Array.new(30, -50),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 5,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# RESULTS
-# "best fitness overall 0.010480449136671111"
-# "generation of best fitness 6910"
-# "function evaluations of best fitness 359311"
-# "Execution time (seconds): 208.23771955"
+  # RESULTS
+  # "best fitness overall 0.010480449136671111"
+  # "generation of best fitness 6910"
+  # "function evaluations of best fitness 359311"
+  # "Execution time (seconds): 208.23771955"
 
-# f6 se acerco al valor reportado
+  # f6 se acerco al valor reportado
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(30, 50),
-#                 lower_bounds: Array.new(30, -50),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 6,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 50),
+  #                 lower_bounds: Array.new(30, -50),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 6,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# RESULTS
-# "best fitness overall 2.9562991214496233e-09"
-# "generation of best fitness 9995"
-# "function evaluations of best fitness 498975"
-# "Execution time (seconds): 193.669437994"
+  # RESULTS
+  # "best fitness overall 2.9562991214496233e-09"
+  # "generation of best fitness 9995"
+  # "function evaluations of best fitness 498975"
+  # "Execution time (seconds): 193.669437994"
 
-# f7 se acerco al valor reportado
+  # f7 se acerco al valor reportado
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(100, Math::PI),
-#                 lower_bounds: Array.new(100, 0),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 100,
-#                 continuous: true,
-#                 selected_func: 7,
-#                 is_negative_fit: true,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, Math::PI),
+  #                 lower_bounds: Array.new(100, 0),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 7,
+  #                 is_negative_fit: true,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# RESULTS
-# "best fitness overall -92.2268345505006"
-# "generation of best fitness 9613"
-# "function evaluations of best fitness 466832"
-# "Execution time (seconds): 1614.534575738"
+  # RESULTS
+  # "best fitness overall -92.2268345505006"
+  # "generation of best fitness 9613"
+  # "function evaluations of best fitness 466832"
+  # "Execution time (seconds): 1614.534575738"
 
-# f8 funcion muy costosa
+  # f8 funcion muy costosa
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(100, Math::PI),
-#                 lower_bounds: Array.new(100, -1 * Math::PI),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 100,
-#                 continuous: true,
-#                 selected_func: 8,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, Math::PI),
+  #                 lower_bounds: Array.new(100, -1 * Math::PI),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 8,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# f9 se acerco al valor reportado
+  # f9 se acerco al valor reportado
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(100, 5),
-#                 lower_bounds: Array.new(100, -5),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 100,
-#                 continuous: true,
-#                 selected_func: 9,
-#                 is_negative_fit: true,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, 5),
+  #                 lower_bounds: Array.new(100, -5),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 9,
+  #                 is_negative_fit: true,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# RESULTS
-# "best fitness overall -78.33233140753973"
-# "generation of best fitness 10000"
-# "function evaluations of best fitness 523372"
-# "Execution time (seconds): 1633.606771202"
+  # RESULTS
+  # "best fitness overall -78.33233140753973"
+  # "generation of best fitness 10000"
+  # "function evaluations of best fitness 523372"
+  # "Execution time (seconds): 1633.606771202"
 
-# f10 no se acerco al valor reportado
+  # f10 no se acerco al valor reportado
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(100, 10),
-#                 lower_bounds: Array.new(100, -5),
-#                 pop_size: 200,
-#                 cross_rate: 0.2,
-#                 mut_rate: 0.02,
-#                 num_genes: 100,
-#                 continuous: true,
-#                 selected_func: 10,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, 10),
+  #                 lower_bounds: Array.new(100, -5),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.2,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 10,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# RESULTS
-# "best fitness overall 98.98255812317848"
-# "generation of best fitness 9978"
-# "function evaluations of best fitness 150245"
-# "Execution time (seconds): 1598.60769294
+  # RESULTS
+  # "best fitness overall 98.98255812317848"
+  # "generation of best fitness 9978"
+  # "function evaluations of best fitness 150245"
+  # "Execution time (seconds): 1598.60769294
 
-# f11 se acerco al valor reportado
+  # f11 se acerco al valor reportado
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(30, 100),
-#                 lower_bounds: Array.new(30, -100),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 11,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 11,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# RESULTS
-# "best fitness overall 0.0"
-# "generation of best fitness 34"
-# "function evaluations of best fitness 1232"
-# "Execution time (seconds): 0.57755215"
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 34"
+  # "function evaluations of best fitness 1232"
+  # "Execution time (seconds): 0.57755215"
 
-# f12 se acerco al valor reportado
+  # f12 se acerco al valor reportado
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(30, 1.28),
-#                 lower_bounds: Array.new(30, -1.28),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 12,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 1.28),
+  #                 lower_bounds: Array.new(30, -1.28),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 12,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# RESULTS
-# "best fitness overall 3.5203227273239435e-06"
-# "generation of best fitness 1454"
-# "function evaluations of best fitness 79425"
-# "Execution time (seconds): 190.778915494"
+  # RESULTS
+  # "best fitness overall 3.5203227273239435e-06"
+  # "generation of best fitness 1454"
+  # "function evaluations of best fitness 79425"
+  # "Execution time (seconds): 190.778915494"
 
+  # f13 se acerco al valor reportado
 
-# f13 se acerco al valor reportado
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 10),
+  #                 lower_bounds: Array.new(30, -10),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 13,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(30, 10),
-#                 lower_bounds: Array.new(30, -10),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 13,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 36"
+  # "function evaluations of best fitness 1004"
+  # "Execution time (seconds): 0.672913684"
 
-# RESULTS
-# "best fitness overall 0.0"
-# "generation of best fitness 36"
-# "function evaluations of best fitness 1004"
-# "Execution time (seconds): 0.672913684"
+  # f14 se acerco al valor reportado
 
-# f14 se acerco al valor reportado
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 14,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(30, 100),
-#                 lower_bounds: Array.new(30, -100),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 14,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 53"
+  # "function evaluations of best fitness 2069"
+  # "Execution time (seconds): 1.128410878"
 
-# RESULTS
-# "best fitness overall 0.0"
-# "generation of best fitness 53"
-# "function evaluations of best fitness 2069"
-# "Execution time (seconds): 1.128410878"
+  # f15 se acerco al valor reportado
 
-# f15 se acerco al valor reportado
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 15,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
-# htga = HTGA.new beta_values: 'discrete',
-#                 upper_bounds: Array.new(30, 100),
-#                 lower_bounds: Array.new(30, -100),
-#                 pop_size: 200,
-#                 cross_rate: 0.1,
-#                 mut_rate: 0.02,
-#                 num_genes: 30,
-#                 continuous: true,
-#                 selected_func: 15,
-#                 is_negative_fit: false,
-#                 is_high_fit: false,
-#                 max_generation: 10000
-# htga.execute
-
-# RESULTS
-# "best fitness overall 0.0"
-# "generation of best fitness 39"
-# "function evaluations of best fitness 1005"
-# "Execution time (seconds): 0.671060716"
-
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 39"
+  # "function evaluations of best fitness 1005"
+  # "Execution time (seconds): 0.671060716"
 
 end

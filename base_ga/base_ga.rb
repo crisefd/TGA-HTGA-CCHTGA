@@ -70,8 +70,8 @@ class BaseGA
   # @param [Chromosome] chromosome
   # @note fitness equals the function value
   def evaluate_chromosome(chromosome)
-    chromosome.fitness = @selected_func.call chromosome
     @num_evaluations += 1
+    chromosome.fitness = @selected_func.call chromosome
   end
 
 end
