@@ -93,7 +93,7 @@ class CCHTGA < HTGA
 
   # Mutation operator method for the chromosomes
   # @param [Chromosome] chromosome, the chromosome to mutate
-  # @return [Chromosome] the resulting mutated chromosome
+  # @return [Chromosome]
   def mutate(chromosome, position)
     best_experience = @best_chromosomes_experiences[position]
     (0...@num_genes).each do |i|
@@ -125,19 +125,18 @@ class CCHTGA < HTGA
   end
 
   # Method to correct genes in case a chromosome exceeds the bounds
-  # @param [Integer] gene, the ith gene
-  # @param [Integer] u, the ith upper bound
-  # @param [Integer] l, the ith lower bound
-  # @return [Integer]
+  # @param [Chromosome] chromosome
   # @note The search space is doubled in each dimension and reconnected
   # from the opposite bounds to avoid discontinuities
-  def correct_gene(gene, u, l)
-    if gene < l
-      gene = 2 * l - gene
-    elsif u < gene
-      gene = 2 * u - gene
+  def correct_gene(chromosome)
+    chromosome.map! do |gene|
+      if gene < @lower_bounds
+        gene = 2 * @lower_bounds - gene
+      elsif @upper_bounds < gene
+        gene = 2 * @upper_bounds - gene
+      end
+      gene
     end
-    gene
   end
 
   # Method to generate the initial population of chromosomes
@@ -173,8 +172,6 @@ class CCHTGA < HTGA
                                                chromosome.fitness <
                                                @best_chromosome.fitness
       end
-
     end
   end
-
 end
