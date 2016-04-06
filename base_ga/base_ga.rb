@@ -73,5 +73,4 @@ class BaseGA
     @num_evaluations += 1
     chromosome.fitness = @selected_func.call chromosome
   end
-
 end

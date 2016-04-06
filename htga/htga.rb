@@ -182,12 +182,10 @@ class HTGA < BaseGA
   def cross_individuals(selected_offset)
     m = selected_offset
     m += 1 if m == 1
-    (0...m).each do
+    (0...m).each do |x|
       r = rand(0.0..1.0)
-      x = -1
       y = -1
       loop do
-        x = rand(0...m)
         y = rand(0...m)
         break if x != y
       end
@@ -205,10 +203,9 @@ class HTGA < BaseGA
   # @return [void]
   def mutate_individuals
     m = @chromosomes.size
-    (0...m).each do
+    (0...m).each do |x|
       r = rand(0.0..1.0)
       next if r > @mut_rate
-      x = rand(0...m)
       new_chrom = mutate @chromosomes[x].clone
       evaluate_chromosome new_chrom
       @chromosomes << new_chrom

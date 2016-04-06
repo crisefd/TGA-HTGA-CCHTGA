@@ -128,13 +128,15 @@ class CCHTGA < HTGA
   # @param [Chromosome] chromosome
   # @note The search space is doubled in each dimension and reconnected
   # from the opposite bounds to avoid discontinuities
-  def correct_gene(chromosome)
+  def correct_genes(chromosome)
+    i = 0
     chromosome.map! do |gene|
-      if gene < @lower_bounds
-        gene = 2 * @lower_bounds - gene
-      elsif @upper_bounds < gene
-        gene = 2 * @upper_bounds - gene
+      if gene < @lower_bounds[i]
+        gene = 2 * @lower_bounds[i] - gene
+      elsif @upper_bounds[i] < gene
+        gene = 2 * @upper_bounds[i] - gene
       end
+      i += 1
       gene
     end
   end
