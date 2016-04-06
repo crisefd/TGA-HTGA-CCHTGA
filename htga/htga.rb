@@ -18,29 +18,6 @@ class HTGA < BaseGA
   # experiments
   attr_accessor :taguchi_array
 
-  # @param [Hash] input, hash list for the initialization of the HTGA
-  def initialize(**input)
-    @beta_values = input[:beta_values]
-    @upper_bounds = input[:upper_bounds]
-    @lower_bounds = input[:lower_bounds]
-    @pop_size = input[:pop_size]
-    @cross_rate = input[:cross_rate]
-    @mut_rate = input[:mut_rate]
-    @num_genes = input[:num_genes]
-    @chromosomes = []
-    @continuous = input[:continuous]
-    input[:selected_func] = 0 if input[:selected_func].nil?
-    @selected_func = TEST_FUNCTIONS[input[:selected_func] - 1]
-    @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
-    @is_negative_fit = input[:is_negative_fit]
-    @is_high_fit = input[:is_high_fit]
-    @is_negative_fit = false if @is_negative_fit.nil?
-    p "HTGA is_negative_fit #{@is_negative_fit}"
-    @is_high_fit = false if @is_high_fit.nil?
-    @max_generation = input[:max_generation]
-    @num_evaluations = 0
-  end
-
   # Main method for the HTGA
   def execute
     output_hash = {}
