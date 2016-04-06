@@ -17,9 +17,18 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/subsystem.rb')
 class CCHTGA < HTGA
   # @!attribute [Chromosome] the current chromosome with the best fitness
   attr_reader :best_chromosome
+  # @!attribute [Chromosome] the current chromosome with the best fitness
+  attr_reader :prev_best_chromosome
   # @!attribute [Array<Chromsome>] list with the best experience of the
   # chromosomes
   attr_reader :best_chromosomes_experiences
+
+  def initialize(**input)
+    super input
+    @best_chromosome = nil
+    @prev_best_chromosome = nil
+    @best_chromosomes_experiences = []
+  end
 
   # Method to calculate a list of divisors for n = number of variables
   # @return [Array<Integer>]
@@ -70,12 +79,12 @@ class CCHTGA < HTGA
   # Mutation operator method for the chromosomes
   # @param [Chromosome] chromosome, the chromosome to mutate
   # @return [Chromosome]
-  def mutate(chromosome, position)
+  def mutate(subsystem, chromosome, position)
     best_experience = @best_chromosomes_experiences[position]
-    (0...@num_genes).each do |i|
+    subsystem.each do |i|
       p = rand(0..10) / 10.0 # correct ?
       r = rand(0..10) / 10.0
-      if p < 0.5 # Where to apply the correction ?
+      if p < 0.5
         chromosome[i] = @lower_bounds[i] + r * (@upper_bounds[i] -
                                                 @lower_bounds[i])
       else
@@ -88,17 +97,69 @@ class CCHTGA < HTGA
 
   # Method to perform mutation operation over the chromosomes
   # @return [void]
-  def mutate_individuals
+  def mutate_individuals(subsystem)
     m = @chromosomes.size
-    (0...m).each do
+    (0...m).each do |j|
       r = rand(0.0..1.0)
       next if r > @mut_rate
-      x = rand(0...m)
-      new_chrom = mutate @chromosomes[x].clone, x
+      new_chrom = mutate subsystem, @chromosomes[x].clone, x
       evaluate_chromosome new_chrom
       @chromosomes << new_chrom
     end
   end
+
+  # Crossover operator method use in HTGA
+  # @param [Chromosome] chromosome_x
+  # @param [Chromosome] chromosome_y
+  # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.
+  def crossover(subsystem, chromosome_x, chromosome_y)
+    beta = rand(0..10) / 10.0
+    k = subsystem.to_a.sample
+    # new values for kth genes x and y
+    cut_point_x = chromosome_x[k]
+    cut_point_y = chromosome_y[k]
+    cut_point_x += beta * (cut_point_y - cut_point_x)
+    cut_point_y = lower_bounds[k] + beta * (@upper_bounds[k] - @lower_bounds[k])
+    if @continuous # Doesn't work with discrete functions
+      chromosome_x[k] = cut_point_x
+      chromosome_y[k] = cut_point_y
+    else
+      chromosome_x[k] = cut_point_x.floor
+      chromosome_y[k] = cut_point_y.floor
+    end
+    # swap right side of chromosomes x and y
+    subsystem.each do |i|
+      if i > k
+        chromosome_x[i], chromosome_y[i] = chromosome_y[i], chromosome_x[i]
+      end
+    end
+    [chromosome_x, chromosome_y]
+  end
+
+  # Method to perform crossover operation over chromosomes
+  # @param [Integer] offset for the selected chromosomes by the #roulette_select
+  # method
+  # @return [void]
+  def cross_individuals(subsystem, selected_offset)
+    m = selected_offset
+    m += 1 if m == 1
+    (0...m).each do |x|
+      r = rand(0.0..1.0)
+      y = -1
+      loop do
+        y = rand(0...m)
+        break if x != y
+      end
+      next if r > @cross_rate
+      new_chrom_x, new_chrom_y = crossover subsystem, @chromosomes[x].clone,
+                                           @chromosomes[y].clone
+
+      evaluate_chromosome new_chrom_x
+      evaluate_chromosome new_chrom_y
+      @chromosomes << new_chrom_x << new_chrom_y
+    end
+  end
+
 
   # Method to correct genes in case a chromosome exceeds the bounds
   # @param [Chromosome] chromosome
@@ -150,6 +211,12 @@ class CCHTGA < HTGA
                                                chromosome.fitness <
                                                @best_chromosome.fitness
       end
+    end
+  end
+
+  def apply_htga_to_subsystems
+    @subsystems.each do |subsystem|
+      'implement...'
     end
   end
 end
