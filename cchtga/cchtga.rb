@@ -77,7 +77,9 @@ class CCHTGA < HTGA
   end
 
   # Mutation operator method for the chromosomes
+  # @param [Subystem] subsystem
   # @param [Chromosome] chromosome, the chromosome to mutate
+  # @param [Integer] position
   # @return [Chromosome]
   def mutate(subsystem, chromosome, position)
     best_experience = @best_chromosomes_experiences[position]
@@ -96,6 +98,7 @@ class CCHTGA < HTGA
   end
 
   # Method to perform mutation operation over the chromosomes
+  # @param [Subystem] subsystem
   # @return [void]
   def mutate_individuals(subsystem)
     m = @chromosomes.size
@@ -108,7 +111,8 @@ class CCHTGA < HTGA
     end
   end
 
-  # Crossover operator method use in HTGA
+  # Crossover operator method use in CCHTGA
+  # @param [Subsystem] subsystem
   # @param [Chromosome] chromosome_x
   # @param [Chromosome] chromosome_y
   # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.

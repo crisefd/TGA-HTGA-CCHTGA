@@ -242,7 +242,7 @@ class HTGA < BaseGA
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
     optimal_chromosome = Chromosome.new
     experiment_matrix = generate_experiment_matrix chromosome_x, chromosome_y
-    # Calculate fitness and SNR values
+    # Calculate SNR values
     experiment_matrix.each_index do |i|
       calculate_snr experiment_matrix[i]
     end
