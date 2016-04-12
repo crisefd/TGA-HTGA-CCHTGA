@@ -12,6 +12,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
 # @author Oscar Tigreros
 
+# clase principal
 class TGA < BaseGA
   def initialize(**input)
     @values = input[:values]
@@ -29,7 +30,7 @@ class TGA < BaseGA
     @is_high_fit = false if @is_high_fit.nil?
     @max_generation = input[:max_generation]
     @mating_pool = []
-    @new_gen = []
+    @new_generation = []
     @num_evaluations = 0
     @best_fit = nil
   end
@@ -44,7 +45,9 @@ class TGA < BaseGA
         cross_cut_point_mating_pool
         mutate_matingpool
         insert_new_generation
-        break if best_fit == @optimal_func_val
+        break if @best_fit == @optimal_func_val
+        @new_generation.clear
+        p @best_fit
       end
     end
   end
@@ -105,8 +108,8 @@ class TGA < BaseGA
       chromosome_x[i] = temp_cut_y
       chromosome_y[i] = temp_cut_x
     end
-    @new_gen << chromosome_y
-    @new_gen << chromosome_x
+    @new_generation << chromosome_y
+    @new_generation << chromosome_x
   end
 
   # GENERAL MUTATE FOR n CHROMOSOMES POOL
@@ -120,25 +123,25 @@ class TGA < BaseGA
         gene = rand(lower_bounds[mutate_point].to_f..upper_bounds[mutate_point].to_f)
       end
       chromosome[mutate_point] = gene
-      @new_gen << chromosome
+      @new_generation << chromosome
     end
   end
 
   # Insert the new chromosomes into the population
   def insert_new_generation
-    calculate_fitness @new_gen
+    calculate_fitness @new_generation
     (0...4).each do
       x = rand(0...@chromosomes.size)
       @chromosomes.delete_at(x)
     end
-    (0...@new_gen.size).each do |x|
-      is_best_fit @new_gen[x]
-      @chromosomes << @new_gen[x]
+    (0...@new_generation.size).each do |x|
+      best_fit? @new_generation[x]
+      @chromosomes << @new_generation[x]
     end
   end
 
   # Verify if the chromosome has a better fitness
-  def is_best_fit(chromosome)
+  def best_fit?(chromosome)
     if @is_high_fit
       @best_fit = chromosome.fitness if @best_fit.nil? || chromosome.fitness > @best_fit
     else
@@ -148,8 +151,9 @@ class TGA < BaseGA
 
   # calculate the fitness of bunch of chromosomes
   def calculate_fitness(chromosomes_clust)
-    chromosomes_clust.map! do |chromosome|
-      chromosome.fitness = @selected_func.call chromosome
+    # p chromosomes_clust.size
+    (0...chromosomes_clust.size).each do |i|
+      chromosomes_clust[i].fitness = @selected_func.call chromosomes_clust[i]
       @num_evaluations += 1
     end
   end
@@ -170,9 +174,9 @@ class TGA < BaseGA
       end
       @chromosomes << chromosome
     end
-    calculate_fitness @Chromosomes
-    (0...@Chromosomes.size).each do |i|
-      is_best_fit @Chromosomes[i]
+    calculate_fitness @chromosomes
+    (0...@chromosomes.size).each do |i|
+      best_fit? @chromosomes[i]
     end
   end
 end
