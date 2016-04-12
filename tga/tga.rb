@@ -36,7 +36,7 @@ class TGA < BaseGA
   # Main methon for TGA
   def execute
     @generation = 1
-    init_time = Time.now
+    # init_time = Time.now
     begin
       init_population
       while @generation <= @max_generation
@@ -147,7 +147,7 @@ class TGA < BaseGA
   end
 
   # calculate the fitness of bunch of chromosomes
-  def calculate_fitness (chromosomes_clust)
+  def calculate_fitness(chromosomes_clust)
     chromosomes_clust.map! do |chromosome|
       chromosome.fitness = @selected_func.call chromosome
       @num_evaluations += 1
@@ -157,7 +157,8 @@ class TGA < BaseGA
   # Method to generate the initial population of chromosomes
   # @return [void]
   def init_population
-    (0...@pop_sizes).each do
+    y = @pop_size
+    (0...y).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @continuous
