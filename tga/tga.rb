@@ -46,8 +46,8 @@ class TGA < BaseGA
         mutate_matingpool
         insert_new_generation
         break if @best_fit == @optimal_func_val
-        @new_generation.clear
-        p @best_fit
+        @generation += 1
+         p "pop:"+ (@chromosomes.size.to_s) +  " Bf: "+ (@best_fit.to_s) +" maxG: "+(@max_generation.to_s) +" gen: "+ @generation.to_s
       end
     end
   end
@@ -56,45 +56,23 @@ class TGA < BaseGA
   # @return [void]
   def tournament
     k = 2
-    temp_k = k
     x = -1
     y = -1
     prev_chromo = -1
-    loop do
-      temp_k -= 1
-      loop do
+    k.times {
+      until (x != y) && (x != prev_chromo) && (y != prev_chromo)
         x = rand(0...@pop_size)
         y = rand(0...@pop_size)
-        break if x != y
       end
-      if (@chromosomes[x].fitness < @chromosomes[y].fitness) && (y != prev_chromo)
+      if @chromosomes[x].fitness <= @chromosomes[y].fitness
         @mating_pool << @chromosomes[y]
         prev_chromo = y
-      elsif (@chromosomes[y].fitness < @chromosomes[x].fitness) && (x != prev_chromo)
+      elsif @chromosomes[y].fitness < @chromosomes[x].fitness
         @mating_pool << @chromosomes[x]
         prev_chromo = x
-      else
-        if (temp_k += 1) > k
-          temp_k = k
-        else
-          temp_k += 1
-        end
       end
-      break if temp_k <= 0
-    end
+    }
   end
-
-  # Uniform cross 1 gen
-  def cross_mating_pool
-    cut_point = rand(0...@num_genes)
-    chromosome_x = @mating_pool[0]
-    chromosome_y = @mating_pool[1]
-    gen_x = chromosome_x[cut_point]
-    gen_y = chromosome_y[cut_point]
-    chromosome_x[cut_point] = gen_y
-    chromosome_y[cut_point] = gen_x
-  end
-
   # uniform cross 1 cut point
   def cross_cut_point_mating_pool
     cut_point = rand(0...@num_genes)
@@ -138,6 +116,8 @@ class TGA < BaseGA
       best_fit? @new_generation[x]
       @chromosomes << @new_generation[x]
     end
+    @mating_pool.clear
+    @new_generation.clear
   end
 
   # Verify if the chromosome has a better fitness
@@ -194,6 +174,6 @@ if __FILE__ == $PROGRAM_NAME
                 selected_func: 12,
                 is_negative_fit: false,
                 is_high_fit: false,
-                max_generation: 1000
+                max_generation: 10000000
   tga.execute
 end
