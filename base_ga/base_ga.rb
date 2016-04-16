@@ -96,9 +96,13 @@ class BaseGA
       @chromosomes << chromosome
     end
   end
-  def evaluate_chromosome(chromosome)
-    chromosome.fitness =  @selected_func.call chromosome
-    @num_evaluations += 1
-  end
 
+  # calculate the fitness of bunch of chromosomes
+  def evaluate_chromosome(chromosomes_clust)
+    # p chromosomes_clust.size
+    (0...chromosomes_clust.size).each do |i|
+      chromosomes_clust[i].fitness = @selected_func.call chromosomes_clust[i]
+      @num_evaluations += 1
+    end
+  end
 end

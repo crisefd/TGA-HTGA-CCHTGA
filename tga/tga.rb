@@ -107,7 +107,7 @@ class TGA < BaseGA
 
   # Insert the new chromosomes into the population
   def insert_new_generation
-    calculate_fitness @new_generation
+    evaluate_chromosome @new_generation
     (0...4).each do
       x = rand(0...@chromosomes.size)
       @chromosomes.delete_at(x)
@@ -129,15 +129,6 @@ class TGA < BaseGA
     end
   end
 
-  # calculate the fitness of bunch of chromosomes
-  def calculate_fitness(chromosomes_clust)
-    # p chromosomes_clust.size
-    (0...chromosomes_clust.size).each do |i|
-      chromosomes_clust[i].fitness = @selected_func.call chromosomes_clust[i]
-      @num_evaluations += 1
-    end
-  end
-
   # Method to generate the initial population of chromosomes
   # @return [void]
   def init_population
@@ -154,7 +145,7 @@ class TGA < BaseGA
       end
       @chromosomes << chromosome
     end
-    calculate_fitness @chromosomes
+    evaluate_chromosome @chromosomes
     (0...@chromosomes.size).each do |i|
       best_fit? @chromosomes[i]
     end
