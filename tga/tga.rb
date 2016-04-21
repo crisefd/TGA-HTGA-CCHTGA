@@ -14,6 +14,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
 # clase principal
 class TGA < BaseGA
+  attr_reader :mating_pool
   def initialize(**input)
     @values = input[:values]
     @pop_size = input[:pop_size]
@@ -21,7 +22,7 @@ class TGA < BaseGA
     @lower_bounds = input[:lower_bounds]
     @num_genes = input[:num_genes]
     @chromosomes = []
-    @continuos = input[:continuos]
+    @continuous = input[:continuous]
     input[:selected_func] = 0 if input[:selected_func].nil?
     @selected_func = TEST_FUNCTIONS[input[:selected_func] - 1]
     @is_negative_fit = input[:is_negative_fit]
@@ -135,14 +136,14 @@ class TGA < BaseGA
   # Method to generate the initial population of chromosomes
   # @return [void]
   def init_population
-    y = @pop_size
-    (0...y).each do
+    (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
+        gene = nil
         if @continuous
-          gene = rand(lower_bounds[i].to_i..upper_bounds[i].to_i)
-        else
           gene = rand(lower_bounds[i].to_f..upper_bounds[i].to_f)
+        else
+          gene = rand(lower_bounds[i].to_i..upper_bounds[i].to_i)
         end
         chromosome << gene
       end

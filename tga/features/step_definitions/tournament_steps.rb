@@ -4,17 +4,23 @@
 # email:  oscar.tigreros@correounivalle.edu.co
 # creation date: 2016-3-08
 
-
-Given(/^a population of  (\d+) chromosomes$/) do |arg|
-  @tga = TGA.new pop_size: arg.to_i
-  @tga.chromosomes = 
-
+Given(/^a population of any five chromosomes$/) do
+  @tga = TGA.new pop_size: 5, selected_func: 12
+  @tga.chromosomes = []
+  (0..4).each do |i|
+    chr = Chromosome.new
+    (0..5).each do |j|
+      chr << rand(0..10)
+    end
+    @tga.evaluate_chromosomes chr
+    @tga.chromosomes << chr
+  end
 end
-When(/^tournament is apply on the population select two diferents chromosomes at random$/) do
-  TGA.tournament
 
+When(/^tournament is apply on the population$/) do
+  @tga.tournament
 end
 
-Then(/^Two differents chromosomes should be added to the mating pool$/) do
-  expect(@mating_pool[0]).to_not eql(@mating_pool[1])
+Then(/^two different chromosomes must be randomly chosen$/) do
+  expect(@tga.mating_pool[0]).not_to eq(@tga.mating_pool[1])
 end

@@ -32,19 +32,16 @@ Given(/^the lower bounds are$/) do |table|
   input[:lower_bounds] = lower_bounds
 end
 
-Given(/^the values for beta are "([^"]*)"$/) do |arg1|
-  input[:values] = arg1
-end
 
-When(/^I initialize  the tga and generate the initial population with continuous variables$/) do
+When(/^I initialize  the TGA and generate the initial population with continuous variables$/) do
   input[:continuous] = true
-  input[:selected_func] = 0
+  input[:selected_func] = 12
   @tga = TGA.new input
 end
 
 When(/^I initialize  the TGA and generate the initial population with non continuous variables$/) do
   input[:continuous] = false
-  input[:selected_func] = 0
+  input[:selected_func] = 12
   @tga = TGA.new input
 end
 
