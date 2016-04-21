@@ -8,9 +8,9 @@
 # version: 0.2
 # licence: GPL
 
-Feature: Mutation operation
-  @test_mutation
-  Scenario: Test the mutation operation
+Feature: Crossover operation
+  @test_crossover
+  Scenario: Test the crossover operation
     Given the chromosomes:
     #|chromosome x|chromosome y|
     |1|0|
@@ -18,5 +18,5 @@ Feature: Mutation operation
     |-1|3|
     |0|1|
 
-    When mutation is apply on the mating pool
-    Then the mutate chromosome changes on one gene
+    When crossover is apply on the mating pool
+    Then the crossover chromosome changes on one gene

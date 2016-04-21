@@ -32,7 +32,6 @@ Given(/^the lower bounds are$/) do |table|
   input[:lower_bounds] = lower_bounds
 end
 
-
 When(/^I initialize  the TGA and generate the initial population with continuous variables$/) do
   input[:continuous] = true
   input[:selected_func] = 12

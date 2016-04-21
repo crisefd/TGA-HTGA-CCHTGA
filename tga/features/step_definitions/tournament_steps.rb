@@ -7,9 +7,9 @@
 Given(/^a population of any five chromosomes$/) do
   @tga = TGA.new pop_size: 5, selected_func: 12
   @tga.chromosomes = []
-  (0..4).each do |i|
+  (0..4).each do
     chr = Chromosome.new
-    (0..5).each do |j|
+    (0..5).each do
       chr << rand(0..10)
     end
     @tga.evaluate_chromosomes chr

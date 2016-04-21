@@ -14,7 +14,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
 # clase principal
 class TGA < BaseGA
-  attr_reader :mating_pool
+  attr_reader :mating_pool, :new_generation, :num_genes
   def initialize(**input)
     @values = input[:values]
     @pop_size = input[:pop_size]
@@ -96,13 +96,15 @@ class TGA < BaseGA
 
   # GENERAL MUTATE FOR n CHROMOSOMES POOL
   def mutate_matingpool
+    gene = -1
+    chromosome = []
     (0...@mating_pool.size).each do |i|
       mutate_point = rand(0...@num_genes)
-      chromosome = @mating_pool[i]
+      chromosome = @mating_pool[i].clone
       if @continuous
-        gene = rand(lower_bounds[mutate_point].to_i..upper_bounds[mutate_point].to_i)
+        gene = rand(lower_bounds[0].to_f..upper_bounds[0].to_f)
       else
-        gene = rand(lower_bounds[mutate_point].to_f..upper_bounds[mutate_point].to_f)
+        gene = rand(lower_bounds[0].to_i..upper_bounds[0].to_i)
       end
       chromosome[mutate_point] = gene
       @new_generation << chromosome
