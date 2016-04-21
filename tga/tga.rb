@@ -59,11 +59,12 @@ class TGA < BaseGA
     x = -1
     y = -1
     prev_chromo = -1
-    k.times {
+    k.times do
       until (x != y) && (x != prev_chromo) && (y != prev_chromo)
         x = rand(0...@pop_size)
         y = rand(0...@pop_size)
       end
+      #mejorar para minimizar o maximizar
       if @chromosomes[x].fitness <= @chromosomes[y].fitness
         @mating_pool << @chromosomes[y]
         prev_chromo = y
@@ -71,7 +72,7 @@ class TGA < BaseGA
         @mating_pool << @chromosomes[x]
         prev_chromo = x
       end
-    }
+    end
   end
   # uniform cross 1 cut point
   def cross_cut_point_mating_pool
@@ -107,8 +108,8 @@ class TGA < BaseGA
 
   # Insert the new chromosomes into the population
   def insert_new_generation
-    evaluate_chromosome @new_generation
-    (0...4).each do
+    evaluate_chromosomes *@new_generation
+    (0...@new_generation.size).each do
       x = rand(0...@chromosomes.size)
       @chromosomes.delete_at(x)
     end
@@ -145,7 +146,7 @@ class TGA < BaseGA
       end
       @chromosomes << chromosome
     end
-    evaluate_chromosome @chromosomes
+    evaluate_chromosomes *@chromosomes
     (0...@chromosomes.size).each do |i|
       best_fit? @chromosomes[i]
     end
