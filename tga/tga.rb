@@ -34,6 +34,7 @@ class TGA < BaseGA
     @num_evaluations = 0
     @best_fit = nil
   end
+
   # Main methon for TGA.
   def execute
     @generation = 1
@@ -47,7 +48,7 @@ class TGA < BaseGA
         insert_new_generation
         break if @best_fit == @optimal_func_val
         @generation += 1
-         p "pop:"+ (@chromosomes.size.to_s) +  " Bf: "+ (@best_fit.to_s) +" maxG: "+(@max_generation.to_s) +" gen: "+ @generation.to_s
+        p 'pop:' + (@chromosomes.size.to_s) + ' Bf: ' + (@best_fit.to_s) + ' maxG: ' + (@max_generation.to_s) + ' gen: ' + @generation.to_s
       end
     end
   end
@@ -64,7 +65,7 @@ class TGA < BaseGA
         x = rand(0...@pop_size)
         y = rand(0...@pop_size)
       end
-      #mejorar para minimizar o maximizar
+      # mejorar para minimizar o maximizar
       if @chromosomes[x].fitness <= @chromosomes[y].fitness
         @mating_pool << @chromosomes[y]
         prev_chromo = y
@@ -74,6 +75,7 @@ class TGA < BaseGA
       end
     end
   end
+
   # uniform cross 1 cut point
   def cross_cut_point_mating_pool
     cut_point = rand(0...@num_genes)
@@ -166,6 +168,6 @@ if __FILE__ == $PROGRAM_NAME
                 selected_func: 12,
                 is_negative_fit: false,
                 is_high_fit: false,
-                max_generation: 10000000
+                max_generation: 10_000_000
   tga.execute
 end
