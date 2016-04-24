@@ -7,7 +7,7 @@
 
 require 'rubygems'
 require 'bundler/setup'
-require File.join(File.dirname(__FILE__), '..', 'helpers/roulette.rb')
+require File.join(File.dirname(__FILE__), '..', 'helpers/selection_methods.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 
 # @author Cristhian Fuertes
@@ -15,7 +15,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 # Mixin class for TGA, HTGA & CCHTGA
 class BaseGA
   # Modules for roulette selection operation and test functions
-  extend Roulette
+  extend Selection
   include TestFunctions
 
   # @!attribute [Array] lower_bounds, lower bounds for the variables
@@ -70,7 +70,7 @@ class BaseGA
   # Roulette selection operation method
   # @return [Integer] offset of the selected chromosomes
   def roulette_select
-    Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
+    Selection.calc_probs @chromosomes, is_high_fit: @is_high_fit,
                                       is_negative_fit: @is_negative_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
     r = rand(0.0..1.0)
@@ -85,6 +85,9 @@ class BaseGA
     selected_offset = @chromosomes.size
     @chromosomes += rejected_chromosomes.reverse!
     selected_offset
+  end
+
+  def stochastic_universal_sampling
   end
 
   # Method to evaluate an assign a fitness value to a chromosome

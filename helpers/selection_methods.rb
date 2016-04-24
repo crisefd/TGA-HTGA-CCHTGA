@@ -9,9 +9,9 @@ require 'rubygems'
 require 'bundler/setup'
 
 # @author Cristhian Fuertes
-# Module for roulette selection operation
-module Roulette
-
+# Module for Roulette Selection and SUS (Stochastic Universal Selection)
+module Selection
+  private
   # Method that normalizes an array that potentially contains negative numbers
   # by shifting
   # all of them up to be positive (0 is left alone).
@@ -32,7 +32,7 @@ module Roulette
 
   # Compute an array of each individual's probability between 0.0 and 1.0
   # fitted
-  # onto an imaginary roulette wheel (or pie).
+  # onto an imaginary roulette WHEEL (or pie).
   #
   # This will NOT work for negative fitness numbers, as a negative piece of a
   # pie
@@ -44,8 +44,8 @@ module Roulette
   # @param [Boolean] is_high_fit, true if high fitness is best or false if low fitness is best
   # @param [Boolean] is_negative_fit, true if there are negative fitness and false otherwise
   # @return [void]
-  def self.calc_probs(chromosomes, is_high_fit: true, is_negative_fit: true)
-    Roulette.norm_pop chromosomes if is_negative_fit
+  def self.calc_probs(chromosomes, is_high_fit: true, is_negative_fit: true) # rename to rws
+    Selection.norm_pop chromosomes if is_negative_fit
     fit_sum  = 0.0 # Sum of each individual's fitness in the population
     prob_sum = 0.0 # You can think of this in 2 ways; either...
     # 1) Current sum of each individual's probability in the
@@ -91,5 +91,26 @@ module Roulette
     end
     # Ensure that the last individual' probability is 1.0
     chromosomes.last.prob = 1.0
+  end
+
+  def self.sample(chromosomes, num_required_selects, is_high_fit: true, is_negative_fit: true) # rename to sus
+    Selection.norm_pop chromosomes if is_negative_fit
+    total_fit = chromosomes.map(&:fitness).inject(0, &:+)
+    step_size = (total_fit / num_required_selects).to_i
+    start = rand(0..step_size)
+    pointers = []
+    (0...num_required_selects).each do |i|
+      ptr = start + (i * step_size)
+      pointers << ptr
+    end
+    pointers
+    # k = 0
+    # pointers.each do |ptr|
+    #   loop do
+    #     fit_sum = chromosomes[0..k].map(&:fitness).inject(0, &:+)
+    #     break if fit_sum >= ptr
+    #     k += 1
+    #   end
+    # end
   end
 end
