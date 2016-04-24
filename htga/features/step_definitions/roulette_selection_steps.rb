@@ -17,7 +17,7 @@ Given(/^the positive fitness values of some chromosomes:$/) do |table|
 end
 
 When(/^I execute the roulette selection operation for maximization of positive fitness values$/) do
-  Selection.calc_probs @chromosomes, is_negative_fit: false
+  Selection::Roulette.calc_probs @chromosomes, is_negative_fit: false
 end
 
 Then(/^The calculated probabilities must be:$/) do |table|
@@ -44,5 +44,5 @@ Given(/^the negative fitness values of some chromosomes:$/) do |table|
 end
 
 When(/^I execute the roulette selection operation for maximization of negative fitness values$/) do
-  Selection.calc_probs @chromosomes, is_negative_fit: true
+  Selection::Roulette.calc_probs @chromosomes, is_negative_fit: true
 end
