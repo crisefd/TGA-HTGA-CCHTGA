@@ -70,7 +70,7 @@ class BaseGA
   # Roulette selection operation method
   # @return [Integer] offset of the selected chromosomes
   def roulette_select
-    Selection.calc_probs @chromosomes, is_high_fit: @is_high_fit,
+    Selection::Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
                                       is_negative_fit: @is_negative_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
     r = rand(0.0..1.0)
@@ -87,7 +87,22 @@ class BaseGA
     selected_offset
   end
 
-  def stochastic_universal_sampling
+  # SUS selection operation method
+  # @return [Array<Chromosome>] selected chromosomes
+  def sus_select
+    pointers = Selection::SUS.sample @chromosomes, @pop_size * @cross_rate,
+                                     is_high_fit: @is_high_fit,
+                                     is_negative_fit: @is_negative_fit
+    k = 0
+    selected_chromosomes = []
+    pointers.each do |ptr|
+      loop do
+        break if @chromosomes.fit_sum >= ptr
+        k += 1
+      end
+      selected_chromosomes << @chromosomes[k]
+    end
+    selected_chromosomes
   end
 
   # Method to evaluate an assign a fitness value to a chromosome

@@ -22,4 +22,6 @@ class Chromosome < Array
   attr_accessor :prob
   # @attr [Float] snr, the value of the SNR
   attr_accessor :snr
+  # @attr [Float] fit_sum, accumulated fitness
+  attr_accessor :fit_sum
 end
