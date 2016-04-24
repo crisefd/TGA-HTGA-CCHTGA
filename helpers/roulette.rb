@@ -11,8 +11,6 @@ require 'bundler/setup'
 # @author Cristhian Fuertes
 # Module for roulette selection operation
 module Roulette
-  @@flag = false
-  private
 
   # Method that normalizes an array that potentially contains negative numbers
   # by shifting
@@ -47,31 +45,27 @@ module Roulette
   # @param [Boolean] is_negative_fit, true if there are negative fitness and false otherwise
   # @return [void]
   def self.calc_probs(chromosomes, is_high_fit: true, is_negative_fit: true)
-   #  @@flag = false
     Roulette.norm_pop chromosomes if is_negative_fit
     fit_sum  = 0.0 # Sum of each individual's fitness in the population
     prob_sum = 0.0 # You can think of this in 2 ways; either...
-                   # 1) Current sum of each individual's probability in the
-                   #    population
-                   # or...
-                   # 2) Last (most recently processed) individual's
-                   # probability
-                   # in the population
+    # 1) Current sum of each individual's probability in the
+    #    population
+    # or...
+    # 2) Last (most recently processed) individual's
+    # probability
+    # in the population
 
     max_fit = nil # use only  for minimization (is_high_fit=false)
 
     # Get fitness sum and maximum fitness
     chromosomes.each do |chromosome|
-      fail 'nil fit_sum' unless !fit_sum.nil?
       if is_negative_fit && !chromosome.norm_fitness.nil?
-        # fail "nil norm_fitness. Flag #{@@flag}" unless !chromosome.norm_fitness.nil?
         fit_sum += chromosome.norm_fitness
         max_fit = chromosome.norm_fitness if max_fit.nil? || chromosome.norm_fitness > max_fit
       else
         fit_sum += chromosome.fitness
         max_fit = chromosome.fitness if max_fit.nil? || chromosome.fitness > max_fit
       end
-
     end
 
     max_fit += 1 # So that we don't get max_fit=0
@@ -93,12 +87,9 @@ module Roulette
           chromosomes[i].prob = (f != 0) ? (prob_sum + ((max_fit - f) / fit_sum)) : 0.0
         end
       end
-      fail "negative probability #{chromosomes[i].prob} max_fit #{max_fit} f #{f} fit_sum #{fit_sum} prob_sum #{prob_sum}" unless chromosomes[i].prob >= 0
       prob_sum = chromosomes[i].prob
     end
     # Ensure that the last individual' probability is 1.0
     chromosomes.last.prob = 1.0
-
   end
-
 end

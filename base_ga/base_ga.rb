@@ -15,7 +15,8 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 # Mixin class for TGA, HTGA & CCHTGA
 class BaseGA
   # Modules for roulette selection operation and test functions
-  include Roulette, TestFunctions
+  extend Roulette
+  include TestFunctions
 
   # @!attribute [Array] lower_bounds, lower bounds for the variables
   attr_accessor :lower_bounds
@@ -44,7 +45,7 @@ class BaseGA
   # continuous
   attr_accessor :continuous
 
-  # @param [Hash] input, hash list for the initialization 
+  # @param [Hash] input, hash list for the initialization
   def initialize(**input)
     @beta_values = input[:beta_values]
     @upper_bounds = input[:upper_bounds]
@@ -69,7 +70,6 @@ class BaseGA
   # Roulette selection operation method
   # @return [Integer] offset of the selected chromosomes
   def roulette_select
-    fail "pop size incorrect, expected #{pop_size} found #{@chromosomes.size}" unless @pop_size == @chromosomes.size
     Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
                                       is_negative_fit: @is_negative_fit
     copied_chromosomes = @chromosomes.clone and @chromosomes.clear
@@ -82,7 +82,6 @@ class BaseGA
         rejected_chromosomes << copied_chromosomes[i]
       end
     end
-    fail "pop size after selection incorrect, expected #{@chromosomes.size} <= #{pop_size}" unless @pop_size >= @chromosomes.size
     selected_offset = @chromosomes.size
     @chromosomes += rejected_chromosomes.reverse!
     selected_offset

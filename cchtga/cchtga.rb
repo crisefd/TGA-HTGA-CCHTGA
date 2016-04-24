@@ -72,6 +72,7 @@ class CCHTGA < HTGA
       fail "CCHTGA's SNR calculation for maximization not implemented yet"
     else
       evaluate_chromosome chromosome
+      # What if the rest equals zero ?
       chromosome.snr = (chromosome.fitness - @best_chromosome.fitness)**-2
     end
   end
