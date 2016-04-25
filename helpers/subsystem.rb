@@ -12,4 +12,5 @@ require_relative 'chromosome'
 # Class for subsystems in the CCHTGA
 class Subsystem < Set
   attr_accessor :best_chromosome
+  attr_accessor :snr
 end

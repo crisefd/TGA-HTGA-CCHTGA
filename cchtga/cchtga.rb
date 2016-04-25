@@ -64,14 +64,15 @@ class CCHTGA < HTGA
     end
   end
 
+
   # Method to perfom SNR calculation used in the CCHTGA
   # @param [Chromosome] chromosome, the chromosome
   # @return [void]
-  def calculate_snr(chromosome)
+  def calculate_snr(chromosome, subsystem)
     if @is_high_fit
       fail "CCHTGA's SNR calculation for maximization not implemented yet"
     else
-      evaluate_chromosome chromosome
+      evaluate_chromosome chromosome # Wrong
       # What if the rest equals zero ?
       chromosome.snr = (chromosome.fitness - @best_chromosome.fitness)**-2
     end
