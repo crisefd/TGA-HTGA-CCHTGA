@@ -3,11 +3,8 @@
 # file: roulette.rb
 # author: Cristhian Fuertes & Oscar Tigreros
 # email:  cristhian.fuertes@correounivalle.edu.co
-<<<<<<< HEAD
 # creation date: 2016-04-24
-=======
-# creation date: 2015-15-11
->>>>>>> f6654c7f463625b3e65a66065742c62505ba4149
+
 
 require 'rubygems'
 require 'bundler/setup'

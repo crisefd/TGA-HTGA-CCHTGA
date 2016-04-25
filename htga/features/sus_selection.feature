@@ -3,7 +3,8 @@
 # file: roulette_selection.feature
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co
-# creation date: 2015-15-11
+# creation date: 2016-04-25
+
 Feature: SUS selection operation
 
     @test_sus_selection_positive_fitness
