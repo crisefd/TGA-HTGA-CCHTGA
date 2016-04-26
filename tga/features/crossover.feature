@@ -19,4 +19,4 @@ Feature: Crossover operation
     |0|1|
 
     When crossover is apply on the mating pool
-    Then the crossover chromosome changes on one gene
+    Then the resulting chromosomes must have swapped their right sides$

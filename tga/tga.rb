@@ -14,7 +14,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
 # clase principal
 class TGA < BaseGA
-  attr_reader :mating_pool, :new_generation, :num_genes
+  attr_reader :mating_pool, :new_generation, :num_genes, :chromosomes
   def initialize(**input)
     @values = input[:values]
     @pop_size = input[:pop_size]
@@ -80,8 +80,8 @@ class TGA < BaseGA
   # uniform cross 1 cut point
   def cross_cut_point_mating_pool
     cut_point = rand(0...@num_genes)
-    chromosome_x = @mating_pool[0]
-    chromosome_y = @mating_pool[1]
+    chromosome_x = @mating_pool[0].clone
+    chromosome_y = @mating_pool[1].clone
     temp_cut_x = -1
     temp_cut_y = -1
     (cut_point...@num_genes).each do |i|
