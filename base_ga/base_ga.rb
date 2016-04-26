@@ -72,36 +72,11 @@ class BaseGA
     selected_offset
   end
 
-
-  def init_population
-    p "=>initializing population"
-
-    (0...@pop_sizes).each do
-      chromosome = Chromosome.new
-      (0...@num_genes).each do |i|
-        if @values == 'discrete'
-          beta = (Array.new(11) { |k| k / 10.0 }).sample
-        elsif @values == 'uniform distribution'
-          beta = Random.rand(1.0)
-        end
-        gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
-                                                 @lower_bounds[i])
-        if @continuous
-          chromosome << gene
-        else
-          chromosome << gene.floor
-        end
-      end
-      evaluate_chromosome chromosome
-      @chromosomes << chromosome
-    end
-  end
-
   # calculate the fitness of bunch of chromosomes
-  def evaluate_chromosome(chromosomes_clust)
+  def evaluate_chromosomes(*chromosomes)
     # p chromosomes_clust.size
-    (0...chromosomes_clust.size).each do |i|
-      chromosomes_clust[i].fitness = @selected_func.call chromosomes_clust[i]
+    (0...chromosomes.size).each do |i|
+      chromosomes[i].fitness = @selected_func.call chromosomes[i]
       @num_evaluations += 1
     end
   end
