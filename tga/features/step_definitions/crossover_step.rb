@@ -21,7 +21,8 @@ Given(/^the chromosomes:$/) do |table|
     i += 1
   end
   # Esta linea se agrega para que funcione para el caso de mutacion y de cruce
-  @tga = TGA.new num_genes: 4, upper_bounds: [5, 5, 5, 5], lower_bounds: [-11, -11, -11, -11], continuous: false
+  @tga = TGA.new num_genes: 4, upper_bounds: [5, 5, 5, 5],
+                 lower_bounds: [-11, -11, -11, -11], continuous: false
   @tga.mating_pool << @chromosome_x
   @tga.mating_pool << @chromosome_y
 end
@@ -30,19 +31,20 @@ When(/^crossover is apply on the mating pool$/) do
   @tga.cross_cut_point_mating_pool
 end
 
-Then(/^the resulting chromosomes must have swapped their right sides$/) do
+Then(/^the resulting chromosomes must have swapped their right sides\$$/) do
   cut_point = -1
+
   size = @chromosome_x.size
   (0...size).each do |i|
-    if @chromosome_x[i] != @crossed_chromosome_x[i]
+    if @tga.mating_pool[0][i] != @tga.new_generation[1][i]
       cut_point = i
       break
     end
   end
   if cut_point < size - 1
-    expect(@crossed_chromosome_x[(cut_point + 1)...size]).to eq(@chromosome_y[(cut_point + 1)...size])
-    expect(@crossed_chromosome_y[(cut_point + 1)...size]).to eq(@chromosome_x[(cut_point + 1)...size])
+    expect(@tga.mating_pool[0][(cut_point + 1)...size]).to eq(@chromosome_x[(cut_point + 1)...size])
+    expect(@tga.mating_pool[1][(cut_point + 1)...size]).to eq(@chromosome_y[(cut_point + 1)...size])
   end
-  expect(@crossed_chromosome_x[cut_point]).to_not eq(@chromosome_x)
-  expect(@crossed_chromosome_y[cut_point]).to_not eq(@chromosome_y)
+  expect(@tga.mating_pool[0][cut_point]).to_not eq(@chromosome_x)
+  expect(@tga.mating_pool[1][cut_point]).to_not eq(@chromosome_y)
 end

@@ -14,7 +14,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
 # clase principal
 class TGA < BaseGA
-  attr_reader :mating_pool, :new_generation, :num_genes, :chromosomes
+  attr_reader :mating_pool, :new_generation, :num_genes, :chromosomes, :pop_size
   def initialize(**input)
     @values = input[:values]
     @pop_size = input[:pop_size]
@@ -49,7 +49,8 @@ class TGA < BaseGA
         insert_new_generation
         break if @best_fit == @optimal_func_val
         @generation += 1
-        p 'pop:' + (@chromosomes.size.to_s) + ' Bf: ' + (@best_fit.to_s) + ' maxG: ' + (@max_generation.to_s) + ' gen: ' + @generation.to_s
+        p('pop:' + (@chromosomes.size.to_s) + ' Bf: ' + (@best_fit.to_s) +
+          ' maxG: ' + (@max_generation.to_s) + ' gen: ' + @generation.to_s)
       end
     end
   end
@@ -116,7 +117,7 @@ class TGA < BaseGA
     evaluate_chromosomes *@new_generation
     (0...@new_generation.size).each do
       x = rand(0...@chromosomes.size)
-      @chromosomes.delete_at(x)
+      @chromosomes.delete_at(x.to_i)
     end
     (0...@new_generation.size).each do |x|
       best_fit? @new_generation[x]
