@@ -4,27 +4,23 @@
 # email:  oscar.tigreros@correounivalle.edu.co
 # creation date: 2016-05-03
 
-Given(/^the amount of gene:$/) do
-  table = table.raw
-  @num_genes = 0
-  table.each do |item|
-    if i >= 0
-      @num_genes = item[0].to_i
-    end
-    i += 1
-  end
+input = {}
+Given(/^a number of genes of (\d+):$/) do |arg1|
+  input[:num_genes] = arg1.to_i
 end
 
 When(/^the calculate divisors is apply$/) do
   @divisors = []
-  CCHTGA.num_genes = @num_genes
-  @divisors = CCHTGA.calculate_divisors.clone
+  cchtga = CCHTGA.new
+  cchtga.num_genes = input[:num_genes]
+  @num_genesTest = cchtga.num_genes
+  @divisors = cchtga.calculate_divisors.clone
 end
 
-Then(/^$/)do
+Then(/^return a valid list with the divisors$/)do
   flag = true
   (0...@divisors.size).each do |i|
-    
+    flag = false if @num_genesTest % @divisors[i] != 0
   end
-
+  expect(flag).to eq(true)
 end

@@ -23,6 +23,8 @@ class CCHTGA < HTGA
   # chromosomes
   attr_reader :best_chromosomes_experiences
 
+  attr_writer :num_genes
+
   def initialize(**input)
     super input
     @best_chromosome = nil
@@ -33,6 +35,7 @@ class CCHTGA < HTGA
   # Method to calculate a list of divisors for n = number of variables
   # @return [Array<Integer>]
 def calculate_divisors
+  divisors = []  
   flags = Array.new(@num_genes) { false }
   n = Math.sqrt(@num_genes).round
   (2..@num_genes).each do |i|
