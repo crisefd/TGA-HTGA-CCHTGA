@@ -32,17 +32,25 @@ class CCHTGA < HTGA
 
   # Method to calculate a list of divisors for n = number of variables
   # @return [Array<Integer>]
-  def calculate_divisors
-    divisors = []
-    n = Math.sqrt(@num_genes).round
-    (2..n).each do |i|
-      if i % @num_genes == 0
+def calculate_divisors
+  flags = Array.new(@num_genes) { false }
+  n = Math.sqrt(@num_genes).round
+  (2..@num_genes).each do |i|
+    if @num_genes % i == 0
+      unless flags[i]
         divisors << i
-        divisors << n / i if i != n / i
+        flags[i] = true
+      end
+
+      if i != (@num_genes / i) && 0 != (@num_genes / i) && 1 != (@num_genes / i) && !flags[@num_genes / i]
+        divisors << @num_genes / i
+        flags[@num_genes / i] = true
       end
     end
-    divisors
   end
+  divisors
+end
+
 
   # Method to divide the variables in K subsystems
   # @note A random value s in chosen from the a list of divisor
