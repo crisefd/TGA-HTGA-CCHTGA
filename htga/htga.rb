@@ -1,7 +1,7 @@
 # language: english
 # encoding: utf-8
 # Program: htga.rb
-# Authors: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
+# Authors: Cristhian Fuertes,  Oscar Tigreros
 # Email: cristhian.fuertes@correounivalle.edu.co,
 #        oscar.tigreros@correounivalle.edu.co
 # Creation date: 2015-10-05
@@ -11,95 +11,96 @@ require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
-def pp(arg)
-  # p arg
-end
-
-# require '/home/crisefd/Ruby/TGA-HTGA-CCHTGA/base_ga/base_ga'
-
 # @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
 class HTGA < BaseGA
+  # @!attribute [taguchi_array] the selected Taguchi array for matrix
+  # experiments
   attr_accessor :taguchi_array
-
-  # @param [Hash] input, hash list for the initialization of the HTGA
-  def initialize(**input)
-    @values = input[:values]
-    @upper_bounds = input[:upper_bounds]
-    @lower_bounds = input[:lower_bounds]
-    @pop_size = input[:pop_size]
-    @cross_rate = input[:cross_rate]
-    @mut_rate = input[:mut_rate]
-    @num_genes = input[:num_genes]
-    @chromosomes = []
-    @continuous = input[:continuous]
-    input[:selected_func] = 0 if input[:selected_func].nil?
-    @selected_func = TEST_FUNCTIONS[input[:selected_func] - 1]
-    @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
-    @is_negative_fit = input[:is_negative_fit]
-    @is_high_fit = input[:is_high_fit]
-    @is_negative_fit = false if @is_negative_fit.nil?
-    @is_high_fit = false if @is_high_fit.nil?
-    @max_generation = input[:max_generation]
-  end
 
   # Main method for the HTGA
   def execute
-    @generation = 1
+    output_hash = {}
+    @generation = 0
     best_fit = nil
+    gen_of_best_fit = 0
+    func_evals_of_best_fit = 0
     init_time = Time.now
     begin
       init_population
       p 'population initialized'
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
-      while @generation <= @max_generation
+      while @generation < @max_generation
         selected_offset = roulette_select
         cross_individuals selected_offset
         generate_offspring_by_taguchi_method
         mutate_individuals
-        recalculate_fitness
         select_next_generation
-        p "GENERATION #{@generation} fitness #{@chromosomes.first.fitness}" if @generation % 10 == 0
-        if @is_high_fit
-          best_fit = @chromosomes.first.fitness if best_fit.nil? || @chromosomes.first.fitness > best_fit
-        else
-          best_fit = @chromosomes.first.fitness if best_fit.nil? || @chromosomes.first.fitness < best_fit
+        if @generation % 10 == 0
+          p "Generation: #{@generation}-Fitness: #{@chromosomes.first.fitness}"
+          p "Execution time (seconds): #{Time.now - init_time}"
         end
-        break if @chromosomes.first.fitness == @optimal_func_val
+        if @is_high_fit
+          if best_fit.nil? || @chromosomes.first.fitness > best_fit
+            best_fit = @chromosomes.first.fitness
+            gen_of_best_fit = @generation
+            func_evals_of_best_fit = @num_evaluations
+          end
+        else
+          if best_fit.nil? || @chromosomes.first.fitness < best_fit
+            best_fit = @chromosomes.first.fitness
+            gen_of_best_fit = @generation
+            func_evals_of_best_fit = @num_evaluations
+          end
+        end
+        # update_output_variables best_fit, gen_of_best_fit,
+        #                         func_evals_of_best_fit
+        break if best_fit == @optimal_func_val
         @generation += 1
       end
-      p '==================OUTPUT===================='
-      p "generations #{@generation}"
-      p "first chromosome of last gen #{@chromosomes[0]}"
-      p "first fitness of last gen #{@chromosomes[0].fitness}"
-      p "best fitness #{best_fit}"
-      p "function calls #{@pop_size + 0.5 * @pop_size * @cross_rate * (@taguchi_array.size + 2) * @generation}"
-      p "Execution time (seconds): #{Time.now - init_time}"
+      relative_error = (((best_fit + 1) / (@optimal_func_val + 1)) - 1).abs
+      output_hash.merge! best_fit: best_fit, gen_of_best_fit: gen_of_best_fit,
+                         func_evals_of_best_fit: func_evals_of_best_fit,
+                         optimal_func_val: @optimal_func_val,
+                         relative_error: relative_error
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
       exit
     end
+    output_hash
+  end
+
+  def update_output_variables(best_fit, _gen_of_best_fit, _func_evals_of_best_fit)
+    if @is_high_fit
+      if best_fit.nil? || @chromosomes.first.fitness > best_fit
+        best_fit = @chromosomes.first.fitness
+        gen_of_best_fit = @generation
+        func_evals_of_best_fit = @num_evaluations
+      end
+    else
+      if best_fit.nil? || @chromosomes.first.fitness < best_fit
+        best_fit = @chromosomes.first.fitness
+        gen_of_best_fit = @generation
+        func_evals_of_best_fit = @num_evaluations
+      end
+    end
   end
 
   # Crossover operator method use in HTGA
-  # @param [Hash] args, argument hash list that includes chromosomes, lower and upper bounds
-  # @return [Chromosome, Chromosome]  the resulting chromosomes.
-  def self.crossover(**args)
-    continuous = args[:continuous]
-    chromosome_x = args[:chromosome_x]
-    chromosome_y = args[:chromosome_y]
+  # @param [Chromosome] chromosome_x
+  # @param [Chromosome] chromosome_y
+  # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.
+  def crossover(chromosome_x, chromosome_y)
     beta = rand(0..10) / 10.0
     k = rand(0...chromosome_y.size)
-    upper_bounds = args[:upper_bounds]
-    lower_bounds = args[:lower_bounds]
     # new values for kth genes x and y
     cut_point_x = chromosome_x[k]
     cut_point_y = chromosome_y[k]
-    cut_point_x = cut_point_x + beta * (cut_point_y - cut_point_x)
-    cut_point_y = lower_bounds[k] + beta * (upper_bounds[k] - lower_bounds[k])
-    if continuous
+    cut_point_x += beta * (cut_point_y - cut_point_x)
+    cut_point_y = lower_bounds[k] + beta * (@upper_bounds[k] - @lower_bounds[k])
+    if @continuous # Doesn't work with discrete functions
       chromosome_x[k] = cut_point_x
       chromosome_y[k] = cut_point_y
     else
@@ -110,13 +111,13 @@ class HTGA < BaseGA
     ((k + 1)...chromosome_y.size).each do |i|
       chromosome_x[i], chromosome_y[i] = chromosome_y[i], chromosome_x[i]
     end
-    return chromosome_x, chromosome_y
+    [chromosome_x, chromosome_y]
   end
 
   # Mutation operator method for the chromosomes
   # @param [Chromosome] chromosome, the chromosome to mutate
-  # @return [Chromosome] the resulting chrmosome
-  def self.mutate(chromosome, continuous: true) # Does not work for discrete functions
+  # @return [Chromosome] the resulting mutated chromosome
+  def mutate(chromosome) # Does not work for discrete functions
     beta = rand(0..10) / 10.0
     i = -1
     k = -1
@@ -127,7 +128,7 @@ class HTGA < BaseGA
     end
     gene_i = chromosome[i]
     gene_k = chromosome[k]
-    if continuous
+    if @continuous # Doesn't work for discrete functions
       chromosome[i] = (1 - beta) * gene_i + beta * gene_k
       chromosome[k] = beta * gene_i + (1 - beta) * gene_k
     else
@@ -139,79 +140,65 @@ class HTGA < BaseGA
 
   # Method to perfom SNR calculation used in the HTGA
   # @param [Chromosome] chromosome, the chromosome
-  # @param [Boolean] smaller_the_better, true if SNR is for minization or false otherwise
   # @return [void]
-  def self.calculate_snr(chromosome, smaller_the_better: true)
+  def calculate_snr(chromosome)
     n = chromosome.size.to_f
-    if smaller_the_better
-      chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| gene**2.0 }.reduce(:+))
-    else # What happens when the gene is 0 ?
-      chromosome.snr = -10.0 * Math.log10((1.0 / n) * chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
+    if @is_high_fit # What happens when the gene is 0 ?
+      chromosome.snr = -10.0 * Math.log10((1.0 / n) *
+                        chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
+    else
+      chromosome.snr = -10.0 * Math.log10((1.0 / n) *
+                        chromosome.map { |gene| gene**2.0 }.reduce(:+))
     end
   end
 
   # Method to perform crossover operation over chromosomes
+  # @param [Integer] offset for the selected chromosomes by the #roulette_select
+  # method
   # @return [void]
   def cross_individuals(selected_offset)
-    pp '=> crossing individuals'
     m = selected_offset
     m += 1 if m == 1
     (0...m).each do |x|
-      r = Random.rand(1.0)
-      # r = @chromosomes[x].prob
-      next if r > @cross_rate
-      (0...m).each do |y|
-        s = Random.rand(1.0)
-        # s = @chromosomes[y].prob
-        next if s > @cross_rate || x == y
-        new_chrom_x, new_chrom_y =
-                       HTGA.crossover(chromosome_x: @chromosomes[x].clone,
-                                      chromosome_y: @chromosomes[y].clone,
-                                      upper_bounds: @upper_bounds,
-                                      lower_bounds: @lower_bounds,
-                                      continuous: @continuous)
-        @chromosomes << new_chrom_x << new_chrom_y
-        break
+      r = rand(0.0..1.0)
+      y = -1
+      loop do
+        y = rand(0...m)
+        break if x != y
       end
+      next if r > @cross_rate
+      new_chrom_x, new_chrom_y =
+                     crossover @chromosomes[x].clone, @chromosomes[y].clone
+
+      evaluate_chromosome new_chrom_x
+      evaluate_chromosome new_chrom_y
+      @chromosomes << new_chrom_x << new_chrom_y
     end
   end
 
   # Method to perform mutation operation over the chromosomes
   # @return [void]
   def mutate_individuals
-    pp '=> mutating individuals'
     m = @chromosomes.size
-    (0...m).each do
-      r = Random.rand(1.0)
+    (0...m).each do |x|
+      r = rand(0.0..1.0)
       next if r > @mut_rate
-      x = rand(0...m)
-      new_chrom = HTGA.mutate @chromosomes[x].clone, continuous: @continuous
+      new_chrom = mutate @chromosomes[x].clone
+      evaluate_chromosome new_chrom
       @chromosomes << new_chrom
-    end
-  end
-
-  # Recalculate the fitness values
-  # @return [void]
-  def recalculate_fitness
-    @chromosomes.map! do |chromosome|
-      chromosome.fitness = @selected_func.call chromosome
-      chromosome
     end
   end
 
   # Method that select the best M chromosomes for the next generation
   # @return [void]
   def select_next_generation
-    pp "=> selecting next generation"
     if @is_high_fit
-      pp "sort in decreasing order"
       # sort in decreasing order by fitness values
       @chromosomes.sort! do |left_chrom, right_chrom|
         right_chrom.fitness <=> left_chrom.fitness
       end
     else
       # sort in increasing order of fitness values
-      pp "sort in increasing order"
       @chromosomes.sort! do |left_chrom, right_chrom|
         left_chrom.fitness <=> right_chrom.fitness
       end
@@ -254,22 +241,20 @@ class HTGA < BaseGA
   # @return [Chromosome] the optimal chromosome
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
     optimal_chromosome = Chromosome.new
-    experimental_matrix = generate_experimental_matrix chromosome_x,
-                                                       chromosome_y
-    # Calculate fitness and SNR values
-    experimental_matrix.each_index do |i|
-      # experimental_matrix[i].fitness = @selected_func.call experimental_matrix[i]
-      HTGA.calculate_snr experimental_matrix[i], smaller_the_better: !@is_high_fit
+    experiment_matrix = generate_experiment_matrix chromosome_x, chromosome_y
+    # Calculate SNR values
+    experiment_matrix.each_index do |i|
+      calculate_snr experiment_matrix[i]
     end
     # Calculate the effects of the various factors
-    (0...experimental_matrix[0].size).each do |j|
+    (0...experiment_matrix[0].size).each do |j|
       sum_lvl_1 = 0.0
       sum_lvl_2 = 0.0
-      (0...experimental_matrix.size).each do |i|
+      (0...experiment_matrix.size).each do |i|
         if @taguchi_array[i][j] == 1
-          sum_lvl_2 += experimental_matrix[i].snr
+          sum_lvl_2 += experiment_matrix[i].snr
         else
-          sum_lvl_1 += experimental_matrix[i].snr
+          sum_lvl_1 += experiment_matrix[i].snr
         end
       end
       if sum_lvl_1 > sum_lvl_2
@@ -279,15 +264,15 @@ class HTGA < BaseGA
       end
     end
     # Find the optimal fitness value
-    optimal_chromosome.fitness = @selected_func.call optimal_chromosome
+    evaluate_chromosome optimal_chromosome
     # Return the optimal chromosome
     optimal_chromosome
   end
 
+  # Method to generate offspring using the Taguchi method
+  # @return [void]
   def generate_offspring_by_taguchi_method
     expected_number = 0.5 * @pop_size * @cross_rate
-    pp '=> generate_offspring_by_taguchi_method'
-    pp "expected_number #{expected_number}"
     n = 0
     m = @chromosomes.size
     while n < expected_number
@@ -309,8 +294,9 @@ class HTGA < BaseGA
   # chromosome
   # @param [Chromosome] chromosome_x, the first chromosome
   # @param [Chromosome] chromosome_y, the second chromosome
-  def generate_experimental_matrix(chromosome_x, chromosome_y)
-    experimental_matrix = []
+  # @param [Array<Chromosome>] an array of chromosomes
+  def generate_experiment_matrix(chromosome_x, chromosome_y)
+    experiment_matrix = []
     (0...@taguchi_array.size).each do |i|
       row_chromosome = Chromosome.new
       (0...@taguchi_array[0].size).each do |j|
@@ -320,55 +306,359 @@ class HTGA < BaseGA
           row_chromosome << chromosome_y[j]
         end
       end
-      experimental_matrix << row_chromosome
+      experiment_matrix << row_chromosome
     end
-    experimental_matrix
+    experiment_matrix
   end
-
 
   # Method to generate the initial population of chromosomes
   # @return [void]
   def init_population
-    pp "=>initializing population"
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
-        if @values == 'discrete'
-          beta = (Array.new(11) { |k| k / 10.0 }).sample
-        elsif @values == 'uniform distribution'
-          beta = Random.rand(1.0)
+        if @beta_values == 'discrete'
+          beta = rand(0..10) / 10.0
+        elsif @beta_values == 'uniform distribution'
+          beta = rand(0.0..1.0)
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
                                                  @lower_bounds[i])
-        if @continuous
+        if @continuous # Wrong for discrete functions
           chromosome << gene
         else
           chromosome << gene.floor
         end
       end
-      chromosome.fitness = @selected_func.call chromosome.clone
+      evaluate_chromosome chromosome
       @chromosomes << chromosome
     end
   end
 end
 
 if __FILE__ == $PROGRAM_NAME
-  dim = 30
-  bound = 1.28
-  htga = HTGA.new values: 'discrete',
-                  upper_bounds: Array.new(dim, bound),
-                  lower_bounds: Array.new(dim, -1 * bound),
-                  pop_size: 200,
-                  cross_rate: 0.1,
-                  mut_rate: 0.02,
-                  num_genes: dim,
-                  continuous: true,
-                  selected_func: 12,
-                  is_negative_fit: false,
-                  is_high_fit: false,
-                  max_generation: 1000
+  # f1 se acerco al valor reportado
 
-  htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 500),
+  #                 lower_bounds: Array.new(30, -500),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 1,
+  #                 is_negative_fit: true,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
 
+  # RESULTS
+  # "best fitness overall -12568.655014100983"
+  # "generation of best fitness 9996"
+  # "function evaluations 400393"
+  # "Execution time (seconds): 176.504894135"
+
+  # f2 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 5.12),
+  #                 lower_bounds: Array.new(30, -5.12),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 2,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 33"
+  # "function evaluations 1195"
+  # "Execution time (seconds): 0.628910283"
+
+  # f3 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 32),
+  #                 lower_bounds: Array.new(30, -32),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 3,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 4.440892098500626e-16"
+  # "generation of best fitness 30"
+  # "function evaluations of best fitness 780"
+  # "Execution time (seconds): 188.342336139"
+
+  # f4 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 600),
+  #                 lower_bounds: Array.new(30, -600),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 4,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 36"
+  # "function evaluations of best fitness 1303"
+  # "Execution time (seconds): 0.697401036"
+
+  # f5 se acerco, pero no  segun lo reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 50),
+  #                 lower_bounds: Array.new(30, -50),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 5,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 0.010480449136671111"
+  # "generation of best fitness 6910"
+  # "function evaluations of best fitness 359311"
+  # "Execution time (seconds): 208.23771955"
+
+  # f6 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 50),
+  #                 lower_bounds: Array.new(30, -50),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 6,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 2.9562991214496233e-09"
+  # "generation of best fitness 9995"
+  # "function evaluations of best fitness 498975"
+  # "Execution time (seconds): 193.669437994"
+
+  # f7 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, Math::PI),
+  #                 lower_bounds: Array.new(100, 0),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 7,
+  #                 is_negative_fit: true,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall -92.2268345505006"
+  # "generation of best fitness 9613"
+  # "function evaluations of best fitness 466832"
+  # "Execution time (seconds): 1614.534575738"
+
+  # f8 funcion muy costosa
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, Math::PI),
+  #                 lower_bounds: Array.new(100, -1 * Math::PI),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 8,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # f9 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, 5),
+  #                 lower_bounds: Array.new(100, -5),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 9,
+  #                 is_negative_fit: true,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall -78.33233140753973"
+  # "generation of best fitness 10000"
+  # "function evaluations of best fitness 523372"
+  # "Execution time (seconds): 1633.606771202"
+
+  # f10 no se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, 10),
+  #                 lower_bounds: Array.new(100, -5),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.2,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 10,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 98.98255812317848"
+  # "generation of best fitness 9978"
+  # "function evaluations of best fitness 150245"
+  # "Execution time (seconds): 1598.60769294
+
+  # f11 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 11,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 34"
+  # "function evaluations of best fitness 1232"
+  # "Execution time (seconds): 0.57755215"
+
+  # f12 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 1.28),
+  #                 lower_bounds: Array.new(30, -1.28),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 12,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 3.5203227273239435e-06"
+  # "generation of best fitness 1454"
+  # "function evaluations of best fitness 79425"
+  # "Execution time (seconds): 190.778915494"
+
+  # f13 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 10),
+  #                 lower_bounds: Array.new(30, -10),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 13,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 36"
+  # "function evaluations of best fitness 1004"
+  # "Execution time (seconds): 0.672913684"
+
+  # f14 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 14,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 53"
+  # "function evaluations of best fitness 2069"
+  # "Execution time (seconds): 1.128410878"
+
+  # f15 se acerco al valor reportado
+
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 15,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # htga.execute
+
+  # RESULTS
+  # "best fitness overall 0.0"
+  # "generation of best fitness 39"
+  # "function evaluations of best fitness 1005"
+  # "Execution time (seconds): 0.671060716"
 
 end

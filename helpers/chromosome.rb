@@ -16,10 +16,12 @@ require 'bundler/setup'
 class Chromosome < Array
   # @attr [Float] fitness, the fitness value for the chromosome
   attr_accessor :fitness
-
+  # @attr [Float] norm_fitness, the normalized fitness value fo the chromosome
   attr_accessor :norm_fitness
   # @attr [Float] prob, the probability value for the chromosome
   attr_accessor :prob
   # @attr [Float] snr, the value of the SNR
   attr_accessor :snr
+  # @attr [Float] fit_sum, accumulated fitness
+  attr_accessor :fit_sum
 end

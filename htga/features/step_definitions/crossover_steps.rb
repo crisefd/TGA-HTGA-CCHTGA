@@ -7,7 +7,7 @@
 # last modified: 2015-10-11
 # version: 0.2
 # licence: GPL
-args = {}
+
 Given(/^the chromosomes:$/) do |table|
   table = table.raw
   @chromosome_x = Chromosome.new
@@ -20,8 +20,6 @@ Given(/^the chromosomes:$/) do |table|
     end
     i += 1
   end
-  args[:chromosome_x] = @chromosome_x.clone
-  args[:chromosome_y] = @chromosome_y.clone
 end
 
 Given(/^the upper bounds are:$/) do |table|
@@ -31,7 +29,8 @@ Given(/^the upper bounds are:$/) do |table|
   table.each do |item|
     upper_bounds << item.to_i
   end
-  args[:upper_bounds] = upper_bounds
+  @htga = HTGA.new
+  @htga.upper_bounds = upper_bounds
 end
 
 Given(/^the lower bounds are:$/) do |table|
@@ -41,12 +40,12 @@ Given(/^the lower bounds are:$/) do |table|
   table.each do |item|
     lower_bounds << item.to_i
   end
-  args[:lower_bounds] = lower_bounds
+  @htga.lower_bounds = lower_bounds
 end
 
 When(/^we apply crossover on the chromosomes$/) do
-  args[:continuous] = true
-  @crossed_chromosome_x, @crossed_chromosome_y = HTGA.crossover args
+  @htga.continuous = true
+  @crossed_chromosome_x, @crossed_chromosome_y = @htga.crossover @chromosome_x.clone, @chromosome_y.clone
 end
 
 Then(/^the resulting chromosomes must have swapped their right sides$/) do

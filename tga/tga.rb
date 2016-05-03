@@ -36,7 +36,6 @@ class TGA < BaseGA
     @best_fit = nil
   end
 
-  # Main methon for TGA.
   def execute
     @generation = 1
     # init_time = Time.now
