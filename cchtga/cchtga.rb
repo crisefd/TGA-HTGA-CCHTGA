@@ -35,17 +35,17 @@ class CCHTGA < HTGA
   # Method to calculate a list of divisors for n = number of variables
   # @return [Array<Integer>]
 def calculate_divisors
-  divisors = []  
+  divisors = []
   flags = Array.new(@num_genes) { false }
   n = Math.sqrt(@num_genes).round
-  (2..@num_genes).each do |i|
+  (2..n).each do |i|
     if @num_genes % i == 0
       unless flags[i]
         divisors << i
         flags[i] = true
       end
-
-      if i != (@num_genes / i) && 0 != (@num_genes / i) && 1 != (@num_genes / i) && !flags[@num_genes / i]
+      if i != (@num_genes / i) && 0 != (@num_genes / i) &&
+         1 != (@num_genes / i) && !flags[@num_genes / i]
         divisors << @num_genes / i
         flags[@num_genes / i] = true
       end

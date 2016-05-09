@@ -9,18 +9,17 @@ Given(/^a number of genes of (\d+):$/) do |arg1|
   input[:num_genes] = arg1.to_i
 end
 
-When(/^the calculate divisors is apply$/) do
+When(/^the calculate divisors function is apply$/) do
   @divisors = []
   cchtga = CCHTGA.new
   cchtga.num_genes = input[:num_genes]
-  @num_genesTest = cchtga.num_genes
-  @divisors = cchtga.calculate_divisors.clone
+  @num_genes_test = cchtga.num_genes
+  @divisors = cchtga.calculate_divisors
 end
 
-Then(/^return a valid list with the divisors$/)do
-  flag = true
-  (0...@divisors.size).each do |i|
-    flag = false if @num_genesTest % @divisors[i] != 0
-  end
-  expect(flag).to eq(true)
+Then(/^the resulting list of divisors should be$/) do |table|
+  @divisors.sort!
+  table = table.raw
+  expected_list = table.first.map!(&:to_i)
+  expect(@divisors).to eq(expected_list)
 end
