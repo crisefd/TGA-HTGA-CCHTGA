@@ -23,6 +23,7 @@ class CCHTGA < HTGA
   # chromosomes
   attr_reader :best_chromosomes_experiences
 
+  attr_reader :subsystems
   attr_writer :num_genes
 
   def initialize(**input)
@@ -37,8 +38,8 @@ class CCHTGA < HTGA
 def calculate_divisors
   divisors = []
   flags = Array.new(@num_genes) { false }
-  n = Math.sqrt(@num_genes).round
-  (2..n).each do |i|
+  m = Math.sqrt(@num_genes).round
+  (2..m).each do |i|
     if @num_genes % i == 0
       unless flags[i]
         divisors << i
@@ -62,6 +63,7 @@ end
   def divide_variables
     divisors = calculate_divisors
     s = divisors.sample
+    @genes_per_group = s
     k = @num_genes / s
     @subsystems = Array.new(k) { Subsystem.new }
   end
@@ -69,9 +71,12 @@ end
   # Method to perform random grouping
   # @return [void]
   def random_grouping
-    (0...@num_genes).each do |g|
-      j = rand(0...@subsystems.size)
-      @subsystems[j] << g
+    available_genes = (0...@num_genes).to_a
+    (0...@subsystems.size).each do |j|
+      (0...@genes_per_group).each do
+        g = available_genes.delete_at(rand(available_genes.size))
+        @subsystems[j] << g
+      end
     end
   end
 
