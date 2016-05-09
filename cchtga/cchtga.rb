@@ -38,7 +38,7 @@ class CCHTGA < HTGA
 def calculate_divisors
   divisors = []
   flags = Array.new(@num_genes) { false }
-  m = Math.sqrt(@num_genes).round
+  m = Math.sqrt(@num_genes)
   (2..m).each do |i|
     if @num_genes % i == 0
       unless flags[i]
@@ -159,12 +159,9 @@ end
   end
 
   # Method to perform crossover operation over chromosomes
-  # @param [Integer] offset for the selected chromosomes by the #roulette_select
-  # method
   # @return [void]
-  def cross_individuals(subsystem, selected_offset)
-    m = selected_offset
-    m += 1 if m == 1
+  def cross_individuals(subsystem)
+     m = @chromosomes.size
     (0...m).each do |x|
       r = rand(0.0..1.0)
       y = -1
