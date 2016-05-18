@@ -8,33 +8,23 @@
 
 require 'rubygems'
 require 'bundler/setup'
-require File.join(File.dirname(__FILE__), '..', 'htga/htga.rb')
+# require File.join(File.dirname(__FILE__), '..', 'htga/htga.rb')
+require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/subsystem.rb')
 
 # @author Cristhian Fuertes
 # Main class for the Cooperative Coevolutive Hybrid-Taguchi Genetic Algorithm
-class CCHTGA < HTGA
-  # @!attribute [Chromosome] the current chromosome with the best fitness
-  attr_reader :best_chromosome
-  # @!attribute [Chromosome] the current chromosome with the best fitness
-  attr_reader :prev_best_chromosome
-  # @!attribute [Array<Chromsome>] list with the best experience of the
-  # chromosomes
-  attr_reader :best_chromosomes_experiences
-
-  attr_reader :subsystems
-  attr_writer :num_genes
+class CCHTGA < BaseGA
 
   def initialize(**input)
     super input
     @best_chromosome = nil
     @prev_best_chromosome = nil
-    @best_chromosomes_experiences = []
   end
 
-  # Method to calculate a list of divisors for n = number of variables
-  # @return [Array<Integer>]
+# Method to calculate a list of divisors for n = number of variables
+# @return [Array<Integer>]
 def calculate_divisors
   divisors = []
   flags = Array.new(@num_genes) { false }
@@ -81,105 +71,6 @@ end
   end
 
 
-  # Method to perfom SNR calculation used in the CCHTGA
-  # @param [Chromosome] chromosome, the chromosome
-  # @return [void]
-  def calculate_snr(chromosome, subsystem)
-    if @is_high_fit
-      fail "CCHTGA's SNR calculation for maximization not implemented yet"
-    else
-      evaluate_chromosome chromosome # Wrong
-      # What if the rest equals zero ?
-      chromosome.snr = (chromosome.fitness - @best_chromosome.fitness)**-2
-    end
-  end
-
-  # Mutation operator method for the chromosomes
-  # @param [Subystem] subsystem
-  # @param [Chromosome] chromosome, the chromosome to mutate
-  # @param [Integer] position
-  # @return [Chromosome]
-  def mutate(subsystem, chromosome, position)
-    best_experience = @best_chromosomes_experiences[position]
-    subsystem.each do |i|
-      p = rand(0..10) / 10.0 # correct ?
-      r = rand(0..10) / 10.0
-      if p < 0.5
-        chromosome[i] = @lower_bounds[i] + r * (@upper_bounds[i] -
-                                                @lower_bounds[i])
-      else
-        chromosome[i] = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
-                                                       best_experience[i]).abs
-      end
-    end
-    chromosome
-  end
-
-  # Method to perform mutation operation over the chromosomes
-  # @param [Subystem] subsystem
-  # @return [void]
-  def mutate_individuals(subsystem)
-    m = @chromosomes.size
-    (0...m).each do |j|
-      r = rand(0.0..1.0)
-      next if r > @mut_rate
-      new_chrom = mutate subsystem, @chromosomes[x].clone, x
-      evaluate_chromosome new_chrom
-      @chromosomes << new_chrom
-    end
-  end
-
-  # Crossover operator method use in CCHTGA
-  # @param [Subsystem] subsystem
-  # @param [Chromosome] chromosome_x
-  # @param [Chromosome] chromosome_y
-  # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.
-  def crossover(subsystem, chromosome_x, chromosome_y)
-    beta = rand(0..10) / 10.0
-    k = subsystem.to_a.sample
-    # new values for kth genes x and y
-    cut_point_x = chromosome_x[k]
-    cut_point_y = chromosome_y[k]
-    cut_point_x += beta * (cut_point_y - cut_point_x)
-    cut_point_y = lower_bounds[k] + beta * (@upper_bounds[k] - @lower_bounds[k])
-    if @continuous # Doesn't work with discrete functions
-      chromosome_x[k] = cut_point_x
-      chromosome_y[k] = cut_point_y
-    else
-      chromosome_x[k] = cut_point_x.floor
-      chromosome_y[k] = cut_point_y.floor
-    end
-    # swap right side of chromosomes x and y
-    subsystem.each do |i|
-      if i > k
-        chromosome_x[i], chromosome_y[i] = chromosome_y[i], chromosome_x[i]
-      end
-    end
-    [chromosome_x, chromosome_y]
-  end
-
-  # Method to perform crossover operation over chromosomes
-  # @return [void]
-  def cross_individuals(subsystem)
-     m = @chromosomes.size
-    (0...m).each do |x|
-      r = rand(0.0..1.0)
-      y = -1
-      loop do
-        y = rand(0...m)
-        break if x != y
-      end
-      next if r > @cross_rate
-      new_chrom_x, new_chrom_y = crossover subsystem, @chromosomes[x].clone,
-                                           @chromosomes[y].clone
-
-      evaluate_chromosome new_chrom_x
-      evaluate_chromosome new_chrom_y
-      @chromosomes << new_chrom_x << new_chrom_y
-    end
-  end
-
-
   # Method to correct genes in case a chromosome exceeds the bounds
   # @param [Chromosome] chromosome
   # @note The search space is doubled in each dimension and reconnected
@@ -208,7 +99,7 @@ end
         if @beta_values == 'discrete'
           beta = rand(0..10) / 10.0
         elsif @beta_values == 'uniform distribution'
-          beta = rand(0.0..1.0)
+          beta = rand 0.0..1.0
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
                                                  @lower_bounds[i])
@@ -220,7 +111,6 @@ end
       end
       evaluate_chromosome chromosome
       @chromosomes << chromosome
-      @best_chromosomes_experiences << chromosome
       if @is_high_fit
         @best_chromosome = chromosome.clone if @best_chromosome.nil? ||
                                                chromosome.fitness >
