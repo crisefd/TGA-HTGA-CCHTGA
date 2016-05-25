@@ -24,7 +24,7 @@ class IHTGA < HTGA
     @cross_rate = input[:cross_rate]
     @mut_rate = input[:mut_rate]
     @num_genes = input[:num_genes]
-    @chromosomes = []
+    @chromosomes = input[:chromosomes]
     @continuous = input[:continuous]
     input[:selected_func] = 0 if input[:selected_func].nil?
     @selected_func = TEST_FUNCTIONS[input[:selected_func] - 1]
@@ -37,9 +37,52 @@ class IHTGA < HTGA
     # @num_evaluations = 0 # how to calculate the number of evaluations for cchtga
   end
 
-  def evaluate_chromosome(chromosome)
-    
+  def mutate(chromosome, position)
+    best_experience = @subsystem.best_chromosomes_experiences[position]
+    chromosome.each do |i|
+      p = rand(0..10) / 10.0
+      r = rand(0..10) / 10.0
+      if p < 0.5
+        chromosome[i] = @lower_bounds[i] + r * (@upper_bounds[i] -
+                                                @lower_bounds[i])
+      else
+        chromosome[i] = chromosome[i] + (2 * r - 1) * (@best_chromosome[i]-
+                                                       best_experience[i]).abs
+      end
+    end
+    chromosome
   end
+
+  def mutate_inviduals
+    m = @chromosomes.size
+    (0...m).each do |x|
+      r = rand 0.0..1.0
+      next if r > @mut_rate
+      new_chrom = mutate @chromosomes[x].clone, x
+      evaluate_chromosome new_chrom
+      @chromosomes << new_chrom
+    end
+  end
+
+  def cross_inviduals
+    m = @chromosomes.size
+    (0...m).each do |x|
+      r = rand 0.0..1.0
+      y = -1
+      loop do
+        y = rand 0...m
+        break if x != y
+      end
+      next if r > @cross_rate
+      new_chrom_x, new_chrom_y =
+        crossover @chromosomes[x].clone, @chromosomes[y].clone
+      evaluate_chromosome new_chrom_x
+      evaluate_chromosome new_chrom_y
+      @chromosomes << new_chrom_x << new_chrom_y
+    end 
+  end
+
+
 
   def execute
   end
@@ -52,7 +95,7 @@ class IHTGA < HTGA
    if @is_high_fit
      fail "CCHTGA's SNR calculation for maximization not implemented yet"
    else
-     evaluate_chromosome chromosome # Wrong
+     evaluate_chromosome chromosome
      # What if the rest equals zero ?
      chromosome.snr = (chromosome.fitness - @best_chromosome.fitness)**-2
    end
