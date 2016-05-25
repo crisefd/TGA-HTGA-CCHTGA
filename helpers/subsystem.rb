@@ -6,11 +6,11 @@
 #        oscar.tigreros@correounivalle.edu.co
 # Creation date: 2016-04-04
 
-require 'set'
+# require 'set'
 require_relative 'chromosome'
 
 # Class for subsystems in the CCHTGA
-class Subsystem < Set
-  attr_accessor :best_chromosome
-  attr_accessor :snr
+class Subsystem < Array
+ # attr_accessor :best_chromosome
+  attr_accessor :best_chromosome_experiences
 end
