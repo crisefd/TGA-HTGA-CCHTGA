@@ -101,7 +101,10 @@ class BaseGA
   # SUS selection operation method
   # @return [Array<Chromosome>] selected chromosomes
   def sus_select
-    pointers = Selection::SUS.sample @chromosomes, @pop_size * @cross_rate,
+   # pointers = Selection::SUS.sample @chromosomes, @pop_size * @cross_rate,
+    #                                 is_high_fit: @is_high_fit,
+     #                                is_negative_fit: @is_negative_fit
+    pointers = Selection::SUS.sample @chromosomes, @pop_size,
                                      is_high_fit: @is_high_fit,
                                      is_negative_fit: @is_negative_fit
     k = 0
