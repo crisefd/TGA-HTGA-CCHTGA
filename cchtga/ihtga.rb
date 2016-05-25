@@ -14,6 +14,9 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 # @author Cristhian Fuertes
 # Main class for the Improved Hybrid-Taguchi Genetic Algorithm
 class IHTGA < HTGA
+  
+  attr_writer :best_chromosome
+  attr_accessor :subsystem
 
   # @param [Hash] input, hash list for the initialization
   def initialize(**input)
@@ -34,6 +37,7 @@ class IHTGA < HTGA
     @is_high_fit = false if @is_high_fit.nil?
     @best_chromosome = nil
     @subsystem = input[:subsystem]
+    @mutation_prob = input[:mutation_prob]
     # @num_evaluations = 0 # how to calculate the number of evaluations for cchtga
   end
 
