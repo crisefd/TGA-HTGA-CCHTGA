@@ -1,9 +1,9 @@
 
 mutation_test_vars = {}
 
-Given(/^the chromosome the size ten chromosome:$/) do |table|
+Given(/^the size ten chromosome:$/) do |table|
   table = table.raw
-  chromosome = Chromsome.new
+  chromosome = Chromosome.new
   table.first.each{ |item| chromosome << item.to_f }
   mutation_test_vars[:chromosome] = chromosome
 end
@@ -25,7 +25,6 @@ end
 
 Given(/^the best experience of current chromosome:$/) do |table|
   table = table.raw
-  pending # Write code here that turns the phrase above into concrete actions
   best_experience = Chromosome.new
   table.first.each{ |item| best_experience << item.to_f }
   mutation_test_vars[:best_experience] = best_experience
@@ -49,13 +48,25 @@ When(/^the mutation operation is apply$/) do
                     subsystem: Subsystem.new,
                     mutation_prob: mutation_test_vars[:mutation_prob]
   
-  ihtga.subsystem.best_chromosome_experiences = [ mutation_test_vars[:best_experience] ]
+  ihtga.subsystem.best_chromosomes_experiences = [ mutation_test_vars[:best_experience] ]
+  ihtga.best_chromosome = mutation_test_vars[:best_chromosome]
   
   
-  mutation_test_vars[:mutated_chromosome] = ihtga.mutate mutation_test_vars[:chromosome], 0
+  mutation_test_vars[:mutated_chromosome] = ihtga.mutate mutation_test_vars[:chromosome].clone, 0
 end
 
-Then(/^half of the genes must be less than or equal than previous gene value minus one$/) do
-  
+Then(/^half of the gene values of the mutated chromosome must be less than or equal than previous gene value minus one$/) do
+  mutated_chromosome = mutation_test_vars[:mutated_chromosome]
+  original_chromosome = mutation_test_vars[:chromosome]
+  p "mutated_chromosome = #{mutated_chromosome}"
+  p "original_chromosome = #{original_chromosome}"
+  count = 0
+  mutated_chromosome.each_with_index do |gene, i|
+    if original_chromosome[i] - gene <= 1
+      count += 1
+    end
+  end
+  p "count = #{count}"
+  expect(count).to eq(original_chromosome.size / 2)
 end
 

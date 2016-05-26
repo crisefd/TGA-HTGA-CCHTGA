@@ -12,5 +12,5 @@ require_relative 'chromosome'
 # Class for subsystems in the CCHTGA
 class Subsystem < Array
  # attr_accessor :best_chromosome
-  attr_accessor :best_chromosome_experiences
+  attr_accessor :best_chromosomes_experiences
 end

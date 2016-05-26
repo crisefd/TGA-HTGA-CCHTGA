@@ -7,8 +7,8 @@ Feature: mutation operation test
 
   @test_mutation_operation
   Scenario: Apply the mutation operation on chromosome
-    Given the chromosome the size ten chromosome:
-      |4|8|2|2|1|5|5|9|4|1|
+    Given the size ten chromosome:
+      |9|9|9|9|9|9|9|9|9|9|
     And the upper bounds:
       |10|10|10|10|10|10|10|10|10|10|
     And the lower bounds:
@@ -19,4 +19,4 @@ Feature: mutation operation test
       |0|1|0|1|0|0|0|0|0|0|
     And The probability of mutation is set to "0.5"
     When the mutation operation is apply
-    Then half of the genes must be less than or equal than previous gene value minus one 
+    Then half of the gene values of the mutated chromosome must be less than or equal than previous gene value minus one
