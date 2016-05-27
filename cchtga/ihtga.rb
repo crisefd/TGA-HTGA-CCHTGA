@@ -44,7 +44,7 @@ class IHTGA < HTGA
   def mutate(chromosome, position)
     best_experience = @subsystem.best_chromosomes_experiences[position]
     k = 0
-    chromosome.each do |i|
+    (0...chromosomesize).each do |i|
       p = rand(0..10) / 10.0
       r = rand(0..10) / 10.0
       if p < @mutation_prob
@@ -52,7 +52,7 @@ class IHTGA < HTGA
                                                 @lower_bounds[i])
         k += 1
       else
-        chromosome[i] = chromosome[i] + (2 * r - 1) * (@best_chromosome[i]-
+        chromosome[i] = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
                                                        best_experience[i]).abs
       end
     end
