@@ -37,6 +37,7 @@ class IHTGA < HTGA
     @is_high_fit = false if @is_high_fit.nil?
     @best_chromosome = nil
     @subsystem = input[:subsystem]
+    @num_genes = @subsystem.size
     @mutation_prob = input[:mutation_prob]
     # @num_evaluations = 0 # how to calculate the number of evaluations for cchtga
   end
@@ -44,7 +45,7 @@ class IHTGA < HTGA
   def mutate(chromosome, position)
     best_experience = @subsystem.best_chromosomes_experiences[position]
     k = 0
-    (0...chromosome.size).each do |i|
+    (0...@num_genes).each do |i|
       p = rand(0..10) / 10.0
       r = rand(0..10) / 10.0
       if p < @mutation_prob
