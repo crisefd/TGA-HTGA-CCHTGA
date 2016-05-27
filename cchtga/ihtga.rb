@@ -26,7 +26,7 @@ class IHTGA < HTGA
     @pop_size = input[:pop_size]
     @cross_rate = input[:cross_rate]
     @mut_rate = input[:mut_rate]
-    @num_genes = input[:num_genes]
+    # @num_genes = input[:num_genes]
     @chromosomes = input[:chromosomes]
     @continuous = input[:continuous]
     input[:selected_func] = 0 if input[:selected_func].nil?

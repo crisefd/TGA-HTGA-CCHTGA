@@ -7,7 +7,8 @@
 # Creation date: 2016-03-25
 
 require_relative 'htga/htga'
-
+require_relative 'tga/tga'
+require_relative 'cchtga/cchtga'
 
 # Manager class for running tests
 class TestRunner
