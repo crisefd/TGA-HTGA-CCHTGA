@@ -39,7 +39,7 @@ class IHTGA < HTGA
     @subsystem = input[:subsystem]
     @num_genes = @subsystem.size
     @mutation_prob = input[:mutation_prob]
-    # @num_evaluations = 0 # how to calculate the number of evaluations for cchtga
+    @num_evaluations = 0 # how to calculate the number of evaluations for cchtga
   end
 
   def mutate(chromosome, position)
@@ -100,6 +100,7 @@ class IHTGA < HTGA
  # @param [Chromosome] chromosome, the chromosome
  # @return [void]
  def calculate_snr(chromosome)
+
    if @is_high_fit
      fail "CCHTGA's SNR calculation for maximization not implemented yet"
    else

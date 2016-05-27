@@ -7,6 +7,7 @@
 Feature: Calculate the SNR value for a given chromosome
 
   Scenario: Find the SNR of the smaller-the better caracteristic
-  Given a chromosome with a fitness value of 25
+  Given the chromosome:
+  |2|3|3|3|4|
   And a best chromosome with a fitness value of 12
-  Then the SNR for minimization should be "1/169"
+  Then the SNR for minimization should be "1/1225"
