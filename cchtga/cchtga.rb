@@ -130,7 +130,37 @@ end
 
   def apply_htga_to_subsystems
     @subsystems.each do |subsystem|
-      'implement...'
+      sub_chromosomes, lower_bounds, upper_bounds = decompose_chromosomes subsystem
+      ihtga = IHTGA.new chromosomes: sub_chromosomes,
+                        lower_bounds: lower_bounds,
+                        upper_bounds: upper_bounds,
+                        beta_values: @beta_values,
+                        pop_size: @pop_size,
+                        cross_rate: @cross_rate,
+                        mut_rate: @mut_rate,
+                        continuous: @continuous,
+                        selected_func: @selected_func,
+                        is_negative_fit: @is_negative_fit,
+                        is_high_fit: @is_high_fit,
+                        subsystem: subsystem,
+                        mutation_prob: 0.5
+      ihtga.execute
     end
+  end
+  
+  def decompose_chromosomes(subystem)
+    sub_chromosomes = []
+    lower_bounds = []
+    upper_bounds = []
+    @chromosomes.each do |chromosome|
+      sub_chromosome = Chromosome.new
+      subsystem.each do |g|
+        sub_chromosome << chromosome[g]
+        lower_bounds << @lower_bounds[g]
+        upper_bounds << @upper_bounds[g]
+      end
+      sub_chromosomes << sub_chromosome
+    end
+    [sub_chromosomes, upper_bounds, lower_bounds]
   end
 end
