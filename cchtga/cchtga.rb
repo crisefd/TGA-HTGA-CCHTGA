@@ -16,6 +16,11 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/subsystem.rb')
 # @author Cristhian Fuertes
 # Main class for the Cooperative Coevolutive Hybrid-Taguchi Genetic Algorithm
 class CCHTGA < BaseGA
+  
+  attr_reader :best_chromosome
+  attr_reader :prev_best_chromosome
+  attr_reader :subsystems
+  attr_writer :num_genes
 
   def initialize(**input)
     super input
