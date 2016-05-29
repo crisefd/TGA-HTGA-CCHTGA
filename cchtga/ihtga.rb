@@ -14,7 +14,9 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 # @author Cristhian Fuertes
 # Main class for the Improved Hybrid-Taguchi Genetic Algorithm
 class IHTGA < HTGA
+	# @!attribute [Chromosome] best_chromosome
 	attr_writer :best_chromosome
+	# @!attribute [Subsystem] subsystem
 	attr_accessor :subsystem
 
 	# @param [Hash] input, hash list for the initialization
@@ -41,6 +43,11 @@ class IHTGA < HTGA
 		@num_evaluations = 0 # how to calculate the number of evaluations for cchtga
 	end
 
+
+	# Mutation operator
+	# @param [Chromosome] chromosome
+	# @param [Integer] position
+	# @return [Chromosome]
 	def mutate(chromosome, position)
 		best_experience = @subsystem.best_chromosomes_experiences[position]
 		k = 0
@@ -60,6 +67,8 @@ class IHTGA < HTGA
 		chromosome
 	end
 
+	# Method to mutate the individuals according to a mutation rate
+	# @return [void]
 	def mutate_inviduals
 		m = @chromosomes.size
 		(0...m).each do |x|
@@ -71,6 +80,8 @@ class IHTGA < HTGA
 		end
 	end
 
+	# Method to cross individuals according to a crossover rate
+	# @return [void]
 	def cross_inviduals
 		m = @chromosomes.size
 		(0...m).each do |x|
