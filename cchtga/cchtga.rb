@@ -21,6 +21,7 @@ class CCHTGA < BaseGA
   attr_reader :prev_best_chromosome
   attr_reader :subsystems
   attr_writer :num_genes
+  attr_writer :chromosomes
 
   def initialize(**input)
     super input

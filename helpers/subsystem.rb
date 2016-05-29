@@ -6,12 +6,14 @@
 #        oscar.tigreros@correounivalle.edu.co
 # Creation date: 2016-04-04
 
-# require 'set'
-require_relative 'chromosome'
+
 
 # Class for subsystems in the CCHTGA
 class Subsystem < Array
+  # @!attribute [Chromosome] best chromosome of subsystem
   attr_accessor :best_chromosome
+  # @!attribute [Array<Chromosome>] population of chromosomes of the subsystem
   attr_accessor :chromosomes
+  # @!attribute [Array<Chromosome>] the best experiences of each chromosome
   attr_accessor :best_chromosomes_experiences
 end
