@@ -67,7 +67,7 @@ class HTGA < BaseGA
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
-      exit
+      output_hash.merge error: error.message
     end
     output_hash
   end

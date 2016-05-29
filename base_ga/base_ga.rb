@@ -8,6 +8,8 @@
 require 'rubygems'
 require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'helpers/selection_methods.rb')
+require File.join(File.dirname(__FILE__), '..', 'helpers/roulette.rb')
+require File.join(File.dirname(__FILE__), '..', 'helpers/SUS.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 
 # @author Cristhian Fuertes

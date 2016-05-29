@@ -12,19 +12,38 @@ require_relative 'cchtga/cchtga'
 
 # Manager class for running tests
 class TestRunner
-
+  
+  def initialize(continue)
+    @continue = continue
+  end
+  
+  # Main method to execute tests
+  # @param [Array<String>] paths_to_input_test_files
+  # @return [void]
   def execute(paths_to_input_test_files)
     paths_to_input_test_files.each do |path|
       input_hash = load_input_test_file path
       1.upto(@num_runs) do |run|
         p "========== RUN #{run} ============="
-        htga = HTGA.new input_hash
-        output_hash = htga.execute
+        output_hash = {}
+        if path.include? '/htga'
+          htga = HTGA.new input_hash
+          output_hash = htga.execute
+        elsif path.include? '/cchtga'
+          cchtga = CCHTGA.new input_hash
+          output_hash = cchtga.execute
+        elsif path.include? '/tga'
+          tga = TGA.new input_hash
+          output_hash = tga.execute
+        end
         write_ouput_file output_hash, path, run
       end
     end
   end
 
+  # Method to read input test files
+  # @param [String] path_to_input_test_file
+  # @return [Hash]
   def load_input_test_file(path_to_input_test_file)
     input_hash = {}
     file = open path_to_input_test_file, 'r'
@@ -39,6 +58,11 @@ class TestRunner
     input_hash
   end
 
+  # Method to write the output of a test
+  # @param [Hash] output_hash
+  # @param [String] path_to_input_test_file
+  # @param [Integer] run
+  # @return [void]
   def write_ouput_file(output_hash, path_to_input_test_file, run)
     splitted_path = path_to_input_test_file.split '/'
     test_dir = splitted_path[1]
@@ -46,6 +70,7 @@ class TestRunner
     path_to_output_file = "test_cases/#{test_dir}/#{input_file_name}-OUTPUT.csv"
     File.delete path_to_output_file if File.exist?(path_to_output_file) &&
                                        run == 1
+    #File.delete path_to_output_file if !@continue
     file = open path_to_output_file, 'a'
     if run == 1
       file.puts "best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error"
@@ -54,6 +79,11 @@ class TestRunner
     file.close
   end
 
+
+  # Method to process the input test file lines
+  # @param [String] first_word
+  # @param [String] second word
+  # @param [Hash] input_hash
   def return_hash(first_word, second_word, input_hash)
     hash = {}
     case first_word
@@ -136,13 +166,15 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   arg = ARGV[0].to_s
+  continue = false
+  continue = true if ARGV[1].to_s == 'continue'
   paths_to_input_test_files = []
-  if arg == 'htga' || arg == 'tga' || arg == 'cchtga'
+  if arg == 'htga' || arg == 'tga' || arg == 'cchtga' || arg == 'htga2'
     paths_to_input_test_files += Dir["test_cases/#{arg}/*.ini"]
   else
     paths_to_input_test_files << "test_cases/#{arg}"
   end
-  tr = TestRunner.new
+  tr = TestRunner.new continue
   tr.execute paths_to_input_test_files
 
 end
