@@ -92,6 +92,7 @@ class IHTGA < HTGA
 
 
 	def execute
+		output_hash = {}
 	end
 
 

@@ -74,6 +74,56 @@ end
       end
     end
   end
+  
+  
+  def cooperative_coevolution
+    @subsystems.each do |subsystem|
+      (0...@pop_size).each do |i|
+        update_subsystem_best_experience subsystem, i
+        update_subsystem_best_chromosome subsystem, i
+        update_best_chromosome subsystem, i
+        correct_genes @best_chromosome
+      end
+    end
+  end
+  
+  def update_subsystem_best_experience(subsystem, i)
+    if @is_high_fit
+      'not implemented'
+    else
+      if subsystem.chromosomes[i].fitness <
+         subsystem.best_chromosomes_experiences[i].fitness
+         subsystem.best_chromosomes_experiences[i] = subsystem.chromosomes[i].clone
+      end
+    end
+  end
+  
+  def update_subsystem_best_chromosome(subsystem, i)
+    if @is_high_fit
+      'not implemented'
+    else
+     if subsystem.chromosomes[i].fitness < subsystem.best_chromosome.fitness
+       subsystem.best_chromosome = subsystem.chromosomes[i].clone
+     end
+    end
+  end
+  
+  def update_best_chromosome(subsystem, i)
+    if @is_high_fit
+      'not implemented'
+    else
+     if subsystem.best_chromosome.fitness < @best_chromosome.fitness
+       replace_subsystem_part_in_chromosome subsystem
+     end
+    end
+  end
+  
+  
+  def replace_subsystem_part_in_chromosome(subsystem)
+    subsystem.each_with_index do |g, i|
+      @best_chromosome[g] = subsystem.best_chromosome[i]
+    end
+  end
 
 
   # Method to correct genes in case a chromosome exceeds the bounds
