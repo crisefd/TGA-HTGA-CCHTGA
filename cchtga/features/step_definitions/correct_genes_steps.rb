@@ -31,7 +31,9 @@ end
 When(/^the correct gene rule is apply$/) do
   cchtga = CCHTGA.new upper_bounds: correct_genes_test_vars[:upper_bounds],
                       lower_bounds: correct_genes_test_vars[:lower_bounds]
-  cchtga.correct_genes correct_genes_test_vars[:best_chromosome]
+  cchtga.best_chromosome = correct_genes_test_vars[:best_chromosome]
+  cchtga.correct_best_chromosome_genes
+  correct_genes_test_vars[:best_chromosome] = cchtga.best_chromosome
   
 end
 

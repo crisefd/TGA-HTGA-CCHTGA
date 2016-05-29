@@ -17,7 +17,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/subsystem.rb')
 # Main class for the Cooperative Coevolutive Hybrid-Taguchi Genetic Algorithm
 class CCHTGA < BaseGA
   
-  attr_reader :best_chromosome
+  attr_accessor :best_chromosome
   attr_reader :prev_best_chromosome
   attr_reader :subsystems
   attr_writer :num_genes
@@ -55,6 +55,7 @@ end
   # @note A random value s in chosen from the a list of divisor
   # (see #calculate_divisors), then K = n / s. Where n is the number of
   # variables
+  # @return [void]
   def divide_variables
     divisors = calculate_divisors
     s = divisors.sample
@@ -76,17 +77,24 @@ end
   end
   
   
+  # Method to perform cooperative coevolution subroutine
+  # @return [void]
   def cooperative_coevolution
     @subsystems.each do |subsystem|
       (0...@pop_size).each do |i|
         update_subsystem_best_experience subsystem, i
         update_subsystem_best_chromosome subsystem, i
         update_best_chromosome subsystem, i
-        correct_genes @best_chromosome
+        correct_best_chromosome_genes
       end
     end
   end
   
+  
+  # Method to update the best chromosomes' experiences of a subsystem
+  # @param [Subsystem] subsystem
+  # @param [Integer] i
+  # @return [void]
   def update_subsystem_best_experience(subsystem, i)
     if @is_high_fit
       'not implemented'
@@ -98,6 +106,10 @@ end
     end
   end
   
+  # Method to update the best chromosome of a subsystem
+  # @param [Subsystem] subsystem
+  # @param [Integer] i
+  # @return [void]
   def update_subsystem_best_chromosome(subsystem, i)
     if @is_high_fit
       'not implemented'
@@ -108,6 +120,10 @@ end
     end
   end
   
+  # Method to update the best chromosome using the jth part of a subsystem
+  # @param [Subsystem] subsystem
+  # @param [Integer] i
+  # @return [void]
   def update_best_chromosome(subsystem, i)
     if @is_high_fit
       'not implemented'
@@ -118,7 +134,9 @@ end
     end
   end
   
-  
+  # Method to replace the jth parth (subsystem's variables) in
+  # the best chromosome
+  # @return [void]
   def replace_subsystem_part_in_chromosome(subsystem)
     subsystem.each_with_index do |g, i|
       @best_chromosome[g] = subsystem.best_chromosome[i]
@@ -126,13 +144,12 @@ end
   end
 
 
-  # Method to correct genes in case a chromosome exceeds the bounds
-  # @param [Chromosome] chromosome
+  # Method to correct genes in case a the best chromosome exceeds the bounds
   # @note The search space is doubled in each dimension and reconnected
   # from the opposite bounds to avoid discontinuities
-  def correct_genes(chromosome)
+  def correct_best_chromosome_genes
     i = 0
-    chromosome.map! do |gene|
+    @best_chromosome.map! do |gene|
       if gene < @lower_bounds[i]
         gene = 2 * @lower_bounds[i] - gene
       elsif @upper_bounds[i] < gene
@@ -145,8 +162,7 @@ end
 
   # Method to generate the initial population of chromosomes
   # @return [void]
-  # @note It also initialize the best experiences for chromosomes and the best
-  # chromosome
+  # @note It also initialize the best chromosomes
   def init_population
     (0...@pop_size).each do
       chromosome = Chromosome.new
@@ -178,6 +194,8 @@ end
     end
   end
 
+  # Method to apply the ICHTGA to each subsystem
+  # return [void]
   def apply_htga_to_subsystems
     @subsystems.each do |subsystem|
       sub_chromosomes, lower_bounds, upper_bounds = decompose_chromosomes subsystem
@@ -198,6 +216,10 @@ end
     end
   end
   
+  
+  # Method to create sub chromosomes for the ICHTGA' subsystems
+  # @param [Subsystem] subsystem
+  # @return [Array<Chromosomes>, Array<Float>, Array<Float>]
   def decompose_chromosomes(subystem)
     sub_chromosomes = []
     lower_bounds = []
