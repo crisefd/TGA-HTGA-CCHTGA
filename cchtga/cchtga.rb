@@ -85,7 +85,7 @@ end
       (0...@pop_size).each do |i|
         update_subsystem_best_experience subsystem, i
         update_subsystem_best_chromosome subsystem, i
-        update_best_chromosome subsystem, i
+        update_best_chromosome subsystem
         correct_best_chromosome_genes
       end
     end
@@ -125,7 +125,7 @@ end
   # @param [Subsystem] subsystem
   # @param [Integer] i
   # @return [void]
-  def update_best_chromosome(subsystem, i)
+  def update_best_chromosome(subsystem)
     if @is_high_fit
       'not implemented'
     else
@@ -235,7 +235,3 @@ end
     [sub_chromosomes, upper_bounds, lower_bounds]
   end
 end
-
-
- #sub_chromosome << chromosome[g]
- 
