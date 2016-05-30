@@ -7,7 +7,7 @@
 Feature: Update best chromosome with jth part of subsystem
 
 
-    Scenario: Test the replacement of the jth part of subsystem j best chromosome in global best chromosome for a minimization problem
+    Scenario: Test the replacement of the jth part of subsystem j best chromosome in global best chromosome for a minimization problem without negative fitness values
         Given the global best chromosome:
             | 4 | 15 | 13 | 6 | 5 | 7 | 8 | 6 | 1 |
         And the subsystem with the variables:

@@ -84,7 +84,7 @@ end
   def cooperative_coevolution
     @subsystems.each do |subsystem|
       (0...@pop_size).each do |i|
-        update_subsystem_best_experience subsystem, i
+        update_subsystem_best_experiences subsystem, i
         update_subsystem_best_chromosome subsystem, i
         update_best_chromosome subsystem
         correct_best_chromosome_genes
@@ -97,7 +97,7 @@ end
   # @param [Subsystem] subsystem
   # @param [Integer] i
   # @return [void]
-  def update_subsystem_best_experience(subsystem, i)
+  def update_subsystem_best_experiences(subsystem, i)
     if @is_high_fit
       'not implemented'
     else
