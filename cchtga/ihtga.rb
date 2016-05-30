@@ -18,6 +18,8 @@ class IHTGA < HTGA
 	attr_writer :best_chromosome
 	# @!attribute [Subsystem] subsystem
 	attr_accessor :subsystem
+	
+	attr_writer :selected_func
 
 	# @param [Hash] input, hash list for the initialization
 	def initialize(**input)
