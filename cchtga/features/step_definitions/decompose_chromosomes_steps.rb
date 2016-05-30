@@ -17,6 +17,7 @@ Given(/^the population of chromosomes:$/) do |table|
     chromosomes << chromosome
   end
   decompose_test_vars[:chromosomes] = chromosomes
+  decompose_test_vars[:pop_size] = chromosomes.size
 end
 
 Given(/^a subsystem with the variables:$/) do |table|
@@ -42,7 +43,8 @@ end
 
 When(/^the decompose operation is apply$/) do
   cchtga = CCHTGA.new lower_bounds: decompose_test_vars[:lower_bounds],
-                      upper_bounds: decompose_test_vars[:upper_bounds]
+                      upper_bounds: decompose_test_vars[:upper_bounds],
+                      pop_size: decompose_test_vars[:pop_size]
   cchtga.chromosomes = decompose_test_vars[:chromosomes]
   decompose_test_vars[:output] = cchtga.decompose_chromosomes decompose_test_vars[:subsystem]
 end
@@ -66,10 +68,10 @@ Then(/^with upper and lower bounds:$/) do |table|
   expected_lower_bounds = []
   expected_upper_bounds = []
   table[0].each do |item|
-    expected_upper_bounds = item.to_f
+    expected_upper_bounds << item.to_f
   end
   table[1].each do |item|
-    expected_lower_bounds = item.to_f
+    expected_lower_bounds << item.to_f
   end
   upper_bounds = decompose_test_vars[:output][1]
   lower_bounds = decompose_test_vars[:output][2]

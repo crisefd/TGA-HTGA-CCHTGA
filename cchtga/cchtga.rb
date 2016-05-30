@@ -221,19 +221,21 @@ end
   # Method to create sub chromosomes for the ICHTGA' subsystems
   # @param [Subsystem] subsystem
   # @return [Array<Chromosomes>, Array<Float>, Array<Float>]
-  def decompose_chromosomes(subystem)
-    sub_chromosomes = []
+  def decompose_chromosomes(subsystem)
+    sub_chromosomes = Array.new(@pop_size) { Chromosome.new }
     lower_bounds = []
     upper_bounds = []
-    @chromosomes.each do |chromosome|
-      sub_chromosome = Chromosome.new
-      subsystem.each do |g|
-        sub_chromosome << chromosome[g]
-        lower_bounds << @lower_bounds[g]
-        upper_bounds << @upper_bounds[g]
+    subsystem.each do |g|
+      lower_bounds << @lower_bounds[g]
+      upper_bounds << @upper_bounds[g]
+      @chromosomes.each_with_index do |chromosome, i|
+        sub_chromosomes[i] << chromosome[g]
       end
-      sub_chromosomes << sub_chromosome
     end
     [sub_chromosomes, upper_bounds, lower_bounds]
   end
 end
+
+
+ #sub_chromosome << chromosome[g]
+ 
