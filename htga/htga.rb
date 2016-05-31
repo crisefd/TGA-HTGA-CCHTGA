@@ -25,7 +25,7 @@ class HTGA < BaseGA
     best_fit = nil
     gen_of_best_fit = 0
     func_evals_of_best_fit = 0
-    init_time = Time.now
+    # init_time = Time.now
     begin
       init_population
       p 'population initialized'
@@ -37,9 +37,9 @@ class HTGA < BaseGA
         generate_offspring_by_taguchi_method
         mutate_individuals
         select_next_generation
-        if @generation % 10 == 0
+        if @generation % 50 == 0
           p "Generation: #{@generation}-Fitness: #{@chromosomes.first.fitness}"
-          p "Execution time (seconds): #{Time.now - init_time}"
+          # p "Execution time (seconds): #{Time.now - init_time}"
         end
         if @is_high_fit
           if best_fit.nil? || @chromosomes.first.fitness > best_fit
