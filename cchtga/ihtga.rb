@@ -33,7 +33,7 @@ class IHTGA < HTGA
 		@chromosomes = input[:chromosomes]
 		@continuous = input[:continuous]
 		input[:selected_func] = 0 if input[:selected_func].nil?
-		@selected_func = TEST_FUNCTIONS[input[:selected_func] - 1]
+		@selected_func = input[:selected_func]
 		@is_negative_fit = input[:is_negative_fit]
 		@is_high_fit = input[:is_high_fit]
 		@is_negative_fit = false if @is_negative_fit.nil?
@@ -47,6 +47,8 @@ class IHTGA < HTGA
 		@num_evaluations = 0 # how to calculate the number of evaluations for cchtga
 		
 		find_best_chromosome
+		
+		# p "chromosomes #{@chromosomes[0].size}"
 	end
 	
 	def find_best_chromosome
@@ -61,6 +63,7 @@ class IHTGA < HTGA
                 		                           chromo.fitness <
                         		                   @best_chromosome.fitness
     		end
+    		chromo
 	    end
 	end
 
@@ -70,32 +73,34 @@ class IHTGA < HTGA
 	# @param [Integer] position
 	# @return [Chromosome]
 	def mutate(chromosome, position)
+		#p "position #{position}"
 		best_experience = @subsystem.best_chromosomes_experiences[position]
-		k = 0
+		# k = 0
 		(0...@num_genes).each do |i|
 			p = rand(0..10) / 10.0
 			r = rand(0..10) / 10.0
 			if p < @mutation_prob
 				chromosome[i] = @lower_bounds[i] + r * (@upper_bounds[i] -
 				@lower_bounds[i])
-				k += 1
+				# k += 1
 			else
 				chromosome[i] = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
 				best_experience[i]).abs
 			end
 		end
-		p "k=#{k}"
+		#p "k=#{k}"
 		chromosome
 	end
 
 	# Method to mutate the individuals according to a mutation rate
 	# @return [void]
-	def mutate_inviduals
+	def mutate_individuals
+		# p "xXXXXX"
 		m = @chromosomes.size
 		(0...m).each do |x|
 			r = rand 0.0..1.0
 			next if r > @mut_rate
-			new_chrom = mutate @chromosomes[x].clone, x
+			new_chrom = mutate(@chromosomes[x].clone, x)
 			evaluate_chromosome new_chrom
 			@chromosomes << new_chrom
 		end
@@ -105,6 +110,7 @@ class IHTGA < HTGA
 	# @return [void]
 	def cross_inviduals
 		m = @chromosomes.size
+		# p "chromosomes size #{m}"
 		(0...m).each do |x|
 			r = rand 0.0..1.0
 			y = -1
@@ -113,6 +119,10 @@ class IHTGA < HTGA
 				break if x != y
 			end
 			next if r > @cross_rate
+			#p "#{@chromosomes[0].nil?}"
+			#p "x = #{x} y = #{y}"
+			#p "chromo x =#{@chromosomes[x].nil?}"
+			#p "chromo y = #{@chromosomes[y].nil?}"
 			new_chrom_x, new_chrom_y =
 			crossover @chromosomes[x].clone, @chromosomes[y].clone
 			evaluate_chromosome new_chrom_x

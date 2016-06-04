@@ -17,5 +17,5 @@ class Subsystem < Array
   # @!attribute [Array<Chromosome>] the best experiences of each chromosome
   attr_accessor :best_chromosomes_experiences
   
-  attr_reader :num_evaluations
+  attr_accessor :num_evaluations
 end

@@ -107,18 +107,19 @@ class BaseGA
     #                                 is_high_fit: @is_high_fit,
      #                                is_negative_fit: @is_negative_fit
     pointers = Selection::SUS.sample @chromosomes, @pop_size,
-                                     is_high_fit: @is_high_fit,
-                                     is_negative_fit: @is_negative_fit
+                                              is_high_fit: @is_high_fit,
+                                              is_negative_fit: @is_negative_fit
     k = 0
     selected_chromosomes = []
     pointers.each do |ptr|
       loop do
-        break if @chromosomes.fit_sum >= ptr
+        break if @chromosomes[k].fit_sum >= ptr
         k += 1
       end
       selected_chromosomes << @chromosomes[k]
 
     end
+    fail 'wrong number of selected chromosomes' if selected_chromosomes.size != @pop_size
     selected_chromosomes
   end
 

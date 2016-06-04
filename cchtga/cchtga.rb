@@ -12,6 +12,7 @@ require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/subsystem.rb')
+require_relative 'ihtga'
 
 # @author Cristhian Fuertes
 # Main class for the Cooperative Coevolutive Hybrid-Taguchi Genetic Algorithm
@@ -275,8 +276,10 @@ end
   def apply_htga_to_subsystems
     k = 0
     @subsystems.each do |subsystem|
-      p "appling htga to subsystem #{k}"
+      p "applying htga to subsystem #{k}"
       sub_chromosomes, lower_bounds, upper_bounds = decompose_chromosomes subsystem
+      #p "subchromosomes #{sub_chromosomes.size} #{sub_chromosomes}"
+      #exit
       ihtga = IHTGA.new chromosomes: sub_chromosomes,
                         lower_bounds: lower_bounds,
                         upper_bounds: upper_bounds,
@@ -324,7 +327,7 @@ if __FILE__ == $PROGRAM_NAME
                       pop_size: 200,
                       cross_rate: 0.1,
                       mut_rate: 0.02,
-                      num_genes: 1000,
+                      num_genes: 10,
                       continuous: true,
                       selected_func: 15,
                       is_negative_fit: false,
