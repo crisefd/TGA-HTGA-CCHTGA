@@ -41,9 +41,27 @@ class IHTGA < HTGA
 		@best_chromosome = nil
 		@subsystem = input[:subsystem]
 		@num_genes = @subsystem.size
+		@subsystem.best_chromosomes_experiences = input[:chromosomes].clone
 		@mutation_prob = input[:mutation_prob]
 		@taguchi_array = input[:taguchi_array]
 		@num_evaluations = 0 # how to calculate the number of evaluations for cchtga
+		
+		find_best_chromosome
+	end
+	
+	def find_best_chromosome
+		@chromosomes.map! do |chromo|
+			evaluate_chromosome chromo
+			if @is_high_fit
+        		@best_chromosome = chromo.clone if @best_chromosome.nil? ||
+                		                           chromo.fitness >
+                        		                   @best_chromosome.fitness
+    		else
+        		@best_chromosome = chromo.clone if @best_chromosome.nil? ||
+                		                           chromo.fitness <
+                        		                   @best_chromosome.fitness
+    		end
+	    end
 	end
 
 
@@ -110,7 +128,7 @@ class IHTGA < HTGA
 		generate_offspring_by_taguchi_method
 		mutate_individuals
 		@subsystem.chromosomes = @chromosomes.clone
-		
+		@subsystem.num_evaluations = @num_evaluations
 	end
 
 

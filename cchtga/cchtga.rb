@@ -285,6 +285,7 @@ end
                         mutation_prob: 0.5,
                         taguchi_array: @taguchi_array
       ihtga.execute
+      @num_evaluations += ihtga.subsystem.num_evaluations
     end
   end
   
