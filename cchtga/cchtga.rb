@@ -33,7 +33,7 @@ class CCHTGA < BaseGA
   # Method to determine if this generation has improved with respect to the 
   # previous generation.
   # @return [Boolean]
-  def has_best_fitness_improved?
+  def has_best_fit_not_improved?
     answer = false
     delta_fit = 0
     if @is_high_fit
@@ -43,6 +43,23 @@ class CCHTGA < BaseGA
       answer = delta_fit < 0 || delta_fit < @prev_best_chromosome.fitness * 0.1
     end
     answer
+  end
+  
+  
+  def execute
+    output_hash = {}
+    
+    init_population
+    divide_variables
+    @generation = 0
+    while @generation < @max_generation
+      random_grouping if @generation > 0 && has_best_fit_not_improved?
+      cooperative_coevolution if @generation > 0
+      apply_htga_to_subsystems
+      @generation += 1
+    end
+    
+    output_hash
   end
 # Method to calculate a list of divisors for n = number of variables
 # @return [Array<Integer>]
