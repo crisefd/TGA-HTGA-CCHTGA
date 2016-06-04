@@ -307,3 +307,20 @@ end
     [sub_chromosomes, upper_bounds, lower_bounds]
   end
 end
+
+
+if __FILE__ == $PROGRAM_NAME
+  cchtga = CCHTGA.new beta_values: 'discrete',
+                      upper_bounds: Array.new(1000, 100),
+                      lower_bounds: Array.new(1000, -100),
+                      pop_size: 200,
+                      cross_rate: 0.1,
+                      mut_rate: 0.02,
+                      num_genes: 1000,
+                      continuous: true,
+                      selected_func: 15,
+                      is_negative_fit: false,
+                      is_high_fit: false,
+                      max_generation: 2
+  cchtga.execute
+end
