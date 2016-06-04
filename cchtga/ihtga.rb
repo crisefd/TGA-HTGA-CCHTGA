@@ -42,6 +42,7 @@ class IHTGA < HTGA
 		@subsystem = input[:subsystem]
 		@num_genes = @subsystem.size
 		@mutation_prob = input[:mutation_prob]
+		@taguchi_array = input[:taguchi_array]
 		@num_evaluations = 0 # how to calculate the number of evaluations for cchtga
 	end
 
@@ -105,7 +106,11 @@ class IHTGA < HTGA
 
 
 	def execute
-		output_hash = {}
+		cross_inviduals
+		generate_offspring_by_taguchi_method
+		mutate_individuals
+		@subsystem.chromosomes = @chromosomes.clone
+		
 	end
 
 

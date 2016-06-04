@@ -40,22 +40,59 @@ class CCHTGA < BaseGA
       fail 'not implemeted'
     else
       delta_fit = @best_chromosome.fitness - @prev_best_chromosome.fitness
-      answer = delta_fit < 0 || delta_fit < @prev_best_chromosome.fitness * 0.1
+      if @prev_best_chromosome.nil?
+        answer = true
+      else
+        answer = delta_fit < 0 || delta_fit < @prev_best_chromosome.fitness * 0.1  
+      end
     end
     answer
+  end
+  
+   # Method that selects the most suitable Taguchi array
+  # @param [Integer] chrom_size, the number of variables of the function
+  def select_taguchi_array
+    closest = 0
+    [8, 16, 32, 64, 128].each do |n|
+      if @genes_per_group <= n - 1
+        closest = n
+        break
+      end
+    end
+    file_name = "L#{closest}"
+    @taguchi_array = load_array_from_file file_name
+  end
+  
+   # Auxiliar method for #select_taguchi_array, it loads the array from a file
+  # @param [String] filename, the name of the file which contains the array
+  # @param [Integer] chrom_size, the number of variables of the function
+  # @return [void]
+  def load_array_from_file(filename)
+    taguchi_array = []
+    path_to_file = File.join(File.dirname(__FILE__), '..',
+                             "taguchi_orthogonal_arrays/#{filename}")
+    array_file = open(path_to_file, 'r')
+    array_file.each_line do |line|
+      taguchi_array << line.split(';')[0, @genes_per_group].map!(&:to_i)
+    end
+    array_file.close
+    taguchi_array
   end
   
   
   def execute
     output_hash = {}
-    
     init_population
     divide_variables
+    select_taguchi_array
+    random_grouping
     @generation = 0
     while @generation < @max_generation
       random_grouping if @generation > 0 && has_best_fit_not_improved?
       cooperative_coevolution if @generation > 0
       apply_htga_to_subsystems
+      p "best_fit = #{@best_chromosome.fitness}"
+      p "generation = #{@generation}"
       @generation += 1
     end
     
@@ -162,6 +199,7 @@ end
       'not implemented'
     else
      if subsystem.best_chromosome.fitness < @best_chromosome.fitness
+       @prev_best_chromosome = @best_chromosome.clone
        replace_subsystem_part_in_chromosome subsystem
      end
     end
@@ -244,7 +282,8 @@ end
                         is_negative_fit: @is_negative_fit,
                         is_high_fit: @is_high_fit,
                         subsystem: subsystem,
-                        mutation_prob: 0.5
+                        mutation_prob: 0.5,
+                        taguchi_array: @taguchi_array
       ihtga.execute
     end
   end

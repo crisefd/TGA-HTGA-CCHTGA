@@ -222,7 +222,6 @@ class HTGA < BaseGA
 
   # Auxiliar method for #select_taguchi_array, it loads the array from a file
   # @param [String] filename, the name of the file which contains the array
-  # @param [Integer] chrom_size, the number of variables of the function
   # @return [void]
   def load_array_from_file(filename)
     @taguchi_array = []
