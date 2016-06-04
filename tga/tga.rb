@@ -16,7 +16,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 class TGA < BaseGA
   attr_reader :mating_pool, :new_generation, :num_genes, :chromosomes, :pop_size
   def initialize(**input)
-    @values = input[:values]
+    @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
     @pop_size = input[:pop_size]
     @upper_bounds = input[:upper_bounds]
     @lower_bounds = input[:lower_bounds]
@@ -36,7 +36,9 @@ class TGA < BaseGA
     @best_fit = nil
   end
 
+  # Main methon for TGA.
   def execute
+    output_hash = {}
     @generation = 1
     # init_time = Time.now
     begin
@@ -48,10 +50,18 @@ class TGA < BaseGA
         insert_new_generation
         break if @best_fit == @optimal_func_val
         @generation += 1
-        p('pop:' + (@chromosomes.size.to_s) + ' Bf: ' + (@best_fit.to_s) +
-          ' maxG: ' + (@max_generation.to_s) + ' gen: ' + @generation.to_s)
+
+        relative_error = (((@best_fit + 1) / (@optimal_func_val + 1)) - 1).abs
+        output_hash.merge! best_fit: @best_fit, gen_of_best_fit: @gen_of_best_fit,
+                           func_evals_of_best_fit: @func_evals_of_best_fit,
+                           optimal_func_val: @optimal_func_val,
+                           relative_error: relative_error
       end
+    rescue StandardError => error
+      p error
+      p @optimal_func_val
     end
+    output_hash
   end
 
   # Method to select chromosomes by tournamet default  k=2
@@ -66,13 +76,22 @@ class TGA < BaseGA
         x = rand(0...@pop_size)
         y = rand(0...@pop_size)
       end
-      # mejorar para minimizar o maximizar
-      if @chromosomes[x].fitness <= @chromosomes[y].fitness
-        @mating_pool << @chromosomes[y]
-        prev_chromo = y
-      elsif @chromosomes[y].fitness < @chromosomes[x].fitness
-        @mating_pool << @chromosomes[x]
-        prev_chromo = x
+      if @is_high_fit
+        if @chromosomes[x].fitness <= @chromosomes[y].fitness
+          @mating_pool << @chromosomes[y]
+          prev_chromo = y
+        elsif @chromosomes[y].fitness < @chromosomes[x].fitness
+          @mating_pool << @chromosomes[x]
+          prev_chromo = x
+        end
+      else
+        if @chromosomes[x].fitness <= @chromosomes[y].fitness
+          @mating_pool << @chromosomes[x]
+          prev_chromo = x
+        elsif @chromosomes[y].fitness < @chromosomes[x].fitness
+          @mating_pool << @chromosomes[y]
+          prev_chromo = y
+        end
       end
     end
   end
@@ -82,23 +101,24 @@ class TGA < BaseGA
     cut_point = rand(0...@num_genes)
     chromosome_x = @mating_pool[0].clone
     chromosome_y = @mating_pool[1].clone
-    temp_cut_x = -1
-    temp_cut_y = -1
+    # temp_cut_x = -1
+    # temp_cut_y = -1
     (cut_point...@num_genes).each do |i|
       temp_cut_x = chromosome_x[i]
       temp_cut_y = chromosome_y[i]
       chromosome_x[i] = temp_cut_y
       chromosome_y[i] = temp_cut_x
     end
-    @new_generation << chromosome_y
-    @new_generation << chromosome_x
+    @new_generation << chromosome_y << chromosome_x
+    # @new_generation << chromosome_x
   end
 
   # GENERAL MUTATE FOR n CHROMOSOMES POOL
   def mutate_matingpool
-    gene = -1
-    chromosome = []
+    # gene = -1
+    # chromosome = []
     (0...@mating_pool.size).each do |i|
+      gene = -1
       mutate_point = rand(0...@num_genes)
       chromosome = @mating_pool[i].clone
       if @continuous
@@ -113,25 +133,32 @@ class TGA < BaseGA
 
   # Insert the new chromosomes into the population
   def insert_new_generation
-    evaluate_chromosomes *@new_generation
-    (0...@new_generation.size).each do
-      x = rand(0...@chromosomes.size)
-      @chromosomes.delete_at(x.to_i)
+    # evaluate_chromosomes *@new_generation
+    (0...@new_generation.size).each do |i|
+      evaluate_chromosome @new_generation[i]
+      j = rand 0...@chromosomes.size
+      @chromosomes.delete_at j
+      verify_best_fit @new_generation[i]
+      @chromosomes << @new_generation[i]
     end
-    (0...@new_generation.size).each do |x|
-      best_fit? @new_generation[x]
-      @chromosomes << @new_generation[x]
-    end
+    #(0...@new_generation.size).each do |x|
+    #  verify_best_fit @new_generation[x]
+    #  @chromosomes << @new_generation[x]
+    #end
     @mating_pool.clear
     @new_generation.clear
   end
 
   # Verify if the chromosome has a better fitness
-  def best_fit?(chromosome)
+  def verify_best_fit(chromosome)
     if @is_high_fit
       @best_fit = chromosome.fitness if @best_fit.nil? || chromosome.fitness > @best_fit
+      @gen_of_best_fit = @generation
+      @func_evals_of_best_fit = @num_evaluations
     else
       @best_fit = chromosome.fitness if @best_fit.nil? || chromosome.fitness < @best_fit
+      @gen_of_best_fit = @generation
+      @func_evals_of_best_fit = @num_evaluations
     end
   end
 
@@ -151,26 +178,24 @@ class TGA < BaseGA
       end
       @chromosomes << chromosome
     end
-    evaluate_chromosomes *@chromosomes
+    # evaluate_chromosomes *@chromosomes
     (0...@chromosomes.size).each do |i|
-      best_fit? @chromosomes[i]
+      evaluate_chromosome @chromosomes[i]
+      verify_best_fit @chromosomes[i]
     end
   end
 end
 if __FILE__ == $PROGRAM_NAME
   dim = 30
-  bound = 1.28
-  tga = TGA.new values: 'discrete',
-                upper_bounds: Array.new(dim, bound),
+  bound = 500
+  tga = TGA.new upper_bounds: Array.new(dim, bound),
                 lower_bounds: Array.new(dim, -1 * bound),
                 pop_size: 200,
-                # cross_rate: 0.1,
-                # mut_rate: 0.02,
                 num_genes: dim,
                 continuous: true,
-                selected_func: 12,
-                is_negative_fit: false,
+                selected_func: 1,
+                is_negative_fit: true,
                 is_high_fit: false,
-                max_generation: 10_000_000
-  tga.execute
+                max_generation: 2_0000
+  p tga.execute
 end
