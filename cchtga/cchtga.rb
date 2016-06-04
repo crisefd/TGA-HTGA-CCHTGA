@@ -53,7 +53,7 @@ class CCHTGA < BaseGA
   # @param [Integer] chrom_size, the number of variables of the function
   def select_taguchi_array
     closest = 0
-    [8, 16, 32, 64, 128].each do |n|
+    [8, 16, 32, 64, 128, 256, 512].each do |n|
       if @genes_per_group <= n - 1
         closest = n
         break
@@ -83,11 +83,16 @@ class CCHTGA < BaseGA
   def execute
     output_hash = {}
     init_population
+    p "population initialize"
     divide_variables
+    p "variables divided, num of subsystems #{@subsystems.size} -- genes per group #{@genes_per_group}"
     select_taguchi_array
+    p "selected taguchi array is L#{@taguchi_array.size}"
     random_grouping
+    p "random grouping for generation 0"
     @generation = 0
     while @generation < @max_generation
+      p "===== GENERATION #{@generation} ========"
       random_grouping if @generation > 0 && has_best_fit_not_improved?
       cooperative_coevolution if @generation > 0
       apply_htga_to_subsystems
@@ -268,7 +273,9 @@ end
   # Method to apply the ICHTGA to each subsystem
   # return [void]
   def apply_htga_to_subsystems
+    k = 0
     @subsystems.each do |subsystem|
+      p "appling htga to subsystem #{k}"
       sub_chromosomes, lower_bounds, upper_bounds = decompose_chromosomes subsystem
       ihtga = IHTGA.new chromosomes: sub_chromosomes,
                         lower_bounds: lower_bounds,
@@ -285,6 +292,7 @@ end
                         mutation_prob: 0.5,
                         taguchi_array: @taguchi_array
       ihtga.execute
+      k += 1
       @num_evaluations += ihtga.subsystem.num_evaluations
     end
   end

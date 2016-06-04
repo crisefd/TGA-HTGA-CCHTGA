@@ -125,8 +125,13 @@ class IHTGA < HTGA
 
 	def execute
 		cross_inviduals
+		p "individuals crossed"
 		generate_offspring_by_taguchi_method
+		p "taguchi offspring generated"
 		mutate_individuals
+		p "individuals mutated"
+		@chromosomes = sus_select
+		p "sus selectection performed"
 		@subsystem.chromosomes = @chromosomes.clone
 		@subsystem.num_evaluations = @num_evaluations
 	end
