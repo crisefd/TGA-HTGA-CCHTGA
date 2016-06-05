@@ -40,10 +40,10 @@ class CCHTGA < BaseGA
     if @is_high_fit
       fail 'not implemeted'
     else
-      delta_fit = @best_chromosome.fitness - @prev_best_chromosome.fitness
       if @prev_best_chromosome.nil?
         answer = true
       else
+        delta_fit = @best_chromosome.fitness - @prev_best_chromosome.fitness
         answer = delta_fit < 0 || delta_fit < @prev_best_chromosome.fitness * 0.1  
       end
     end
@@ -94,11 +94,11 @@ class CCHTGA < BaseGA
     @generation = 0
     while @generation < @max_generation
       p "===== GENERATION #{@generation} ========"
-      random_grouping if @generation > 0 && has_best_fit_not_improved?
-      cooperative_coevolution if @generation > 0
+      random_grouping if @generation > 1 && has_best_fit_not_improved?
+      cooperative_coevolution if @generation > 1
       apply_htga_to_subsystems
       p "best_fit = #{@best_chromosome.fitness}"
-      p "generation = #{@generation}"
+      # p "generation = #{@generation}"
       @generation += 1
     end
     

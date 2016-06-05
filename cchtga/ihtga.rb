@@ -73,7 +73,7 @@ class IHTGA < HTGA
 	# @param [Integer] position
 	# @return [Chromosome]
 	def mutate(chromosome, position)
-		#p "position #{position}"
+		#fail "best exp error #{@subsystem.best_chromosomes_experiences.size}  #{@chromosomes.size}" if @subsystem.best_chromosomes_experiences.size != @chromosomes.size
 		best_experience = @subsystem.best_chromosomes_experiences[position]
 		# k = 0
 		(0...@num_genes).each do |i|
@@ -95,8 +95,8 @@ class IHTGA < HTGA
 	# Method to mutate the individuals according to a mutation rate
 	# @return [void]
 	def mutate_individuals
-		# p "xXXXXX"
-		m = @chromosomes.size
+		# m = @chromosomes.size
+		m = @pop_size
 		(0...m).each do |x|
 			r = rand 0.0..1.0
 			next if r > @mut_rate
