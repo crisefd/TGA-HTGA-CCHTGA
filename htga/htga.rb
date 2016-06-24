@@ -56,7 +56,7 @@ class HTGA < BaseGA
         end
         # update_output_variables best_fit, gen_of_best_fit,
         #                         func_evals_of_best_fit
-        break if best_fit == @optimal_func_val
+        break if best_fit <= @optimal_func_val
         @generation += 1
       end
       relative_error = (((best_fit + 1) / (@optimal_func_val + 1)) - 1).abs
@@ -316,6 +316,7 @@ class HTGA < BaseGA
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
+        # beta = 0
         if @beta_values == 'discrete'
           beta = rand(0..10) / 10.0
         elsif @beta_values == 'uniform distribution'
@@ -347,9 +348,9 @@ if __FILE__ == $PROGRAM_NAME
                   num_genes: 30,
                   continuous: true,
                   selected_func: 1,
-                  is_negative_fit: false,
+                  is_negative_fit: true,
                   is_high_fit: false,
-                  max_generation: 100000
+                  max_generation: 10000
   p htga.execute
 
   # RESULTS
