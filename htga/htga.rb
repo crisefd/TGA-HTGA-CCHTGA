@@ -349,7 +349,7 @@ if __FILE__ == $PROGRAM_NAME
                   selected_func: 1,
                   is_negative_fit: false,
                   is_high_fit: false,
-                  max_generation: 10000
+                  max_generation: 100000
   p htga.execute
 
   # RESULTS

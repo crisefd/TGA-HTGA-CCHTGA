@@ -9,7 +9,7 @@
 # @author Cristhian Fuertes
 module TestFunctions
   OPTIMAL_FUNCTION_VALUES = [
-    0, # value 1
+    -12569.5, # value 1
     0, # value 2
     0, # value 3
     0, # value 4
@@ -33,7 +33,7 @@ module TestFunctions
       x.each do |xi|
         sum += -1.0 * xi * Math.sin(Math.sqrt(xi.abs))
       end
-      (418.9829 * d) + sum
+      sum
     end,
     lambda do |x| # function 2
       sum = 0.0
