@@ -9,7 +9,7 @@
 # @author Cristhian Fuertes
 module TestFunctions
   OPTIMAL_FUNCTION_VALUES = [
-    -125_69.4600, # value 1
+    -125_69.5, # value 1
     0, # value 2
     0, # value 3
     0, # value 4

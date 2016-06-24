@@ -56,7 +56,7 @@ class HTGA < BaseGA
         end
         # update_output_variables best_fit, gen_of_best_fit,
         #                         func_evals_of_best_fit
-        break if best_fit == @optimal_func_val
+        break if best_fit <= @optimal_func_val
         @generation += 1
       end
       relative_error = (((best_fit + 1) / (@optimal_func_val + 1)) - 1).abs
@@ -338,19 +338,19 @@ end
 if __FILE__ == $PROGRAM_NAME
   # f1 se acerco al valor reportado
 
-  # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 500),
-  #                 lower_bounds: Array.new(30, -500),
-  #                 pop_size: 200,
-  #                 cross_rate: 0.1,
-  #                 mut_rate: 0.02,
-  #                 num_genes: 30,
-  #                 continuous: true,
-  #                 selected_func: 1,
-  #                 is_negative_fit: true,
-  #                 is_high_fit: false,
-  #                 max_generation: 10000
-  # htga.execute
+  htga = HTGA.new beta_values: 'discrete',
+                  upper_bounds: Array.new(30, 500),
+                  lower_bounds: Array.new(30, -500),
+                  pop_size: 200,
+                  cross_rate: 0.1,
+                  mut_rate: 0.02,
+                  num_genes: 30,
+                  continuous: true,
+                  selected_func: 1,
+                  is_negative_fit: true,
+                  is_high_fit: false,
+                  max_generation: 10000
+  p htga.execute
 
   # RESULTS
   # "best fitness overall -12568.655014100983"
