@@ -137,6 +137,8 @@ class HTGA < BaseGA
     end
     chromosome
   end
+  
+  # validate(:mutate) { |*args, &blk| args.reduce(:+) == 6 } 
 
   # Method to perfom SNR calculation used in the HTGA
   # @param [Chromosome] chromosome, the chromosome
@@ -339,21 +341,6 @@ end
 if __FILE__ == $PROGRAM_NAME
   # f1 se acerco al valor reportado
 
-<<<<<<< HEAD
-  htga = HTGA.new beta_values: 'discrete',
-                  upper_bounds: Array.new(30, 500),
-                  lower_bounds: Array.new(30, -500),
-                  pop_size: 200,
-                  cross_rate: 0.1,
-                  mut_rate: 0.02,
-                  num_genes: 30,
-                  continuous: true,
-                  selected_func: 1,
-                  is_negative_fit: true,
-                  is_high_fit: false,
-                  max_generation: 10000
-  p htga.execute
-=======
   # htga = HTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(100, 500),
   #                 lower_bounds: Array.new(100, -500),
@@ -367,7 +354,6 @@ if __FILE__ == $PROGRAM_NAME
   #                 is_high_fit: false,
   #                 max_generation: 20000
   # p htga.execute
->>>>>>> new-f1
 
   # RESULTS
   # "best fitness overall -12568.655014100983"
