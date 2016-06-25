@@ -339,19 +339,19 @@ end
 if __FILE__ == $PROGRAM_NAME
   # f1 se acerco al valor reportado
 
-  htga = HTGA.new beta_values: 'discrete',
-                  upper_bounds: Array.new(30, 500),
-                  lower_bounds: Array.new(30, -500),
-                  pop_size: 200,
-                  cross_rate: 0.1,
-                  mut_rate: 0.02,
-                  num_genes: 30,
-                  continuous: true,
-                  selected_func: 1,
-                  is_negative_fit: true,
-                  is_high_fit: false,
-                  max_generation: 10000
-  p htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, 500),
+  #                 lower_bounds: Array.new(100, -500),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 1,
+  #                 is_negative_fit: true,
+  #                 is_high_fit: false,
+  #                 max_generation: 20000
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall -12568.655014100983"
@@ -450,18 +450,18 @@ if __FILE__ == $PROGRAM_NAME
   # f6 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 50),
-  #                 lower_bounds: Array.new(30, -50),
+  #                 upper_bounds: Array.new(100, 50),
+  #                 lower_bounds: Array.new(100, -50),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 30,
+  #                 num_genes: 100,
   #                 continuous: true,
   #                 selected_func: 6,
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 2.9562991214496233e-09"
@@ -483,7 +483,7 @@ if __FILE__ == $PROGRAM_NAME
   #                 is_negative_fit: true,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall -92.2268345505006"
@@ -532,18 +532,18 @@ if __FILE__ == $PROGRAM_NAME
   # f10 no se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 10),
-  #                 lower_bounds: Array.new(100, -5),
+  #                 upper_bounds: Array.new(30, 10),
+  #                 lower_bounds: Array.new(30, -5),
   #                 pop_size: 200,
-  #                 cross_rate: 0.2,
+  #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 10,
-  #                 is_negative_fit: false,
+  #                 is_negative_fit: true,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 98.98255812317848"
