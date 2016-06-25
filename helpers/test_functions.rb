@@ -9,7 +9,7 @@
 # @author Cristhian Fuertes
 module TestFunctions
   OPTIMAL_FUNCTION_VALUES = [
-    -125_69.5, # value 1
+    0, # value 1
     0, # value 2
     0, # value 3
     0, # value 4
@@ -29,10 +29,12 @@ module TestFunctions
   TEST_FUNCTIONS = [
     lambda do |x| # function 1
       sum = 0.0
+      d = x.size
       x.each do |xi|
         sum += -1.0 * xi * Math.sin(Math.sqrt(xi.abs))
       end
-      sum
+      # sum + 125_69.5
+      sum + (418.9829 * d)
     end,
     lambda do |x| # function 2
       sum = 0.0
@@ -157,13 +159,15 @@ module TestFunctions
       sum * 1.0 / x.size
     end,
     lambda do |x| # function 10
+      res = 0.0
       first_term = 0.0
       second_term = 0.0
       (0...(x.size - 1)).each do |j|
-        first_term += ((x[j]**2 - x[j + 1])**2) * 100
-        second_term += (x[j] - 1)**2
+        first_term = ((x[j + 1] - x[j]**2)**2) * 100
+        second_term = (x[j] - 1)**2
+        res += first_term + second_term
       end
-      first_term + second_term
+      res
     end,
     lambda do |x| # function 11
       sum = 0.0
@@ -201,11 +205,12 @@ module TestFunctions
       sum_i
     end,
     lambda do |x| # function 15
-      max = nil
-      x.each do |xi|
-        max = xi.abs if max.nil? || xi.abs > max
-      end
-      max
+      # max = nil
+      # x.each do |xi|
+      #   max = xi.abs if max.nil? || xi.abs > max
+      # end
+      # max
+      x.max_by { |xi| xi.abs }.abs
     end
   ]
 end
