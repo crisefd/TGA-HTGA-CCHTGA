@@ -15,9 +15,9 @@ module TestFunctions
     0, # value 4
     0, # value 5
     0, # value 6
-    -99.2784, # value 7
+    0, # value 7
     0, # value 8
-    -78.33236, # value 9
+    0, # value 9
     0, # value 10
     0, # value 11
     0, # value 12
@@ -131,7 +131,7 @@ module TestFunctions
         sum += Math.sin(xi) * Math.sin(i * xi**2 / Math::PI)**20
         i += 1
       end
-      sum * -1
+      (sum * -1) + 99.2784
     end,
     lambda do |x| # function 8
       outer_sum = 0.0
@@ -153,10 +153,11 @@ module TestFunctions
     end,
     lambda do |x| # function 9
       sum = 0.0
+      d = x.size
       x.each do |xi|
         sum += xi**4 - 16 * xi**2 + 5 * xi
       end
-      sum * 1.0 / x.size
+      (sum * 1.0 / d) + 78.33236
     end,
     lambda do |x| # function 10
       res = 0.0

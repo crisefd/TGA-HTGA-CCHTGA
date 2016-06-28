@@ -20,7 +20,7 @@ class BaseGA
   # Modules for roulette selection operation and test functions
   extend Selection
   include TestFunctions
-  
+
 
   # @!attribute [Array] lower_bounds, lower bounds for the variables
   attr_accessor :lower_bounds

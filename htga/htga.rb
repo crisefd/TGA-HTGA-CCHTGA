@@ -212,7 +212,7 @@ class HTGA < BaseGA
   # @param [Integer] chrom_size, the number of variables of the function
   def select_taguchi_array
     closest = 0
-    [8, 16, 32, 64, 128].each do |n|
+    [8, 16, 32, 64, 128, 256, 512].each do |n|
       if @num_genes <= n - 1
         closest = n
         break
@@ -473,19 +473,19 @@ if __FILE__ == $PROGRAM_NAME
 
   # f7 se acerco al valor reportado
 
-  # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, Math::PI),
-  #                 lower_bounds: Array.new(100, 0),
-  #                 pop_size: 200,
-  #                 cross_rate: 0.1,
-  #                 mut_rate: 0.02,
-  #                 num_genes: 100,
-  #                 continuous: true,
-  #                 selected_func: 7,
-  #                 is_negative_fit: true,
-  #                 is_high_fit: false,
-  #                 max_generation: 10000
-  # p htga.execute
+  htga = HTGA.new beta_values: 'discrete',
+                  upper_bounds: Array.new(100, Math::PI),
+                  lower_bounds: Array.new(100, 0),
+                  pop_size: 200,
+                  cross_rate: 0.1,
+                  mut_rate: 0.02,
+                  num_genes: 100,
+                  continuous: true,
+                  selected_func: 7,
+                  is_negative_fit: false,
+                  is_high_fit: false,
+                  max_generation: 10000
+  p htga.execute
 
   # RESULTS
   # "best fitness overall -92.2268345505006"
