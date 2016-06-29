@@ -53,7 +53,7 @@ module Selection::Roulette
 
     # Get probabilities
     chromosomes.each_index do |i|
-      if is_negative_fit
+      if is_negative_fit && !chromosomes[i].norm_fitness.nil?
         f = chromosomes[i].norm_fitness
         if is_high_fit
           chromosomes[i].prob = prob_sum + (f / fit_sum)
