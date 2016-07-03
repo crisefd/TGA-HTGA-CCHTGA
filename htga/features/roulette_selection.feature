@@ -12,7 +12,7 @@ Feature: Roulette selection operation
             | 1 | 15 | 23 | 1 | 5 | 7 | 8 |
         When I execute the roulette selection operation for maximization of positive fitness values
         Then The calculated probabilities must be:
-            | 0.016666666666666666 | 0.26666666666666666 | 0.65 | 0.6666666666666666 | 0.75 | 0.8666666666666666 | 1.0 |
+            | 0.172 | 0.290 | 0.376 | 0.549 | 0.705 | 0.854 | 1.0 |
 
     @test_roulette_selection_negative_fitness
     Scenario: Test the roulette selection operation with negative fitness
@@ -20,4 +20,4 @@ Feature: Roulette selection operation
             | -1 | -15 | -23 | -1 | -5 | -7 | -8 |
         When I execute the roulette selection operation for maximization of negative fitness values
         Then The calculated probabilities must be:
-            | 0.21782178217821782 | 0.297029702970297 | 0.297029702970297 | 0.5148514851485149 | 0.693069306930693 | 0.8514851485148515 | 1.0 |
+            | 0.106 | 0.280 | 0.492 | 0.599 | 0.724 | 0.859 | 1.0 |

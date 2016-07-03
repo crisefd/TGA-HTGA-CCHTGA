@@ -18,12 +18,14 @@ module Selection
   # @return [Array<Chromosome>] the normalized chromosomes
   def self.norm_pop(chromosomes)
     least_fit = (chromosomes.min_by(&:fitness)).fitness
+    return false if !(least_fit < 0)
     chromosomes.map! do |chromosome|
       if chromosome.fitness != 0
         # @@flag = true
-        chromosome.norm_fitness = chromosome.fitness + least_fit * -1 # Correct?
+        chromosome.norm_fitness = chromosome.fitness - least_fit # Correct?
       end
       chromosome
     end
+    return true
   end
 end

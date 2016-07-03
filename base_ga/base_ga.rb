@@ -75,21 +75,63 @@ class BaseGA
 
   # @return [Integer] offset of the selected chromosomes
   def roulette_select
-    Selection::Roulette.calc_probs @chromosomes, is_high_fit: @is_high_fit,
-                                      is_negative_fit: @is_negative_fit
-    copied_chromosomes = @chromosomes.clone and @chromosomes.clear
-    r = rand(0.0..1.0)
-    rejected_chromosomes = []
-    (0...@pop_size).each do |i|
-      if r < copied_chromosomes[i].prob
-        @chromosomes << copied_chromosomes[i]
+    Selection::Roulette.calculate_probabilities @chromosomes, is_high_fit: @is_high_fit
+    selected_chromos_indexes = []
+    fail "what?" if @chromosomes.size != @pop_size
+    num_selections = @pop_size * @cross_rate
+    while selected_chromos_indexes.size < num_selections do
+      r = rand 0.0..1.0
+      #p "roulette_select rand #{r}"
+      m = @pop_size - 1
+      (0...m).each do |i|
+        a = @chromosomes[i].prob
+        b = @chromosomes[i + 1].prob
+        p "i = #{i}" if i%10 == 0
+        
+        if !(a < b)
+          p "#{a} is not < #{b}" 
+          fail 'a is not < b'
+        end
+        selected_chromos_indexes << i if r === (a...b)
+       #selected_chromos_indexes << i if r >= @chromosomes[i].prob r < @chromosomes[i + 1].prob
+      end
+    end    
+    # copied_chromosomes = @chromosomes.clone and @chromosomes.clear
+    # r = rand(0.0..1.0)
+    # rejected_chromosomes = []
+    # (0...@pop_size).each do |i|
+    #   if r < copied_chromosomes[i].prob
+    #     @chromosomes << copied_chromosomes[i]
+    #   else
+    #     rejected_chromosomes << copied_chromosomes[i]
+    #   end
+    # end
+    # selected_offset = @chromosomes.size
+    # @chromosomes += rejected_chromosomes.reverse!
+    # selected_offset
+    selected_chromos_indexes
+  end
+  
+  def tournament_select
+    k = @pop_size * @cross_rate
+    selected_chromos_indexes = []
+    1.upto(k) do 
+      x = -1
+      y = -1
+      loop do 
+        x = rand 0...@pop_size
+        y = rand 0...@pop_size
+        break if x != y
+      end
+      fit_chromo_x = @chromosomes[x].fitness
+      fit_chromo_y = @chromosomes[y].fitness
+      if @is_high_fit
+        if (fit_chromo_x >= fit_chromo_y) then selected_chromos_indexes << x else selected_chromos_indexes << y end
       else
-        rejected_chromosomes << copied_chromosomes[i]
+        if (fit_chromo_x <= fit_chromo_y) then selected_chromos_indexes << x else selected_chromos_indexes << y end
       end
     end
-    selected_offset = @chromosomes.size
-    @chromosomes += rejected_chromosomes.reverse!
-    selected_offset
+    selected_chromos_indexes
   end
 
 

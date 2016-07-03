@@ -32,8 +32,10 @@ class HTGA < BaseGA
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation < @max_generation
-        selected_offset = roulette_select
-        cross_individuals selected_offset
+        selected_indexes = roulette_select
+        cross_individuals selected_indexes
+        #selected_indexes = tournament_select
+        cross_individuals selected_indexes: selected_indexes
         generate_offspring_by_taguchi_method
         mutate_individuals
         select_next_generation
@@ -158,24 +160,36 @@ class HTGA < BaseGA
   # @param [Integer] offset for the selected chromosomes by the #roulette_select
   # method
   # @return [void]
-  def cross_individuals(selected_offset)
-    m = selected_offset
-    m += 1 if m == 1
-    (0...m).each do |x|
-      r = rand(0.0..1.0)
-      y = -1
-      loop do
-        y = rand(0...m)
-        break if x != y
+  def cross_individuals(selected_indexes)
+    # if selected_indexes.nil?
+    #   m = selected_offset
+    #   m += 1 if m == 1
+    #   (0...m).each do |x|
+    #     r = rand(0.0..1.0)
+    #     y = -1
+    #     loop do
+    #       y = rand(0...m)
+    #       break if x != y
+    #     end
+    #     next if r > @cross_rate
+    #     new_chrom_x, new_chrom_y =
+    #                   crossover @chromosomes[x].clone, @chromosomes[y].clone
+  
+    #     evaluate_chromosome new_chrom_x
+    #     evaluate_chromosome new_chrom_y
+    #     @chromosomes << new_chrom_x << new_chrom_y
+    #   end
+    # else
+      m = selected_indexes.size - 1
+      (0...m).each do |j|
+        i = selected_indexes[j]
+        k = selected_indexes[j + 1]
+        new_chrom_x, new_chrom_y =
+                      crossover @chromosomes[i].clone, @chromosomes[k].clone
+        evaluate_chromosome new_chrom_x
+        evaluate_chromosome new_chrom_y
       end
-      next if r > @cross_rate
-      new_chrom_x, new_chrom_y =
-                     crossover @chromosomes[x].clone, @chromosomes[y].clone
-
-      evaluate_chromosome new_chrom_x
-      evaluate_chromosome new_chrom_y
-      @chromosomes << new_chrom_x << new_chrom_y
-    end
+    #end
   end
 
   # Method to perform mutation operation over the chromosomes
@@ -342,12 +356,12 @@ if __FILE__ == $PROGRAM_NAME
   # f1 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 500),
-  #                 lower_bounds: Array.new(100, -500),
+  #                 upper_bounds: Array.new(30, 500),
+  #                 lower_bounds: Array.new(30, -500),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 1,
   #                 is_negative_fit: true,
@@ -397,7 +411,7 @@ if __FILE__ == $PROGRAM_NAME
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 4.440892098500626e-16"
@@ -408,18 +422,18 @@ if __FILE__ == $PROGRAM_NAME
   # f4 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 600),
-  #                 lower_bounds: Array.new(30, -600),
+  #                 upper_bounds: Array.new(100, 600),
+  #                 lower_bounds: Array.new(100, -600),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 30,
+  #                 num_genes: 100,
   #                 continuous: true,
   #                 selected_func: 4,
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 0.0"
@@ -430,18 +444,18 @@ if __FILE__ == $PROGRAM_NAME
   # f5 se acerco, pero no  segun lo reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 50),
-  #                 lower_bounds: Array.new(30, -50),
+  #                 upper_bounds: Array.new(100, 50),
+  #                 lower_bounds: Array.new(100, -50),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 30,
+  #                 num_genes: 100,
   #                 continuous: true,
   #                 selected_func: 5,
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 0.010480449136671111"
@@ -452,12 +466,12 @@ if __FILE__ == $PROGRAM_NAME
   # f6 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 50),
-  #                 lower_bounds: Array.new(100, -50),
+  #                 upper_bounds: Array.new(30, 50),
+  #                 lower_bounds: Array.new(30, -50),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 6,
   #                 is_negative_fit: false,
@@ -482,7 +496,7 @@ if __FILE__ == $PROGRAM_NAME
   #                 num_genes: 100,
   #                 continuous: true,
   #                 selected_func: 7,
-  #                 is_negative_fit: false,
+  #                 is_negative_fit: true,
   #                 is_high_fit: false,
   #                 max_generation: 10000
   # p htga.execute
@@ -523,7 +537,7 @@ if __FILE__ == $PROGRAM_NAME
   #                 is_negative_fit: true,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall -78.33233140753973"
@@ -531,7 +545,7 @@ if __FILE__ == $PROGRAM_NAME
   # "function evaluations of best fitness 523372"
   # "Execution time (seconds): 1633.606771202"
 
-  # f10 no se acerco al valor reportado
+# f10 no se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(30, 10),
@@ -556,18 +570,18 @@ if __FILE__ == $PROGRAM_NAME
   # f11 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 100),
-  #                 lower_bounds: Array.new(30, -100),
+  #                 upper_bounds: Array.new(100, 100),
+  #                 lower_bounds: Array.new(100, -100),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 30,
+  #                 num_genes: 100,
   #                 continuous: true,
   #                 selected_func: 11,
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 0.0"
@@ -589,7 +603,7 @@ if __FILE__ == $PROGRAM_NAME
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 3.5203227273239435e-06"
@@ -600,18 +614,18 @@ if __FILE__ == $PROGRAM_NAME
   # f13 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 10),
-  #                 lower_bounds: Array.new(30, -10),
+  #                 upper_bounds: Array.new(100, 10),
+  #                 lower_bounds: Array.new(100, -10),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 30,
+  #                 num_genes: 100,
   #                 continuous: true,
   #                 selected_func: 13,
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 0.0"
@@ -622,18 +636,18 @@ if __FILE__ == $PROGRAM_NAME
   # f14 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 100),
-  #                 lower_bounds: Array.new(30, -100),
+  #                 upper_bounds: Array.new(100, 100),
+  #                 lower_bounds: Array.new(100, -100),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 30,
+  #                 num_genes: 100,
   #                 continuous: true,
   #                 selected_func: 14,
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 0.0"
@@ -643,19 +657,19 @@ if __FILE__ == $PROGRAM_NAME
 
   # f15 se acerco al valor reportado
 
-  # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 100),
-  #                 lower_bounds: Array.new(30, -100),
-  #                 pop_size: 200,
-  #                 cross_rate: 0.1,
-  #                 mut_rate: 0.02,
-  #                 num_genes: 30,
-  #                 continuous: true,
-  #                 selected_func: 15,
-  #                 is_negative_fit: false,
-  #                 is_high_fit: false,
-  #                 max_generation: 10000
-  # htga.execute
+  htga = HTGA.new beta_values: 'discrete',
+                  upper_bounds: Array.new(30, 100),
+                  lower_bounds: Array.new(30, -100),
+                  pop_size: 200,
+                  cross_rate: 0.1,
+                  mut_rate: 0.02,
+                  num_genes: 30,
+                  continuous: true,
+                  selected_func: 15,
+                  is_negative_fit: false,
+                  is_high_fit: false,
+                  max_generation: 10000
+  p htga.execute
 
   # RESULTS
   # "best fitness overall 0.0"
