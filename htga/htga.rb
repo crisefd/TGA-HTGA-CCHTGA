@@ -139,8 +139,8 @@ class HTGA < BaseGA
     end
     chromosome
   end
-  
-  # validate(:mutate) { |*args, &blk| args.reduce(:+) == 6 } 
+
+  # validate(:mutate) { |*args, &blk| args.reduce(:+) == 6 }
 
   # Method to perfom SNR calculation used in the HTGA
   # @param [Chromosome] chromosome, the chromosome
@@ -174,7 +174,7 @@ class HTGA < BaseGA
     #     next if r > @cross_rate
     #     new_chrom_x, new_chrom_y =
     #                   crossover @chromosomes[x].clone, @chromosomes[y].clone
-  
+
     #     evaluate_chromosome new_chrom_x
     #     evaluate_chromosome new_chrom_y
     #     @chromosomes << new_chrom_x << new_chrom_y
@@ -547,19 +547,19 @@ if __FILE__ == $PROGRAM_NAME
 
 # f10 no se acerco al valor reportado
 
-  # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 10),
-  #                 lower_bounds: Array.new(30, -5),
-  #                 pop_size: 200,
-  #                 cross_rate: 0.1,
-  #                 mut_rate: 0.02,
-  #                 num_genes: 30,
-  #                 continuous: true,
-  #                 selected_func: 10,
-  #                 is_negative_fit: true,
-  #                 is_high_fit: false,
-  #                 max_generation: 10000
-  # p htga.execute
+  htga = HTGA.new beta_values: 'discrete',
+                  upper_bounds: Array.new(30, 10),
+                  lower_bounds: Array.new(30, -5),
+                  pop_size: 200,
+                  cross_rate: 0.1,
+                  mut_rate: 0.02,
+                  num_genes: 30,
+                  continuous: true,
+                  selected_func: 10,
+                  is_negative_fit: true,
+                  is_high_fit: false,
+                  max_generation: 10000
+  p htga.execute
 
   # RESULTS
   # "best fitness overall 98.98255812317848"
@@ -657,19 +657,19 @@ if __FILE__ == $PROGRAM_NAME
 
   # f15 se acerco al valor reportado
 
-  htga = HTGA.new beta_values: 'discrete',
-                  upper_bounds: Array.new(30, 100),
-                  lower_bounds: Array.new(30, -100),
-                  pop_size: 200,
-                  cross_rate: 0.1,
-                  mut_rate: 0.02,
-                  num_genes: 30,
-                  continuous: true,
-                  selected_func: 15,
-                  is_negative_fit: false,
-                  is_high_fit: false,
-                  max_generation: 10000
-  p htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, 100),
+  #                 lower_bounds: Array.new(100, -100),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 15,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10_000
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 0.0"

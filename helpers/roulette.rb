@@ -7,22 +7,24 @@
 
 require 'rubygems'
 require 'bundler/setup'
-require_relative 'selection_methods'
 
 # @author Cristhian Fuertes
-module Selection::Roulette
-  
-  
+module Roulette
+
   def self.calculate_probabilities(chromosomes, is_high_fit: true)
     minmax_chromos = (chromosomes.minmax_by(&:fitness))
     min_fit, max_fit = minmax_chromos[0].fitness, minmax_chromos[1].fitness
-    fit_sum = 0
+    fit_sum = 0.0
     prob_sum = 0
     fit_factor = 1.0
     base = max_fit + fit_factor * (max_fit - min_fit)
     #p "base = #{base}"
-    chromosomes.map! do |chromosome| 
-        chromosome.norm_fitness = base - chromosome.fitness
+    chromosomes.map! do |chromosome|
+        #if base - chromosome.fitness == 0
+          chromosome.norm_fitness = (base + 1) - chromosome.fitness
+        #else
+          #chromosome.norm_fitness = chromosome.fitness - (min_fit.abs + 1)
+        #end
         # p "norm fit = #{chromosome.norm_fitness}"
         fit_sum += chromosome.norm_fitness
         chromosome
@@ -30,17 +32,21 @@ module Selection::Roulette
     #p "fit_sum = #{fit_sum}"
     chromosomes.map! do |chromosome|
       f = chromosome.norm_fitness
+
       chromosome.prob = prob_sum + (f / fit_sum)
-      fail "NAN " if chromosome.prob.nan?
-     # p "prob = #{chromosome.prob}"
+      if chromosome.prob.nan?
+        p "f=#{f} fit_sum=#{fit_sum} base=#{base} max_fit=#{max_fit} min_fit=#{min_fit} prob_sum=#{prob_sum}"
+        fail "NAN "
+      end
+      # p "prob = #{chromosome.prob} prob_sum=#{prob_sum}"
       prob_sum = chromosome.prob
       chromosome
     end
     chromosomes.last.prob = 1.0
   end
-  
-  
-  
+
+
+
   # Compute an array of each individual's probability between 0.0 and 1.0
   # fitted
   # onto an imaginary roulette WHEEL (or pie).

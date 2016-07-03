@@ -8,10 +8,9 @@
 
 require 'rubygems'
 require 'bundler/setup'
-require_relative 'selection_methods'
 
 # @author Cristhian Fuertes
-module Selection::SUS
+module SUS
     def self.sample(chromosomes, num_required_selects, is_high_fit: true,
                                                        is_negative_fit: true) # rename to sus
         Selection.norm_pop chromosomes if is_negative_fit

@@ -7,7 +7,6 @@
 
 require 'rubygems'
 require 'bundler/setup'
-require File.join(File.dirname(__FILE__), '..', 'helpers/selection_methods.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/roulette.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/SUS.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
@@ -18,7 +17,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/validator.rb')
 # Mixin class for TGA, HTGA & CCHTGA
 class BaseGA
   # Modules for roulette selection operation and test functions
-  extend Selection
+  extend Roulette, SUS
   include TestFunctions
 
 
@@ -75,27 +74,30 @@ class BaseGA
 
   # @return [Integer] offset of the selected chromosomes
   def roulette_select
-    Selection::Roulette.calculate_probabilities @chromosomes, is_high_fit: @is_high_fit
+    Roulette.calculate_probabilities @chromosomes
     selected_chromos_indexes = []
-    fail "what?" if @chromosomes.size != @pop_size
     num_selections = @pop_size * @cross_rate
-    while selected_chromos_indexes.size < num_selections do
+    while selected_chromos_indexes.size < num_selections
+      #r = rand 0..10 / 10.0
       r = rand 0.0..1.0
-      #p "roulette_select rand #{r}"
+      # p "roulette_select rand #{r}"
       m = @pop_size - 1
+      # p "m = #{m}"
+      # a = gets.chomp
+      # p a
       (0...m).each do |i|
         a = @chromosomes[i].prob
         b = @chromosomes[i + 1].prob
-        p "i = #{i}" if i%10 == 0
-        
+        # p "i = #{i}" if i%10 == 0
         if !(a < b)
-          p "#{a} is not < #{b}" 
+          p "#{a} is not < #{b}"
           fail 'a is not < b'
         end
-        selected_chromos_indexes << i if r === (a...b)
-       #selected_chromos_indexes << i if r >= @chromosomes[i].prob r < @chromosomes[i + 1].prob
-      end
-    end    
+        selected_chromos_indexes << i if r >= a && r < b
+        selected_chromos_indexes << m if r == 1.0
+        # p "selected size = #{selected_chromos_indexes.size}"
+    end
+  end
     # copied_chromosomes = @chromosomes.clone and @chromosomes.clear
     # r = rand(0.0..1.0)
     # rejected_chromosomes = []
@@ -111,14 +113,14 @@ class BaseGA
     # selected_offset
     selected_chromos_indexes
   end
-  
+
   def tournament_select
     k = @pop_size * @cross_rate
     selected_chromos_indexes = []
-    1.upto(k) do 
+    1.upto(k) do
       x = -1
       y = -1
-      loop do 
+      loop do
         x = rand 0...@pop_size
         y = rand 0...@pop_size
         break if x != y
@@ -150,7 +152,7 @@ class BaseGA
    # pointers = Selection::SUS.sample @chromosomes, @pop_size * @cross_rate,
     #                                 is_high_fit: @is_high_fit,
      #                                is_negative_fit: @is_negative_fit
-    pointers = Selection::SUS.sample @chromosomes, @pop_size,
+    pointers = SUS.sample @chromosomes, @pop_size,
                                               is_high_fit: @is_high_fit,
                                               is_negative_fit: @is_negative_fit
     k = 0
