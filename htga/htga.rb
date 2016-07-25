@@ -143,13 +143,13 @@ class HTGA < BaseGA
     if select_method == :roulette
       m = selected_indexes.size
       (0...m).each do
-        x = -1
-        y = -1
-        loop do
-          x = selected_indexes.sample
-          y = selected_indexes.sample
-          break if x != y
-        end
+        x = selected_indexes.sample
+        y = selected_indexes.sample
+        # loop do
+        #   x = selected_indexes.sample
+        #   y = selected_indexes.sample
+        #   break if x != y
+        # end
         # r = rand 0.0..1.0
         # y = -1
         # loop do
@@ -167,10 +167,10 @@ class HTGA < BaseGA
     elsif select_method == :tournament
       m = selected_indexes.size - 1
       (0...m).each do |j|
-        i = selected_indexes[j]
-        k = selected_indexes[j + 1]
+        x = selected_indexes.sample
+        y = selected_indexes.sample
         new_chrom_x, new_chrom_y =
-                      crossover @chromosomes[i].clone, @chromosomes[k].clone
+                      crossover @chromosomes[x].clone, @chromosomes[y].clone
         evaluate_chromosome new_chrom_x
         evaluate_chromosome new_chrom_y
       end
@@ -363,12 +363,12 @@ if __FILE__ == $PROGRAM_NAME
   # f2 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 5.12),
-  #                 lower_bounds: Array.new(100, -5.12),
+  #                 upper_bounds: Array.new(30, 5.12),
+  #                 lower_bounds: Array.new(30, -5.12),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 2,
   #                 is_negative_fit: false,
@@ -407,12 +407,12 @@ if __FILE__ == $PROGRAM_NAME
   # f4 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 600),
-  #                 lower_bounds: Array.new(100, -600),
+  #                 upper_bounds: Array.new(30, 600),
+  #                 lower_bounds: Array.new(30, -600),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 4,
   #                 is_negative_fit: false,
@@ -429,12 +429,12 @@ if __FILE__ == $PROGRAM_NAME
   # f5 se acerco, pero no  segun lo reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 50),
-  #                 lower_bounds: Array.new(100, -50),
+  #                 upper_bounds: Array.new(30, 50),
+  #                 lower_bounds: Array.new(30, -50),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 5,
   #                 is_negative_fit: false,
@@ -472,19 +472,19 @@ if __FILE__ == $PROGRAM_NAME
 
   # f7 se acerco al valor reportado
 
-  htga = HTGA.new beta_values: 'discrete',
-                  upper_bounds: Array.new(100, Math::PI),
-                  lower_bounds: Array.new(100, 0),
-                  pop_size: 200,
-                  cross_rate: 0.1,
-                  mut_rate: 0.02,
-                  num_genes: 100,
-                  continuous: true,
-                  selected_func: 7,
-                  is_negative_fit: true,
-                  is_high_fit: false,
-                  max_generation: 10000
-  p htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, Math::PI),
+  #                 lower_bounds: Array.new(100, 0),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 7,
+  #                 is_negative_fit: true,
+  #                 is_high_fit: false,
+  #                 max_generation: 10000
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall -92.2268345505006"
@@ -506,7 +506,7 @@ if __FILE__ == $PROGRAM_NAME
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10000
-  # htga.execute
+  # p htga.execute
 
   # f9 se acerco al valor reportado
 
@@ -555,12 +555,12 @@ if __FILE__ == $PROGRAM_NAME
   # f11 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 100),
-  #                 lower_bounds: Array.new(100, -100),
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 11,
   #                 is_negative_fit: false,
@@ -599,12 +599,12 @@ if __FILE__ == $PROGRAM_NAME
   # f13 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 10),
-  #                 lower_bounds: Array.new(100, -10),
+  #                 upper_bounds: Array.new(30, 10),
+  #                 lower_bounds: Array.new(30, -10),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 13,
   #                 is_negative_fit: false,
@@ -621,12 +621,12 @@ if __FILE__ == $PROGRAM_NAME
   # f14 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 100),
-  #                 lower_bounds: Array.new(100, -100),
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 14,
   #                 is_negative_fit: false,
@@ -643,12 +643,12 @@ if __FILE__ == $PROGRAM_NAME
   # f15 se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 100),
-  #                 lower_bounds: Array.new(100, -100),
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
   #                 pop_size: 200,
   #                 cross_rate: 0.1,
   #                 mut_rate: 0.02,
-  #                 num_genes: 100,
+  #                 num_genes: 30,
   #                 continuous: true,
   #                 selected_func: 15,
   #                 is_negative_fit: false,

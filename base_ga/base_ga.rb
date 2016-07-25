@@ -89,7 +89,7 @@ class BaseGA
         a = @chromosomes[i].prob
         b = @chromosomes[i + 1].prob
         # p "i = #{i}" if i%10 == 0
-        if !(a < b)
+        if !(a <= b)
           p "#{a} is not < #{b}"
           fail 'a is not < b'
         end
@@ -128,11 +128,20 @@ class BaseGA
       fit_chromo_x = @chromosomes[x].fitness
       fit_chromo_y = @chromosomes[y].fitness
       if @is_high_fit
-        if (fit_chromo_x >= fit_chromo_y) then selected_chromos_indexes << x else selected_chromos_indexes << y end
+        if (fit_chromo_x >= fit_chromo_y) then 
+          selected_chromos_indexes << x 
+        else 
+          selected_chromos_indexes << y 
+        end
       else
-        if (fit_chromo_x <= fit_chromo_y) then selected_chromos_indexes << x else selected_chromos_indexes << y end
+        if (fit_chromo_x <= fit_chromo_y) then 
+          selected_chromos_indexes << x 
+        else 
+          selected_chromos_indexes << y 
+        end
       end
     end
+    fail "tournament size error" if selected_chromos_indexes.size != k
     selected_chromos_indexes
   end
 
