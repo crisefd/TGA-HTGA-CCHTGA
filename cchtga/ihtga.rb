@@ -65,6 +65,7 @@ class IHTGA < HTGA
     		end
     		chromo
 	    end
+	    @subsystem.best_chromosome = @best_chromosome.clone
 	end
 
 

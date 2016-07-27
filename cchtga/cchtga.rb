@@ -90,7 +90,8 @@ class CCHTGA < BaseGA
     select_taguchi_array
     p "selected taguchi array is L#{@taguchi_array.size}"
     random_grouping
-    p "random grouping for generation 0"
+    p "random grouping for generation 0 "
+    
     @generation = 0
     while @generation < @max_generation
       p "===== GENERATION #{@generation} ========"
@@ -104,27 +105,29 @@ class CCHTGA < BaseGA
     
     output_hash
   end
-# Method to calculate a list of divisors for n = number of variables
-# @return [Array<Integer>]
-def calculate_divisors
-  divisors = []
-  flags = Array.new(@num_genes) { false }
-  m = Math.sqrt(@num_genes)
-  (2..m).each do |i|
-    if @num_genes % i == 0
-      unless flags[i]
-        divisors << i
-        flags[i] = true
-      end
-      if i != (@num_genes / i) && 0 != (@num_genes / i) &&
-         1 != (@num_genes / i) && !flags[@num_genes / i]
-        divisors << @num_genes / i
-        flags[@num_genes / i] = true
+  
+  
+  # Method to calculate a list of divisors for n = number of variables
+  # @return [Array<Integer>]
+  def calculate_divisors
+    divisors = []
+    flags = Array.new(@num_genes) { false }
+    m = Math.sqrt(@num_genes)
+    (2..m).each do |i|
+      if @num_genes % i == 0
+        unless flags[i]
+          divisors << i
+          flags[i] = true
+        end
+        if i != (@num_genes / i) && 0 != (@num_genes / i) &&
+           1 != (@num_genes / i) && !flags[@num_genes / i]
+          divisors << @num_genes / i
+          flags[@num_genes / i] = true
+        end
       end
     end
+    divisors
   end
-  divisors
-end
 
 
   # Method to divide the variables in K subsystems
@@ -138,6 +141,11 @@ end
     @genes_per_group = s
     k = @num_genes / s
     @subsystems = Array.new(k) { Subsystem.new }
+    # @subsystems = Array.new(k) do 
+    #                               subsys = Subsystem.new
+    #                               subsys.init_chromosomes @pop_size, @chromosomes
+    #                               subsys
+    #                           end
   end
 
   # Method to perform random grouping
@@ -145,6 +153,7 @@ end
   def random_grouping
     available_genes = (0...@num_genes).to_a
     (0...@subsystems.size).each do |j|
+      @subsystems[j].clear if @subsystems[j].size > 0
       (0...@genes_per_group).each do
         g = available_genes.delete_at(rand(available_genes.size))
         @subsystems[j] << g
@@ -156,6 +165,7 @@ end
   # Method to perform cooperative coevolution subroutine
   # @return [void]
   def cooperative_coevolution
+    fail "subsystem vars error" if @subsystems.first.best_chromosome.nil?
     @subsystems.each do |subsystem|
       (0...@pop_size).each do |i|
         update_subsystem_best_experiences subsystem, i
@@ -187,13 +197,18 @@ end
   # @param [Integer] i
   # @return [void]
   def update_subsystem_best_chromosome(subsystem, i)
+    begin
     if @is_high_fit
       'not implemented'
     else
-     if subsystem.chromosomes[i].fitness < subsystem.best_chromosome.fitness
+      if subsystem.chromosomes[i].fitness < subsystem.best_chromosome.fitness
        subsystem.best_chromosome = subsystem.chromosomes[i].clone
      end
     end
+    rescue ArgumentError => error
+      p "==> #{subsystem.best_chromosome}"
+      exit
+  end
   end
   
   # Method to update the best chromosome using the jth part of a subsystem
@@ -216,7 +231,9 @@ end
   # @return [void]
   def replace_subsystem_part_in_chromosome(subsystem)
     subsystem.each_with_index do |g, i|
-      @best_chromosome[g] = subsystem.best_chromosome[i]
+      item = subsystem.best_chromosome[i]
+      fail "item is nil g=#{g} i=#{i}" if item.nil?
+      @best_chromosome[g] = item
     end
   end
 
@@ -225,6 +242,7 @@ end
   # @note The search space is doubled in each dimension and reconnected
   # from the opposite bounds to avoid discontinuities
   def correct_best_chromosome_genes
+    begin
     i = 0
     @best_chromosome.map! do |gene|
       if gene < @lower_bounds[i]
@@ -235,6 +253,10 @@ end
       i += 1
       gene
     end
+    rescue NoMethodError => error
+      p "--> #{@best_chromosome}"
+      exit
+  end
   end
 
   # Method to generate the initial population of chromosomes
@@ -269,6 +291,7 @@ end
                                                @best_chromosome.fitness
       end
     end
+    p "#{@best_chromosome}"
   end
 
   # Method to apply the ICHTGA to each subsystem
@@ -276,7 +299,7 @@ end
   def apply_htga_to_subsystems
     k = 0
     @subsystems.each do |subsystem|
-      p "applying htga to subsystem #{k}"
+      p "applying htga to subsystem #{subsystem}"
       sub_chromosomes, lower_bounds, upper_bounds = decompose_chromosomes subsystem
       #p "subchromosomes #{sub_chromosomes.size} #{sub_chromosomes}"
       #exit
@@ -322,8 +345,8 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   cchtga = CCHTGA.new beta_values: 'discrete',
-                      upper_bounds: Array.new(1000, 100),
-                      lower_bounds: Array.new(1000, -100),
+                      upper_bounds: Array.new(10, 100),
+                      lower_bounds: Array.new(10, -100),
                       pop_size: 200,
                       cross_rate: 0.1,
                       mut_rate: 0.02,
@@ -332,6 +355,6 @@ if __FILE__ == $PROGRAM_NAME
                       selected_func: 15,
                       is_negative_fit: false,
                       is_high_fit: false,
-                      max_generation: 2
+                      max_generation: 100
   cchtga.execute
 end
