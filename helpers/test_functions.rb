@@ -215,3 +215,20 @@ module TestFunctions
     end
   ]
 end
+
+
+class MyTest 
+  include TestFunctions
+  def foo
+    #p TEST_FUNCTIONS[0].call [400.0, 400.0, 400.0, 400.0, -300.0, 400.0, 400.0, 400.0, 400.0, -300.0]
+    #p TEST_FUNCTIONS[0].call [-300.0, 400.0, 400.0, -300.0, -300.0, 400.0, 400.0, -300.0, 400.0, 400.0]
+    p TEST_FUNCTIONS[0].call [200.0, -500.0, 400.0, 400.0, -300.0, -300.0, 400.0, -500.0, 400.0, 400.0]
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  mt = MyTest.new
+  mt.foo
+end
+
+

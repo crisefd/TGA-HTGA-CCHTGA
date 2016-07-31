@@ -45,8 +45,8 @@ class IHTGA < HTGA
 		@mutation_prob = input[:mutation_prob]
 		@taguchi_array = input[:taguchi_array]
 		@num_evaluations = 0 # how to calculate the number of evaluations for cchtga
-		
-		find_best_chromosome
+		@subsystem.chromosomes = @chromosomes
+		#find_best_chromosome
 		
 		# p "chromosomes #{@chromosomes[0].size}"
 	end
@@ -65,7 +65,9 @@ class IHTGA < HTGA
     		end
     		chromo
 	    end
-	    @subsystem.best_chromosome = @best_chromosome.clone
+	    @subsystem.best_chromosome = @best_chromosome
+	    #p "subsys best chromo #{@best_chromosome}"
+	    #a = gets.chomp
 	end
 
 
@@ -111,7 +113,6 @@ class IHTGA < HTGA
 	# @return [void]
 	def cross_inviduals
 		m = @chromosomes.size
-		# p "chromosomes size #{m}"
 		(0...m).each do |x|
 			r = rand 0.0..1.0
 			y = -1
@@ -120,12 +121,8 @@ class IHTGA < HTGA
 				break if x != y
 			end
 			next if r > @cross_rate
-			#p "#{@chromosomes[0].nil?}"
-			#p "x = #{x} y = #{y}"
-			#p "chromo x =#{@chromosomes[x].nil?}"
-			#p "chromo y = #{@chromosomes[y].nil?}"
 			new_chrom_x, new_chrom_y =
-			crossover @chromosomes[x].clone, @chromosomes[y].clone
+				crossover @chromosomes[x].clone, @chromosomes[y].clone
 			evaluate_chromosome new_chrom_x
 			evaluate_chromosome new_chrom_y
 			@chromosomes << new_chrom_x << new_chrom_y
@@ -135,16 +132,19 @@ class IHTGA < HTGA
 
 
 	def execute
+		find_best_chromosome
+		
 		cross_inviduals
-		p "individuals crossed"
+		# p "individuals crossed"
 		generate_offspring_by_taguchi_method
-		p "taguchi offspring generated"
+		# p "taguchi offspring generated"
 		mutate_individuals
-		p "individuals mutated"
+		# p "individuals mutated"
 		@chromosomes = sus_select
-		p "sus selectection performed"
-		@subsystem.chromosomes = @chromosomes.clone
+		@subsystem.chromosomes = @chromosomes
+		# p "sus selectection performed"
 		@subsystem.num_evaluations = @num_evaluations
+		fail "subsys chromosomes wrong #{@chromosomes.size} #{@subsystem.chromosomes.size}" if @chromosomes.size != @subsystem.chromosomes.size
 	end
 
 
