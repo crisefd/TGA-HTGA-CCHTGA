@@ -13,15 +13,21 @@ require 'bundler/setup'
 module SUS
     def self.sample(chromosomes, num_required_selects, is_high_fit: true,
                                                        is_negative_fit: true) # rename to sus
-        Selection.norm_pop chromosomes if is_negative_fit
-        fit_sum = 0
-        chromosomes.each do |chromosome|
-            if is_negative_fit && !chromosome.norm_fitness.nil?
-                fit_sum += chromosome.norm_fitness
-            else
-                fit_sum += chromosome.fitness
-            end
+        
+        minmax_chromos = (chromosomes.minmax_by(&:fitness))
+        min_fit, max_fit = minmax_chromos[0].fitness, minmax_chromos[1].fitness
+        fit_sum = 0.0
+        prob_sum = 0
+        fit_factor = 1.0
+        max_fit += 1
+        base = max_fit + fit_factor * (max_fit - min_fit)
+        # p "base = #{base}"
+        chromosomes.map! do |chromosome|
+            chromosome.norm_fitness = (base) - chromosome.fitness
+            # chromosome.norm_fitness = chromosome.fitness - min_fit
+            fit_sum += chromosome.norm_fitness
             chromosome.fit_sum = fit_sum
+            chromosome
         end
         step_size = (fit_sum / num_required_selects).to_i
         start = rand(0..step_size)

@@ -19,7 +19,7 @@ Then(/^the SNR for minimization should be "([^"]*)"$/) do |arg|
     snr_test_vars[:is_high_fit] = false
     ihtga = IHTGA.new is_high_fit: snr_test_vars[:is_high_fit], 
                       subsystem: Subsystem.new,
-                      selected_func: 11
+                      selected_func: TestFunctions::TEST_FUNCTIONS[10]
                       
     ihtga.best_chromosome = snr_test_vars[:best_chromosome]
     ihtga.calculate_snr snr_test_vars[:chromosome]

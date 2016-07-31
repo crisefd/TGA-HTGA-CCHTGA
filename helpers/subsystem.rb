@@ -20,13 +20,13 @@ class Subsystem < Array
   
   attr_accessor :num_evaluations
   
-  def initialize
-    super
-    @best_chromosome = Chromosome.new
-    @chromosomes = []
-    @best_chromosomes_experiences = []
-    @num_evaluations = 0
-  end
+  # def initialize(**args)
+  #   super **args
+  #   @best_chromosome = Chromosome.new
+  #   @chromosomes = []
+  #   @best_chromosomes_experiences = []
+  #   @num_evaluations = 0
+  # end
   
   def init_chromosomes(pop_size, macro_cromosomes)
     (0...pop_size).each do |j|

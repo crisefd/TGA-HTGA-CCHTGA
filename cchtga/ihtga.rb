@@ -41,7 +41,7 @@ class IHTGA < HTGA
 		@best_chromosome = nil
 		@subsystem = input[:subsystem]
 		@num_genes = @subsystem.size
-		@subsystem.best_chromosomes_experiences = input[:chromosomes].clone
+		@subsystem.best_chromosomes_experiences = input[:chromosomes]
 		@mutation_prob = input[:mutation_prob]
 		@taguchi_array = input[:taguchi_array]
 		@num_evaluations = 0 # how to calculate the number of evaluations for cchtga
@@ -84,7 +84,7 @@ class IHTGA < HTGA
 			r = rand(0..10) / 10.0
 			if p < @mutation_prob
 				chromosome[i] = @lower_bounds[i] + r * (@upper_bounds[i] -
-				@lower_bounds[i])
+														@lower_bounds[i])
 				# k += 1
 			else
 				chromosome[i] = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
@@ -132,6 +132,7 @@ class IHTGA < HTGA
 
 
 	def execute
+		
 		find_best_chromosome
 		
 		cross_inviduals

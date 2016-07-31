@@ -11,6 +11,7 @@ group :test do
   gem 'cucumber'
   gem 'rspec'
   gem 'rspec-expectations'
+  # gem 'mocha'
 end
 
 group :documentation do

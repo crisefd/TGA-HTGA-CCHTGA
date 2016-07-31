@@ -51,23 +51,29 @@ When(/^the mutation operation is apply$/) do
   ihtga.subsystem.best_chromosomes_experiences = [ mutation_test_vars[:best_experience] ]
   ihtga.best_chromosome = mutation_test_vars[:best_chromosome]
   
-  
+  Kernel.expects(:rand).with(0..10).returns(0.4)
   mutation_test_vars[:mutated_chromosome] = ihtga.mutate mutation_test_vars[:chromosome].clone, 0
 end
 
-Then(/^around half of the gene values of the mutated chromosome must be close to the previous gene value by maximum difference of one$/) do
-  mutated_chromosome = mutation_test_vars[:mutated_chromosome]
-  original_chromosome = mutation_test_vars[:chromosome]
-  p "mutated_chromosome = #{mutated_chromosome}"
-  p "original_chromosome = #{original_chromosome}"
-  count = 0
-  mutated_chromosome.each_with_index do |gene, i|
-    if (original_chromosome[i] - gene).abs <= 1
-      count += 1
-    end
-  end
-  p "count = #{count}"
-  half = original_chromosome.size / 2
-  expect(count).to be_between(half - 2, half + 2).inclusive 
+
+Then(/^the resulting genes of chrmosomes must all be (\d+)$/) do |arg|
+  arg = arg.to_i
+  expected_chromosome = Chromosome.new 20, arg
+  expect(mutation_test_vars[:mutated_chromosome]).to eq(expected_chromosome)
 end
+# Then(/^around half of the gene values of the mutated chromosome must be close to the previous gene value by maximum difference of one$/) do
+#   mutated_chromosome = mutation_test_vars[:mutated_chromosome]
+#   original_chromosome = mutation_test_vars[:chromosome]
+#   p "mutated_chromosome = #{mutated_chromosome}"
+#   p "original_chromosome = #{original_chromosome}"
+#   count = 0
+#   mutated_chromosome.each_with_index do |gene, i|
+#     if (original_chromosome[i] - gene).abs <= 1
+#       count += 1
+#     end
+#   end
+#   p "count = #{count}"
+#   half = original_chromosome.size / 2
+#   expect(count).to be_between(half - 2, half + 2).inclusive 
+# end
 

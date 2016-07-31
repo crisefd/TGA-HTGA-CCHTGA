@@ -18,7 +18,7 @@ Given(/^the required number of selections is (\d+)$/) do |arg1|
 end
 
 When(/^I execute the SUS selection operation for miminization of positive fitness values$/) do
-  sus_test_vars[:pointers] = Selection::SUS.sample(sus_test_vars[:pos_chromosomes], 
+  sus_test_vars[:pointers] = SUS::sample(sus_test_vars[:pos_chromosomes], 
                                                    sus_test_vars[:num_required_selects],
                                                    is_negative_fit: false)
 end
@@ -41,7 +41,7 @@ Given(/^the negative fitness values of some chromosomes:$/) do |table|
 end
 
 When(/^I execute the SUS selection operation for miminization of negative fitness values$/) do
-   sus_test_vars[:pointers] = Selection::SUS.sample(sus_test_vars[:neg_chromosomes], 
+   sus_test_vars[:pointers] = SUS::sample(sus_test_vars[:neg_chromosomes], 
                                                    sus_test_vars[:num_required_selects],
                                                    is_negative_fit: true)
 end
