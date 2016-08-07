@@ -15,7 +15,7 @@ Given(/^a subsystem's best chromosome:$/) do |table|
   update_subsys_best_chromo_test_vars[:subsystem] = subsystem
 end
 
-Given(/^the subsystem's current population:$/) do |table|
+Given(/^the subsystem's current best experiences:$/) do |table|
   table = table.raw
   chromosomes = []
   table.each do |row|
@@ -25,14 +25,14 @@ Given(/^the subsystem's current population:$/) do |table|
     end
     chromosomes << chromosome
   end
-  update_subsys_best_chromo_test_vars[:subsystem].chromosomes = chromosomes
+  update_subsys_best_chromo_test_vars[:subsystem].best_chromosomes_experiences = chromosomes
 end
 
 Given(/^the objective function for this problem is the sum of xi$/) do
   update_subsys_best_chromo_test_vars[:subsystem].best_chromosome.fitness = 15
-  update_subsys_best_chromo_test_vars[:subsystem].chromosomes[0].fitness = 6 
-  update_subsys_best_chromo_test_vars[:subsystem].chromosomes[1].fitness = 16
-  update_subsys_best_chromo_test_vars[:subsystem].chromosomes[2].fitness = 15
+  update_subsys_best_chromo_test_vars[:subsystem].best_chromosomes_experiences[0].fitness = 6 
+  update_subsys_best_chromo_test_vars[:subsystem].best_chromosomes_experiences[1].fitness = 16
+  update_subsys_best_chromo_test_vars[:subsystem].best_chromosomes_experiences[2].fitness = 15
 end
 
 Given(/^the objective functions for this problem is to be minimize$/) do

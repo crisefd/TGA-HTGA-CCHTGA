@@ -12,7 +12,7 @@ require 'bundler/setup'
 # @author Cristhian Fuertes
 module SUS
     def self.sample(chromosomes, num_required_selects, is_high_fit: true,
-                                                       is_negative_fit: true) # rename to sus
+                                                       is_negative_fit: true) 
         
         minmax_chromos = (chromosomes.minmax_by(&:fitness))
         min_fit, max_fit = minmax_chromos[0].fitness, minmax_chromos[1].fitness
@@ -21,10 +21,9 @@ module SUS
         fit_factor = 1.0
         max_fit += 1
         base = max_fit + fit_factor * (max_fit - min_fit)
-        # p "base = #{base}"
+
         chromosomes.map! do |chromosome|
             chromosome.norm_fitness = (base) - chromosome.fitness
-            # chromosome.norm_fitness = chromosome.fitness - min_fit
             fit_sum += chromosome.norm_fitness
             chromosome.fit_sum = fit_sum
             chromosome

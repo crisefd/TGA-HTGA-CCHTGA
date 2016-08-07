@@ -10,7 +10,7 @@ Feature: Update subsystem's best chromosome
     Scenario: Test the update of a subsystem best chromosome for a minimization problem without negative fitness values
         Given a subsystem's best chromosome:
             | 8 | 6 | 1 |
-        And the subsystem's current population:
+        And the subsystem's current best experiences:
             | 1 | 3 | 2 |
             | 3 | 4 | 9 |
             | 1 | 7 | 7 |
