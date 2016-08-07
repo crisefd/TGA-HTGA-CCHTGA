@@ -69,6 +69,16 @@ class BaseGA
     @max_generation = input[:max_generation]
     @num_evaluations = 0
   end
+  
+  
+  def has_stopping_criterion_been_met?(best_fit)
+    if @is_high_fit
+      answer = best_fit >= @optimal_func_val
+    else
+      answer = best_fit <= @optimal_func_val
+    end
+    answer
+  end
 
   # Roulette selection operation method
 

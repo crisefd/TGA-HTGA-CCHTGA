@@ -37,8 +37,13 @@ class CCHTGA < BaseGA
     best_fit = nil
     gen_of_best_fit = 0
     func_evals_of_best_fit = 0
-    output_hash = {}
+    @generation = 0
+    output_hash = { best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
+                    relative_error: nil, num_subsystems: 0
+                  }
+
     begin
+      
       init_population
       p "population initialize"
       divide_variables
@@ -47,47 +52,42 @@ class CCHTGA < BaseGA
       p "selected taguchi array is L#{@taguchi_array.size}"
       random_grouping
       p "random grouping for generation 0 "
-      
-      @generation = 0
       while @generation < @max_generation
         random_grouping if @generation > 1 && has_best_fit_not_improved?
         cooperative_coevolution if @generation > 1
         update_prev_best_chhromosome 
         apply_htga_to_subsystems
-        if @generation % 10 == 0 && @generation > 1
-            p "Generation: #{@generation} - current best fitness: #{best_fit} current best fit gen: #{gen_of_best_fit} "
+        if @generation % 50 == 0 && @generation > 1
+            p "Generation: #{@generation} - current best fitness: #{output_hash[:best_fit]} current best fit gen: #{output_hash[:gen_of_best_fit]} "
             p "Best chromo fitness: #{@best_chromosome.fitness}"
           end
-          if @is_high_fit
-            if (best_fit.nil? || @best_chromosome.fitness > best_fit)
-              best_fit = @best_chromosome.fitness
-              gen_of_best_fit = @generation
-              func_evals_of_best_fit = @num_evaluations
-              break if best_fit >= @optimal_func_val
-            end
-          else
-            if (best_fit.nil? || @best_chromosome.fitness < best_fit)
-              best_fit = @best_chromosome.fitness
-              gen_of_best_fit = @generation
-              func_evals_of_best_fit = @num_evaluations
-              break if best_fit <= @optimal_func_val
-            end
-          end
-          
+        update_output_hash output_hash
+        break if has_stopping_criterion_been_met? output_hash[:best_fit]
         @generation += 1
       end
-      relative_error = (((best_fit + 1) / (@optimal_func_val + 1)) - 1).abs
-      output_hash.merge!  best_fit: best_fit, gen_of_best_fit: gen_of_best_fit,
-                          func_evals_of_best_fit: func_evals_of_best_fit,
-                          optimal_func_val: @optimal_func_val,
-                          relative_error: relative_error
+      relative_error = (((output_hash[:best_fit] + 1) / 
+                        (@optimal_func_val + 1)) - 1).abs
+      output_hash[:relative_error] = relative_error
+      output_hash[:num_subsystems] = @subsystems.size
       rescue StandardError => error
         p error.message
         p error.backtrace.inspect
         exit
       end
-    
     output_hash
+  end
+  
+  # @param [Hash] output_hash
+  # @return [void]
+  def update_output_hash(output_hash)
+    if output_hash[:best_fit].nil? || 
+       (@best_chromosome.fitness < output_hash[:best_fit] && !@is_high_fit) ||
+       (@best_chromosome.fitness > output_hash[:best_fit] &&  @is_high_fit) then
+   
+      output_hash[:best_fit] = @best_chromosome.fitness
+      output_hash[:gen_of_best_fit] = @generation
+      output_hash[:func_evals_of_best_fit] = @num_evaluations
+    end
   end
 
   # Method to determine if this generation has improved with respect to the 
@@ -348,7 +348,9 @@ class CCHTGA < BaseGA
    
   end
   
-  
+  # Method to rejoin the subchromosomes into chromosomes
+  # @param [Subsystem] subsystem
+  # @return [void]
   def rejoin_chromosomes(subsystem)
     sub_chromosomes = subsystem.chromosomes
     sub_chromosomes.each_with_index do |subchromo, i|
@@ -400,12 +402,12 @@ if __FILE__ == $PROGRAM_NAME
    # f11 se acerco al valor reportado
 
   cchtga = CCHTGA.new beta_values: 'discrete',
-                  upper_bounds: Array.new(100, 100),
-                  lower_bounds: Array.new(100, -100),
+                  upper_bounds: Array.new(500, 100),
+                  lower_bounds: Array.new(500, -100),
                   pop_size: 30,
                   cross_rate: 0.8,
                   mut_rate: 0.7,
-                  num_genes: 100,
+                  num_genes: 500,
                   continuous: true,
                   selected_func: 11,
                   is_negative_fit: false,

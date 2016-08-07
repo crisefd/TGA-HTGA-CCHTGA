@@ -20,53 +20,50 @@ class HTGA < BaseGA
 
   # Main method for the HTGA
   def execute
-    output_hash = {}
     @generation = 0
-    best_fit = nil
-    gen_of_best_fit = 0
-    func_evals_of_best_fit = 0
+    output_hash = { best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
+                    relative_error: nil
+                  }
     begin
       init_population
       p 'population initialized'
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation < @max_generation
-        # selected_indexes = tournament_select @pop_size * @cross_rate
         selected_indexes = roulette_select
         cross_individuals selected_indexes
         generate_offspring_by_taguchi_method
         mutate_individuals
         select_next_generation
         if @generation % 50 == 0
-          p "Generation: #{@generation}-Fitness: #{@chromosomes.first.fitness}"
+          p "Generation: #{@generation}- Fitness: #{@chromosomes.first.fitness}"
         end
-        if @is_high_fit
-          if best_fit.nil? || @chromosomes.first.fitness > best_fit
-            best_fit = @chromosomes.first.fitness
-            gen_of_best_fit = @generation
-            func_evals_of_best_fit = @num_evaluations
-          end
-        else
-          if best_fit.nil? || @chromosomes.first.fitness < best_fit
-            best_fit = @chromosomes.first.fitness
-            gen_of_best_fit = @generation
-            func_evals_of_best_fit = @num_evaluations
-          end
-        end
-        break if best_fit <= @optimal_func_val
+        update_output_hash output_hash
+        break if has_stopping_criterion_been_met? output_hash[:best_fit]
         @generation += 1
       end
-      relative_error = (((best_fit + 1) / (@optimal_func_val + 1)) - 1).abs
-      output_hash.merge! best_fit: best_fit, gen_of_best_fit: gen_of_best_fit,
-                         func_evals_of_best_fit: func_evals_of_best_fit,
-                         optimal_func_val: @optimal_func_val,
-                         relative_error: relative_error
+      relative_error = (((output_hash[:best_fit] + 1) / 
+                        (@optimal_func_val + 1)) - 1).abs
+      output_hash[:relative_error] = relative_error
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
-      output_hash.merge error: error.message
+      exit
     end
     output_hash
+  end
+  
+  # @param [Hash] output_hash
+  # @return [void]
+  def update_output_hash(output_hash)
+      if output_hash[:best_fit].nil? || 
+        (@chromosomes.first.fitness < output_hash[:best_fit] && !@is_high_fit) || 
+        (@chromosomes.first.fitness > output_hash[:best_fit] && @is_high_fit) then
+        
+        output_hash[:best_fit] = @chromosomes.first.fitness
+        output_hash[:gen_of_best_fit] = @generation
+        output_hash[:func_evals_of_best_fit] = @num_evaluations
+      end
   end
 
   # Crossover operator method use in HTGA
@@ -145,18 +142,6 @@ class HTGA < BaseGA
       (0...m).each do
         x = selected_indexes.sample
         y = selected_indexes.sample
-        # loop do
-        #   x = selected_indexes.sample
-        #   y = selected_indexes.sample
-        #   break if x != y
-        # end
-        # r = rand 0.0..1.0
-        # y = -1
-        # loop do
-        #   y = rand(0...m)
-        #   break if x != y
-        # end
-        # next if r > @cross_rate
         new_chrom_x, new_chrom_y =
                       crossover @chromosomes[x].clone, @chromosomes[y].clone
 
