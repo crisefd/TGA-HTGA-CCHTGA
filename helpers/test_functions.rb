@@ -134,22 +134,7 @@ module TestFunctions
       sum * -1
     end,
     lambda do |x| # function 8
-      outer_sum = 0.0
-      left_inner_sum = 0.0
-      right_inner_sum = 0.0
-      (0...x.size).each do |i|
-        (0...x.size).each do |j|
-          chi1 = rand(-100..100) # Correct ?
-          psi1 = rand(-100..100)
-          chi2 = rand(-100..100) # Correct ?
-          psi2 = rand(-100..100)
-          omega = rand((-1 * Math::PI)..Math::PI)
-          left_inner_sum += chi1 * Math.sin(omega) + psi1 * Math.cos(omega)
-          right_inner_sum += chi2 * Math.sin(x[j]) + psi2 * Math.cos(x[j])
-        end
-        outer_sum += (left_inner_sum - right_inner_sum)**2
-      end
-      outer_sum
+      0
     end,
     lambda do |x| # function 9
       sum = 0.0
@@ -206,29 +191,7 @@ module TestFunctions
       sum_i
     end,
     lambda do |x| # function 15
-      # max = nil
-      # x.each do |xi|
-      #   max = xi.abs if max.nil? || xi.abs > max
-      # end
-      # max
       x.max_by { |xi| xi.abs }.abs
     end
   ]
 end
-
-
-class MyTest 
-  include TestFunctions
-  def foo
-    #p TEST_FUNCTIONS[0].call [400.0, 400.0, 400.0, 400.0, -300.0, 400.0, 400.0, 400.0, 400.0, -300.0]
-    #p TEST_FUNCTIONS[0].call [-300.0, 400.0, 400.0, -300.0, -300.0, 400.0, 400.0, -300.0, 400.0, 400.0]
-    p TEST_FUNCTIONS[0].call [200.0, -500.0, 400.0, 400.0, -300.0, -300.0, 400.0, -500.0, 400.0, 400.0]
-  end
-end
-
-if __FILE__ == $PROGRAM_NAME
-  mt = MyTest.new
-  mt.foo
-end
-
-

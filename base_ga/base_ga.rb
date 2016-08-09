@@ -69,9 +69,7 @@ class BaseGA
     @max_generation = input[:max_generation]
     @num_evaluations = 0
   end
-  
-  
-  def has_stopping_criterion_been_met?(best_fit)
+      def has_stopping_criterion_been_met?(best_fit)
     if @is_high_fit
       answer = best_fit >= @optimal_func_val
     else
@@ -106,8 +104,8 @@ class BaseGA
         selected_chromos_indexes << i if r >= a && r < b
         selected_chromos_indexes << m if r == 1.0
         # p "selected size = #{selected_chromos_indexes.size}"
+      end
     end
-  end
     # copied_chromosomes = @chromosomes.clone and @chromosomes.clear
     # r = rand(0.0..1.0)
     # rejected_chromosomes = []
@@ -168,12 +166,12 @@ class BaseGA
   # SUS selection operation method
   # @return [Array<Chromosome>] selected chromosomes
   def sus_select
-   # pointers = Selection::SUS.sample @chromosomes, @pop_size * @cross_rate,
+    # pointers = Selection::SUS.sample @chromosomes, @pop_size * @cross_rate,
     #                                 is_high_fit: @is_high_fit,
-     #                                is_negative_fit: @is_negative_fit
+    #                                is_negative_fit: @is_negative_fit
     pointers = SUS.sample @chromosomes, @pop_size,
-                                              is_high_fit: @is_high_fit,
-                                              is_negative_fit: @is_negative_fit
+    is_high_fit: @is_high_fit,
+    is_negative_fit: @is_negative_fit
     k = 0
     selected_chromosomes = []
     pointers.each do |ptr|

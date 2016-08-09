@@ -5,11 +5,8 @@
 # Email: cristhian.fuertes@correounivalle.edu.co,
 #        oscar.tigreros@correounivalle.edu.co
 # Creation date: 2015-10-05
-
-
 require 'rubygems'
 require 'bundler/setup'
-
 # Chromosome class for TGA, HTGA & CCHTGA
 # @author Cristhian Fuertes
 # @author Oscar Tigreros

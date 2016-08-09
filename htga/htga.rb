@@ -42,8 +42,8 @@ class HTGA < BaseGA
         break if has_stopping_criterion_been_met? output_hash[:best_fit]
         @generation += 1
       end
-      relative_error = (((output_hash[:best_fit] + 1) / 
-                        (@optimal_func_val + 1)) - 1).abs
+      relative_error = (((output_hash[:best_fit] + 1) /
+      (@optimal_func_val + 1)) - 1).abs
       output_hash[:relative_error] = relative_error
     rescue StandardError => error
       p error.message
@@ -52,18 +52,18 @@ class HTGA < BaseGA
     end
     output_hash
   end
-  
+
   # @param [Hash] output_hash
   # @return [void]
   def update_output_hash(output_hash)
-      if output_hash[:best_fit].nil? || 
-        (@chromosomes.first.fitness < output_hash[:best_fit] && !@is_high_fit) || 
-        (@chromosomes.first.fitness > output_hash[:best_fit] && @is_high_fit) then
-        
-        output_hash[:best_fit] = @chromosomes.first.fitness
-        output_hash[:gen_of_best_fit] = @generation
-        output_hash[:func_evals_of_best_fit] = @num_evaluations
-      end
+    if output_hash[:best_fit].nil? ||
+       (@chromosomes.first.fitness < output_hash[:best_fit] && !@is_high_fit) ||
+       (@chromosomes.first.fitness > output_hash[:best_fit] && @is_high_fit)
+
+      output_hash[:best_fit] = @chromosomes.first.fitness
+      output_hash[:gen_of_best_fit] = @generation
+      output_hash[:func_evals_of_best_fit] = @num_evaluations
+    end
   end
 
   # Crossover operator method use in HTGA
@@ -125,10 +125,10 @@ class HTGA < BaseGA
     n = chromosome.size.to_f
     if @is_high_fit # What happens when the gene is 0 ?
       chromosome.snr = -10.0 * Math.log10((1.0 / n) *
-                        chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
+      chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
     else
       chromosome.snr = -10.0 * Math.log10((1.0 / n) *
-                        chromosome.map { |gene| gene**2.0 }.reduce(:+))
+      chromosome.map { |gene| gene**2.0 }.reduce(:+))
     end
   end
 
@@ -143,7 +143,7 @@ class HTGA < BaseGA
         x = selected_indexes.sample
         y = selected_indexes.sample
         new_chrom_x, new_chrom_y =
-                      crossover @chromosomes[x].clone, @chromosomes[y].clone
+        crossover @chromosomes[x].clone, @chromosomes[y].clone
 
         evaluate_chromosome new_chrom_x
         evaluate_chromosome new_chrom_y
@@ -155,7 +155,7 @@ class HTGA < BaseGA
         x = selected_indexes.sample
         y = selected_indexes.sample
         new_chrom_x, new_chrom_y =
-                      crossover @chromosomes[x].clone, @chromosomes[y].clone
+        crossover @chromosomes[x].clone, @chromosomes[y].clone
         evaluate_chromosome new_chrom_x
         evaluate_chromosome new_chrom_y
       end
@@ -212,7 +212,7 @@ class HTGA < BaseGA
   def load_array_from_file(filename)
     @taguchi_array = []
     path_to_file = File.join(File.dirname(__FILE__), '..',
-                             "taguchi_orthogonal_arrays/#{filename}")
+    "taguchi_orthogonal_arrays/#{filename}")
     array_file = open(path_to_file, 'r')
     array_file.each_line do |line|
       @taguchi_array << line.split(';')[0, @num_genes].map!(&:to_i)
@@ -309,7 +309,7 @@ class HTGA < BaseGA
           beta = rand(0.0..1.0)
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
-                                                 @lower_bounds[i])
+        @lower_bounds[i])
         if @continuous # Wrong for discrete functions
           chromosome << gene
         else
@@ -515,7 +515,7 @@ if __FILE__ == $PROGRAM_NAME
   # "function evaluations of best fitness 523372"
   # "Execution time (seconds): 1633.606771202"
 
-# f10 no se acerco al valor reportado
+  # f10 no se acerco al valor reportado
 
   # htga = HTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(30, 10),

@@ -21,10 +21,10 @@ module Roulette
     base = max_fit + fit_factor * (max_fit - min_fit)
     # p "base = #{base}"
     chromosomes.map! do |chromosome|
-        chromosome.norm_fitness = (base) - chromosome.fitness
-        # chromosome.norm_fitness = chromosome.fitness - min_fit
-        fit_sum += chromosome.norm_fitness
-        chromosome
+      chromosome.norm_fitness = (base) - chromosome.fitness
+      # chromosome.norm_fitness = chromosome.fitness - min_fit
+      fit_sum += chromosome.norm_fitness
+      chromosome
     end
     # "fit_sum = #{fit_sum}"
     chromosomes.map! do |chromosome|
