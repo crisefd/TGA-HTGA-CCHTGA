@@ -256,7 +256,9 @@ class CCHTGA < BaseGA
   def correct_best_chromosome_genes
     i = 0
     @best_chromosome.map! do |gene|
+      prev_gene = gene
       gene = correct_gene gene, @lower_bounds[i], @upper_bounds[i]
+      fail "incorrect gene=#{gene} prev_gene=#{prev_gene} l=#{@lower_bounds[i]} u=#{@upper_bounds[i]}" if !gene.between?(@lower_bounds[i], @upper_bounds[i])
       i += 1
       gene
     end
@@ -264,7 +266,7 @@ class CCHTGA < BaseGA
 
   def correct_gene(gene, lower_bound, upper_bound)
     corrected_gene = nil
-    if gene >= lower_bound && gene <= upper_bound
+    if gene.between? lower_bound, upper_bound
       corrected_gene = gene
     elsif gene < lower_bound
       gene = 2 * lower_bound - gene
@@ -377,35 +379,35 @@ end
 
 if __FILE__ == $PROGRAM_NAME
 
-  # cchtga = CCHTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(100, 500),
-  #                 lower_bounds: Array.new(100, -500),
-  #                 pop_size: 200,
-  #                 cross_rate: 0.1,
-  #                 mut_rate: 0.02,
-  #                 num_genes: 100,
-  #                 continuous: true,
-  #                 selected_func: 1,
-  #                 is_negative_fit: true,
-  #                 is_high_fit: false,
-  #                 max_generation: 10_000
-  # p cchtga.execute
+  cchtga = CCHTGA.new beta_values: 'discrete',
+                  upper_bounds: Array.new(100, 500),
+                  lower_bounds: Array.new(100, -500),
+                  pop_size: 30,
+                  cross_rate: 0.8,
+                  mut_rate: 0.7,
+                  num_genes: 100,
+                  continuous: true,
+                  selected_func: 1,
+                  is_negative_fit: true,
+                  is_high_fit: false,
+                  max_generation: 10_000
+  p cchtga.execute
 
   # f11 se acerco al valor reportado
 
-  cchtga = CCHTGA.new beta_values: 'discrete',
-  upper_bounds: Array.new(500, 100),
-  lower_bounds: Array.new(500, -100),
-  pop_size: 30,
-  cross_rate: 0.8,
-  mut_rate: 0.7,
-  num_genes: 500,
-  continuous: true,
-  selected_func: 11,
-  is_negative_fit: false,
-  is_high_fit: false,
-  max_generation: 10_000
-  p cchtga.execute
+  # cchtga = CCHTGA.new beta_values: 'discrete',
+  # upper_bounds: Array.new(500, 100),
+  # lower_bounds: Array.new(500, -100),
+  # pop_size: 30,
+  # cross_rate: 0.8,
+  # mut_rate: 0.7,
+  # num_genes: 500,
+  # continuous: true,
+  # selected_func: 11,
+  # is_negative_fit: false,
+  # is_high_fit: false,
+  # max_generation: 10_000
+  # p cchtga.execute
 
   # f15
   # cchtga = CCHTGA.new beta_values: 'discrete',

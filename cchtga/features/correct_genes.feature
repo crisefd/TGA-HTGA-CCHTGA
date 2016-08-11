@@ -29,7 +29,7 @@ Feature: Correct genes operation
 
     Scenario: Test the gene correction with several recursive calls
         Given the best chromosome:
-            | 1 | 21 | 13 | 1 | -5 | 32 | 7 | 8 |
+            | 1 | 21 | 13 | 1 | -15 | 32 | 7 | 8 |
         And the upper bounds fo the best chromosome are:
             | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 |
         And the lower bounds of the best chromosome are:
