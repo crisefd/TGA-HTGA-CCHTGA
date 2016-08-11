@@ -256,14 +256,24 @@ class CCHTGA < BaseGA
   def correct_best_chromosome_genes
     i = 0
     @best_chromosome.map! do |gene|
-      if gene < @lower_bounds[i]
-        gene = 2 * @lower_bounds[i] - gene
-      elsif @upper_bounds[i] < gene
-        gene = 2 * @upper_bounds[i] - gene
-      end
+      gene = correct_gene gene, @lower_bounds[i], @upper_bounds[i]
       i += 1
       gene
     end
+  end
+
+  def correct_gene(gene, lower_bound, upper_bound)
+    corrected_gene = nil
+    if gene >= lower_bound && gene <= upper_bound
+      corrected_gene = gene
+    elsif gene < lower_bound
+      gene = 2 * lower_bound - gene
+      corrected_gene = correct_gene gene, lower_bound, upper_bound
+    elsif upper_bound < gene
+      gene = 2 * upper_bound - gene
+      corrected_gene = correct_gene gene, lower_bound, upper_bound
+    end
+    corrected_gene
   end
 
   # Method to generate the initial population of chromosomes
