@@ -33,7 +33,6 @@ module TestFunctions
       x.each do |xi|
         sum += -1.0 * xi * Math.sin(Math.sqrt(xi.abs))
       end
-      # sum + 125_69.5
       sum + (418.9829 * d)
     end,
     lambda do |x| # function 2

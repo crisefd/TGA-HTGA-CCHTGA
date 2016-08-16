@@ -74,6 +74,20 @@ class IHTGA < HTGA
     end
     @subsystem.best_chromosome = @best_chromosome
   end
+  
+  def correct_gene(gene, lower_bound, upper_bound)
+    corrected_gene = nil
+    if gene >= lower_bound && gene <= upper_bound
+      corrected_gene = gene
+    elsif gene < lower_bound
+      gene = 2 * lower_bound - gene
+      corrected_gene = correct_gene gene, lower_bound, upper_bound
+    elsif upper_bound < gene
+      gene = 2 * upper_bound - gene
+      corrected_gene = correct_gene gene, lower_bound, upper_bound
+    end
+    corrected_gene
+  end
 
 
   # Mutation operator
@@ -86,15 +100,23 @@ class IHTGA < HTGA
       p = rand(0..10) / 10.0
       r = rand(0..10) / 10.0
       if p < @mutation_prob
-        chromosome[i] = @lower_bounds[i] + r * (@upper_bounds[i] -
-        @lower_bounds[i])
+        gene = @lower_bounds[i] + r * (@upper_bounds[i] -
+                                       @lower_bounds[i])
       else
-        chromosome[i] = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
-        best_experience[i]).abs
+        gene = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
+                                              best_experience[i]).abs
+      end
+      begin
+        chromosome[i] = correct_gene gene, @lower_bounds[i], @upper_bounds[i]
+      rescue SystemStackError => error
+        p "gene=#{gene}"
+        exit
       end
     end
     chromosome
   end
+  
+  
 
   # Method to mutate the individuals according to a mutation rate
   # @return [void]
