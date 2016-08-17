@@ -426,24 +426,24 @@ if __FILE__ == $PROGRAM_NAME
   #                 max_generation: 10000
   # p cchtga.execute
 
-  # f3
+  # f3 le falta para acercarse al valor reportado
 
-  cchtga = CCHTGA.new beta_values: 'discrete',
-                  upper_bounds: Array.new(100, 32),
-                  lower_bounds: Array.new(100, -32),
-                  pop_size: 200,
-                  cross_rate: 0.8,
-                  mut_rate: 0.7,
-                  num_genes: 100,
-                  continuous: true,
-                  selected_func: 3,
-                  is_negative_fit: false,
-                  is_high_fit: false,
-                  max_generation: 10_000
-  p cchtga.execute
+  # cchtga = CCHTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, 32),
+  #                 lower_bounds: Array.new(100, -32),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.8,
+  #                 mut_rate: 0.7,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 3,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10_000
+  # p cchtga.execute
 
 
-  # f4
+  # f4 se acerco al valor reportado
 
   # cchtga = CCHTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(100, 600),
@@ -474,7 +474,7 @@ if __FILE__ == $PROGRAM_NAME
   #                     max_generation: 10_000
   # p cchtga.execute
 
-  # f11 se acerco al valor reportado
+  # f11 se acerco al valor reportado con subsystems=4
 
   # cchtga = CCHTGA.new beta_values: 'discrete',
   #                     upper_bounds: Array.new(100, 100),
@@ -491,17 +491,17 @@ if __FILE__ == $PROGRAM_NAME
   # p cchtga.execute
 
   # f15
-  # cchtga = CCHTGA.new beta_values: 'discrete',
-  #                     upper_bounds: Array.new(100, 100),
-  #                     lower_bounds: Array.new(100, -100),
-  #                     pop_size: 30,
-  #                     cross_rate: 0.8,
-  #                     mut_rate: 0.7,
-  #                     num_genes: 100,
-  #                     continuous: true,
-  #                     selected_func: 15,
-  #                     is_negative_fit: false,
-  #                     is_high_fit: false,
-  #                     max_generation: 10_000
-  # p cchtga.execute
+  cchtga = CCHTGA.new beta_values: 'discrete',
+                      upper_bounds: Array.new(100, 100),
+                      lower_bounds: Array.new(100, -100),
+                      pop_size: 30,
+                      cross_rate: 0.8,
+                      mut_rate: 0.7,
+                      num_genes: 100,
+                      continuous: true,
+                      selected_func: 15,
+                      is_negative_fit: false,
+                      is_high_fit: false,
+                      max_generation: 10_000
+  p cchtga.execute
 end

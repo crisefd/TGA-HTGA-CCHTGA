@@ -122,7 +122,7 @@ class IHTGA < HTGA
   # @return [void]
   def mutate_individuals
     # m = @chromosomes.size
-    m = @pop_size
+    m = @chromosomes.size
     (0...m).each do |x|
       r = rand 0.0..1.0
       next if r > @mut_rate
