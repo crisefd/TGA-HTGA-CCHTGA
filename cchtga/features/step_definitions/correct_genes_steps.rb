@@ -32,9 +32,10 @@ When(/^the correct gene rule is apply$/) do
   cchtga = CCHTGA.new upper_bounds: correct_genes_test_vars[:upper_bounds],
                       lower_bounds: correct_genes_test_vars[:lower_bounds]
   cchtga.best_chromosome = correct_genes_test_vars[:best_chromosome]
+  p "best chromo = #{cchtga.best_chromosome}"
   cchtga.correct_best_chromosome_genes
   correct_genes_test_vars[:best_chromosome] = cchtga.best_chromosome
-  
+
 end
 
 Then(/^the corrected chromosome should be:$/) do |table|
@@ -42,6 +43,12 @@ Then(/^the corrected chromosome should be:$/) do |table|
   corrected_chromosome = Chromosome.new
   table.first.each{ |item| corrected_chromosome << item.to_f }
   expect(correct_genes_test_vars[:best_chromosome]).to eq(corrected_chromosome)
-  
 end
 
+Then(/^the corrected genes in chromosome should be in between the upper and lower bounds$/) do
+  resulting_chromosome = correct_genes_test_vars[:best_chromosome]
+  resulting_chromosome.each_with_index do |gene, i|
+    expect(gene).to be_between(correct_genes_test_vars[:lower_bounds][i],
+                               correct_genes_test_vars[:upper_bounds][i]).inclusive
+  end
+end

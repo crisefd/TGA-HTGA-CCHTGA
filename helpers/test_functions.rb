@@ -33,7 +33,6 @@ module TestFunctions
       x.each do |xi|
         sum += -1.0 * xi * Math.sin(Math.sqrt(xi.abs))
       end
-      # sum + 125_69.5
       sum + (418.9829 * d)
     end,
     lambda do |x| # function 2
@@ -43,7 +42,7 @@ module TestFunctions
       end
       sum
     end,
-    lambda do |x| # function 3
+    lambda do |x| # function 3 Shifted Ackley's function
       sum_square_x = 0.0
       sum_cos = 0.0
       x.each do |xi|
@@ -56,7 +55,7 @@ module TestFunctions
       second_term = -1 * Math.exp(sum_cos)
       first_term + second_term + 20.0 + Math.exp(1)
     end,
-    lambda do |x| # function 4
+    lambda do |x| # function 4 Shifted Griewank's function
       sum = 0.0
       prod = 1.0
       i = 1
@@ -155,7 +154,7 @@ module TestFunctions
       end
       res
     end,
-    lambda do |x| # function 11
+    lambda do |x| # function 11 Shifted sphere function
       sum = 0.0
       x.each do |xi|
         sum += xi**2
@@ -190,7 +189,7 @@ module TestFunctions
       end
       sum_i
     end,
-    lambda do |x| # function 15
+    lambda do |x| # function 15 Schwefel's function
       x.max_by { |xi| xi.abs }.abs
     end
   ]

@@ -74,6 +74,20 @@ class IHTGA < HTGA
     end
     @subsystem.best_chromosome = @best_chromosome
   end
+  
+  def correct_gene(gene, lower_bound, upper_bound)
+    corrected_gene = nil
+    if gene >= lower_bound && gene <= upper_bound
+      corrected_gene = gene
+    elsif gene < lower_bound
+      gene = 2 * lower_bound - gene
+      corrected_gene = correct_gene gene, lower_bound, upper_bound
+    elsif upper_bound < gene
+      gene = 2 * upper_bound - gene
+      corrected_gene = correct_gene gene, lower_bound, upper_bound
+    end
+    corrected_gene
+  end
 
 
   # Mutation operator
@@ -86,15 +100,23 @@ class IHTGA < HTGA
       p = rand(0..10) / 10.0
       r = rand(0..10) / 10.0
       if p < @mutation_prob
-        chromosome[i] = @lower_bounds[i] + r * (@upper_bounds[i] -
-        @lower_bounds[i])
+        gene = @lower_bounds[i] + r * (@upper_bounds[i] -
+                                       @lower_bounds[i])
       else
-        chromosome[i] = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
-        best_experience[i]).abs
+        gene = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
+                                              best_experience[i]).abs
+      end
+      begin
+        chromosome[i] = correct_gene gene, @lower_bounds[i], @upper_bounds[i]
+      rescue SystemStackError => error
+        p "gene=#{gene}"
+        exit
       end
     end
     chromosome
   end
+  
+  
 
   # Method to mutate the individuals according to a mutation rate
   # @return [void]
@@ -108,6 +130,32 @@ class IHTGA < HTGA
       evaluate_chromosome new_chrom
       @chromosomes << new_chrom
     end
+  end
+  
+  # Crossover operator method use in HTGA
+  # @param [Chromosome] chromosome_x
+  # @param [Chromosome] chromosome_y
+  # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.
+  def crossover(chromosome_x, chromosome_y)
+    beta = rand(0..10) / 10.0
+    k = rand(0...chromosome_y.size)
+    # new values for kth genes x and y
+    cut_point_x = chromosome_x[k]
+    cut_point_y = chromosome_y[k]
+    cut_point_x += beta * (cut_point_y - cut_point_x)
+    cut_point_y = lower_bounds[k] + beta * (@upper_bounds[k] - @lower_bounds[k])
+    if @continuous # Doesn't work with discrete functions
+      chromosome_x[k] = cut_point_x
+      chromosome_y[k] = cut_point_y
+    else
+      chromosome_x[k] = cut_point_x.floor
+      chromosome_y[k] = cut_point_y.floor
+    end
+    # swap right side of chromosomes x and y
+    ((k + 1)...chromosome_y.size).each do |i|
+      chromosome_x[i], chromosome_y[i] = chromosome_y[i], chromosome_x[i]
+    end
+    [chromosome_x, chromosome_y]
   end
 
   # Method to cross individuals according to a crossover rate

@@ -22,7 +22,7 @@ class HTGA < BaseGA
   def execute
     @generation = 0
     output_hash = { best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
-                    relative_error: nil
+                    relative_error: nil, optimal_value: nil
                   }
     begin
       init_population
@@ -45,6 +45,7 @@ class HTGA < BaseGA
       relative_error = (((output_hash[:best_fit] + 1) /
       (@optimal_func_val + 1)) - 1).abs
       output_hash[:relative_error] = relative_error
+      output_hash[:optimal_value] = @optimal_func_val
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
@@ -627,19 +628,19 @@ if __FILE__ == $PROGRAM_NAME
 
   # f15 se acerco al valor reportado
 
-  # htga = HTGA.new beta_values: 'discrete',
-  #                 upper_bounds: Array.new(30, 100),
-  #                 lower_bounds: Array.new(30, -100),
-  #                 pop_size: 200,
-  #                 cross_rate: 0.1,
-  #                 mut_rate: 0.02,
-  #                 num_genes: 30,
-  #                 continuous: true,
-  #                 selected_func: 15,
-  #                 is_negative_fit: false,
-  #                 is_high_fit: false,
-  #                 max_generation: 10_000
-  # p htga.execute
+  htga = HTGA.new beta_values: 'discrete',
+                  upper_bounds: Array.new(30, 100),
+                  lower_bounds: Array.new(30, -100),
+                  pop_size: 200,
+                  cross_rate: 0.1,
+                  mut_rate: 0.02,
+                  num_genes: 30,
+                  continuous: true,
+                  selected_func: 15,
+                  is_negative_fit: false,
+                  is_high_fit: false,
+                  max_generation: 10_000
+  p htga.execute
 
   # RESULTS
   # "best fitness overall 0.0"

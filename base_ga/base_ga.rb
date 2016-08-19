@@ -192,5 +192,6 @@ class BaseGA
   def evaluate_chromosome(chromosome)
     @num_evaluations += 1
     chromosome.fitness = @selected_func.call chromosome
+    # fail "erroneous fitness value #{chromosome}" if chromosome.fitness < 0 && chromosome.size >= 30
   end
 end
