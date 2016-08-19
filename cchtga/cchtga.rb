@@ -34,7 +34,7 @@ class CCHTGA < BaseGA
   def execute
     @generation = 0
     output_hash = { best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
-                    relative_error: nil, num_subsystems: 0
+                    relative_error: nil, num_subsystems: 0, optimal_value: nil
                   }
     begin
       init_population
@@ -53,6 +53,7 @@ class CCHTGA < BaseGA
         if @generation % 50 == 0 && @generation > 1
           p "Generation: #{@generation} - current best fitness: #{output_hash[:best_fit]} current best fit gen: #{output_hash[:gen_of_best_fit]} "
           p "Best chromo fitness: #{@best_chromosome.fitness}"
+          # p "#{best_chromosome}"
         end
         update_output_hash output_hash
         break if has_stopping_criterion_been_met? output_hash[:best_fit]
@@ -62,6 +63,7 @@ class CCHTGA < BaseGA
                          (@optimal_func_val + 1)) - 1).abs
       output_hash[:relative_error] = relative_error
       output_hash[:num_subsystems] = @subsystems.size
+      output_hash[:optimal_value] = @optimal_func_val
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
@@ -459,7 +461,7 @@ if __FILE__ == $PROGRAM_NAME
   #                 max_generation: 10_000
   # p cchtga.execute
 
-  # f10
+  # f10 alcanzo el optimo, con subsystems = 5
   # cchtga = CCHTGA.new beta_values: 'discrete',
   #                     upper_bounds: Array.new(100, 10),
   #                     lower_bounds: Array.new(100, -5),
@@ -490,18 +492,18 @@ if __FILE__ == $PROGRAM_NAME
   #                     max_generation: 10_000
   # p cchtga.execute
 
-  # f15
-  cchtga = CCHTGA.new beta_values: 'discrete',
-                      upper_bounds: Array.new(100, 100),
-                      lower_bounds: Array.new(100, -100),
-                      pop_size: 30,
-                      cross_rate: 0.8,
-                      mut_rate: 0.7,
-                      num_genes: 100,
-                      continuous: true,
-                      selected_func: 15,
-                      is_negative_fit: false,
-                      is_high_fit: false,
-                      max_generation: 10_000
-  p cchtga.execute
+  # f15 funciona quitando el step en el crossover, subsystem=10
+  # cchtga = CCHTGA.new beta_values: 'discrete',
+  #                     upper_bounds: Array.new(100, 100),
+  #                     lower_bounds: Array.new(100, -100),
+  #                     pop_size: 30,
+  #                     cross_rate: 0.8,
+  #                     mut_rate: 0.7,
+  #                     num_genes: 100,
+  #                     continuous: true,
+  #                     selected_func: 15,
+  #                     is_negative_fit: false,
+  #                     is_high_fit: false,
+  #                     max_generation: 10_000
+  # p cchtga.execute
 end

@@ -122,7 +122,7 @@ class IHTGA < HTGA
   # @return [void]
   def mutate_individuals
     # m = @chromosomes.size
-    m = @chromosomes.size
+    m = @pop_size
     (0...m).each do |x|
       r = rand 0.0..1.0
       next if r > @mut_rate
@@ -130,6 +130,32 @@ class IHTGA < HTGA
       evaluate_chromosome new_chrom
       @chromosomes << new_chrom
     end
+  end
+  
+  # Crossover operator method use in HTGA
+  # @param [Chromosome] chromosome_x
+  # @param [Chromosome] chromosome_y
+  # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.
+  def crossover(chromosome_x, chromosome_y)
+    beta = rand(0..10) / 10.0
+    k = rand(0...chromosome_y.size)
+    # new values for kth genes x and y
+    cut_point_x = chromosome_x[k]
+    cut_point_y = chromosome_y[k]
+    cut_point_x += beta * (cut_point_y - cut_point_x)
+    cut_point_y = lower_bounds[k] + beta * (@upper_bounds[k] - @lower_bounds[k])
+    if @continuous # Doesn't work with discrete functions
+      chromosome_x[k] = cut_point_x
+      chromosome_y[k] = cut_point_y
+    else
+      chromosome_x[k] = cut_point_x.floor
+      chromosome_y[k] = cut_point_y.floor
+    end
+    # swap right side of chromosomes x and y
+    ((k + 1)...chromosome_y.size).each do |i|
+      chromosome_x[i], chromosome_y[i] = chromosome_y[i], chromosome_x[i]
+    end
+    [chromosome_x, chromosome_y]
   end
 
   # Method to cross individuals according to a crossover rate
