@@ -412,7 +412,7 @@ if __FILE__ == $PROGRAM_NAME
   # "function evaluations of best fitness 1303"
   # "Execution time (seconds): 0.697401036"
 
-  # f5 se acerco, pero no  segun lo reportado
+  # f5 se acerco al optimo con subsystems=4
 
   # htga = HTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(30, 50),
@@ -628,19 +628,19 @@ if __FILE__ == $PROGRAM_NAME
 
   # f15 se acerco al valor reportado
 
-  htga = HTGA.new beta_values: 'discrete',
-                  upper_bounds: Array.new(30, 100),
-                  lower_bounds: Array.new(30, -100),
-                  pop_size: 200,
-                  cross_rate: 0.1,
-                  mut_rate: 0.02,
-                  num_genes: 30,
-                  continuous: true,
-                  selected_func: 15,
-                  is_negative_fit: false,
-                  is_high_fit: false,
-                  max_generation: 10_000
-  p htga.execute
+  # htga = HTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(30, 100),
+  #                 lower_bounds: Array.new(30, -100),
+  #                 pop_size: 200,
+  #                 cross_rate: 0.1,
+  #                 mut_rate: 0.02,
+  #                 num_genes: 30,
+  #                 continuous: true,
+  #                 selected_func: 15,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10_000
+  # p htga.execute
 
   # RESULTS
   # "best fitness overall 0.0"

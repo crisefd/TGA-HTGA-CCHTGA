@@ -396,7 +396,7 @@ class CCHTGA < BaseGA
 end
 
 if __FILE__ == $PROGRAM_NAME
-  # f1
+  # f1 alcanzo el optimo
   # cchtga = CCHTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(100, 500),
   #                 lower_bounds: Array.new(100, -500),
@@ -455,6 +455,22 @@ if __FILE__ == $PROGRAM_NAME
   #                 num_genes: 100,
   #                 continuous: true,
   #                 selected_func: 4,
+  #                 is_negative_fit: false,
+  #                 is_high_fit: false,
+  #                 max_generation: 10_000
+  # p cchtga.execute
+  
+  # f5 
+
+  # cchtga = CCHTGA.new beta_values: 'discrete',
+  #                 upper_bounds: Array.new(100, 50),
+  #                 lower_bounds: Array.new(100, -50),
+  #                 pop_size: 30,
+  #                 cross_rate: 0.8,
+  #                 mut_rate: 0.7,
+  #                 num_genes: 100,
+  #                 continuous: true,
+  #                 selected_func: 5,
   #                 is_negative_fit: false,
   #                 is_high_fit: false,
   #                 max_generation: 10_000
