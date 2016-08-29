@@ -23,7 +23,7 @@ class TestRunner
   def execute(paths_to_input_test_files)
     paths_to_input_test_files.each do |path|
       input_hash = load_input_test_file path
-      1.upto(@num_runs) do |run|
+      1.upto(@num_runs - 1) do |run|
         p "========== RUN #{run} ============="
         output_hash = {}
         if path.include? '/htga'
@@ -75,7 +75,7 @@ class TestRunner
     if run == 1
       file.puts "best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error"
     end
-    file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},#{output_hash[:func_evals_of_best_fit]},#{output_hash[:optimal_func_val]},#{output_hash[:relative_error]}"
+    file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},#{output_hash[:func_evals_of_best_fit]},#{output_hash[:optimal_func_val]},#{output_hash[:relative_error]} #{output_hash[:num_subsystems]}"
     file.close
   end
 
@@ -169,7 +169,7 @@ if __FILE__ == $PROGRAM_NAME
   continue = false
   continue = true if ARGV[1].to_s == 'continue'
   paths_to_input_test_files = []
-  if arg == 'htga' || arg == 'tga' || arg == 'cchtga' || arg == 'htga2'
+  if arg == 'htga' || arg == 'tga' || arg == 'cchtga' || arg == 'htga2' || arg == 'htga3'
     paths_to_input_test_files += Dir["test_cases/#{arg}/*.ini"]
   else
     paths_to_input_test_files << "test_cases/#{arg}"

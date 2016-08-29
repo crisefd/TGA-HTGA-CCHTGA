@@ -33,7 +33,7 @@ class CCHTGA < BaseGA
   def execute
     @generation = 0
     output_hash = { best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
-                    relative_error: nil, num_subsystems: 0, optimal_value: nil
+                    relative_error: nil, num_subsystems: 0, optimal_func_val: nil
                   }
     begin
       init_population
@@ -197,7 +197,7 @@ class CCHTGA < BaseGA
   # Method to perform cooperative coevolution subroutine
   # @return [void]
   def cooperative_coevolution
-    @subsystems.each do |subsystem|
+    @subsystems.map! do |subsystem|
       (0...@pop_size).each do |i|
         update_subsystem_best_experiences subsystem, i
         update_subsystem_best_chromosome subsystem, i
@@ -205,6 +205,7 @@ class CCHTGA < BaseGA
       update_best_chromosome subsystem
       # correct_chromosome_genes @best_chromosome
       evaluate_chromosome @best_chromosome
+      subsystem
     end
   end
 

@@ -197,7 +197,7 @@ class HTGA < BaseGA
   # @param [Integer] chrom_size, the number of variables of the function
   def select_taguchi_array
     closest = 0
-    [8, 16, 32, 64, 128, 256, 512].each do |n|
+    [8, 16, 32, 64, 128, 256, 512, 1024].each do |n|
       if @num_genes <= n - 1
         closest = n
         break

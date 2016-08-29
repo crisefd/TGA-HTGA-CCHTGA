@@ -12,7 +12,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
 # @author Oscar Tigreros
 
-# clase principal
+# Main class
 class TGA < BaseGA
   attr_reader :mating_pool, :new_generation, :num_genes, :chromosomes, :pop_size
   def initialize(**input)
@@ -186,16 +186,5 @@ class TGA < BaseGA
   end
 end
 if __FILE__ == $PROGRAM_NAME
-  dim = 1000
-  bound = 500
-  tga = TGA.new upper_bounds: Array.new(dim, bound),
-                lower_bounds: Array.new(dim, -1 * bound),
-                pop_size: 200,
-                num_genes: dim,
-                continuous: true,
-                selected_func: 13,
-                is_negative_fit: false,
-                is_high_fit: false,
-                max_generation: 1_000
-  p tga.execute
+ 
 end
