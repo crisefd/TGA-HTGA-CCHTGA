@@ -21,8 +21,9 @@ class HTGA < BaseGA
   # Main method for the HTGA
   def execute
     @generation = 0
-    output_hash = { best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
-                    relative_error: nil, optimal_value: nil
+    output_hash = {
+                    best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
+                    relative_error: nil, optimal_func_val: nil
                   }
     begin
       init_population
@@ -45,11 +46,10 @@ class HTGA < BaseGA
       relative_error = (((output_hash[:best_fit] + 1) /
       (@optimal_func_val + 1)) - 1).abs
       output_hash[:relative_error] = relative_error
-      output_hash[:optimal_value] = @optimal_func_val
+      output_hash[:optimal_func_val] = @optimal_func_val
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
-      exit
     end
     output_hash
   end

@@ -48,8 +48,10 @@ class IHTGA < HTGA
     @subsystem.chromosomes = @chromosomes
   end
 
-	def execute
-		find_best_chromosome
+  # Main method to execute the ICHTGA
+  # @return [void]
+  def execute
+    find_best_chromosome
     cross_inviduals
     generate_offspring_by_taguchi_method
     mutate_individuals
@@ -58,23 +60,31 @@ class IHTGA < HTGA
     @subsystem.num_evaluations = @num_evaluations
   end
 
+  # Method to find the current genenration's best chromosome
+  # @return [void]
   def find_best_chromosome
     @chromosomes.map! do |chromo|
       evaluate_chromosome chromo
       if @is_high_fit
         @best_chromosome = chromo.clone if @best_chromosome.nil? ||
-        																	 chromo.fitness >
-        													 				 @best_chromosome.fitness
+                                           chromo.fitness >
+                                           @best_chromosome.fitness
       else
         @best_chromosome = chromo.clone if @best_chromosome.nil? ||
-        																	 chromo.fitness <
-        													 				 @best_chromosome.fitness
+                                           chromo.fitness <
+                                           @best_chromosome.fitness
       end
       chromo
     end
     @subsystem.best_chromosome = @best_chromosome
   end
-  
+
+  # Method to recursively correct a gene that is outside the bounds.
+  # @note In this method the search space is doubled in each dimensino and
+  # reconected from the opposite bounds to avoid discontinuities
+  # @param [Float] gene
+  # @param [Float] lower_bound
+  # @param [Float] upper_bound
   def correct_gene(gene, lower_bound, upper_bound)
     corrected_gene = nil
     if gene >= lower_bound && gene <= upper_bound
@@ -106,22 +116,14 @@ class IHTGA < HTGA
         gene = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
                                               best_experience[i]).abs
       end
-      begin
         chromosome[i] = correct_gene gene, @lower_bounds[i], @upper_bounds[i]
-      rescue SystemStackError => error
-        p "gene=#{gene}"
-        exit
-      end
     end
     chromosome
   end
-  
-  
 
   # Method to mutate the individuals according to a mutation rate
   # @return [void]
   def mutate_individuals
-    # m = @chromosomes.size
     m = @pop_size
     (0...m).each do |x|
       r = rand 0.0..1.0
@@ -131,7 +133,7 @@ class IHTGA < HTGA
       @chromosomes << new_chrom
     end
   end
-  
+
   # Crossover operator method use in HTGA
   # @param [Chromosome] chromosome_x
   # @param [Chromosome] chromosome_y
@@ -191,4 +193,5 @@ class IHTGA < HTGA
       chromosome.snr = (chromosome.fitness - @best_chromosome.fitness)**-2
     end
   end
+
 end
