@@ -23,6 +23,7 @@ class CCHTGA < BaseGA
   attr_writer :chromosomes
   attr_writer :selected_func
 
+  # Constructor
   def initialize(**input)
     super input
     @best_chromosome = nil
@@ -30,10 +31,12 @@ class CCHTGA < BaseGA
   end
 
   # Method to execute the CCHTGA
+  # @return [void]
   def execute
     @generation = 0
-    output_hash = { best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
-                    relative_error: nil, num_subsystems: 0, optimal_func_val: nil
+    output_hash = {
+                     best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
+                     relative_error: nil, num_subsystems: 0, optimal_func_val: nil
                   }
     begin
       init_population
@@ -62,25 +65,12 @@ class CCHTGA < BaseGA
                          (@optimal_func_val + 1)) - 1).abs
       output_hash[:relative_error] = relative_error
       output_hash[:num_subsystems] = @subsystems.size
-      output_hash[:optimal_value] = @optimal_func_val
+      output_hash[:optimal_func_val] = @optimal_func_val
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
-      exit
     end
-  
     output_hash
-  end
-  
-  def correct_chromosome?(chromosome) # Should be deleted
-    result = true
-    chromosome.each_with_index do |gene, i|
-      if gene < @lower_bounds[i] || gene > @upper_bounds[i]
-        result = false
-        break
-      end
-    end
-    result
   end
 
   # @param [Hash] output_hash
@@ -117,6 +107,7 @@ class CCHTGA < BaseGA
 
   # Method that selects the most suitable Taguchi array
   # @param [Integer] chrom_size, the number of variables of the function
+  # @return [void]
   def select_taguchi_array
     closest = 0
     [8, 16, 32, 64, 128, 256, 512].each do |n|
@@ -159,7 +150,7 @@ class CCHTGA < BaseGA
         end
         if i != (@num_genes / i) && 0 != (@num_genes / i) &&
           1 != (@num_genes / i) && !flags[@num_genes / i]
-          
+
           divisors << @num_genes / i
           flags[@num_genes / i] = true
         end
@@ -203,7 +194,6 @@ class CCHTGA < BaseGA
         update_subsystem_best_chromosome subsystem, i
       end
       update_best_chromosome subsystem
-      # correct_chromosome_genes @best_chromosome
       evaluate_chromosome @best_chromosome
       subsystem
     end
@@ -215,7 +205,7 @@ class CCHTGA < BaseGA
   # @return [void]
   def update_subsystem_best_experiences(subsystem, i)
     if @is_high_fit
-      'not implemented'
+      fail 'not implemented'
     else
       if subsystem.chromosomes[i].fitness <
          subsystem.best_chromosomes_experiences[i].fitness
@@ -231,7 +221,7 @@ class CCHTGA < BaseGA
   # @return [void]
   def update_subsystem_best_chromosome(subsystem, i)
     if @is_high_fit
-      'not implemented'
+      fail 'not implemented'
     else
       if subsystem.best_chromosomes_experiences[i].fitness <
          subsystem.best_chromosome.fitness
@@ -265,35 +255,6 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to correct genes in case a the chromosome exceeds the bounds
-  # @param [Chromosome] chromosome
-  # @note The search space is doubled in each dimension and reconnected
-  # from the opposite bounds to avoid discontinuities
-  # def correct_chromosome_genes(chromosome)
-  #   i = 0
-  #   chromosome.map! do |gene|
-  #     prev_gene = gene
-  #     gene = correct_gene gene, @lower_bounds[i], @upper_bounds[i]
-  #     fail "incorrect gene=#{gene} prev_gene=#{prev_gene} l=#{@lower_bounds[i]} u=#{@upper_bounds[i]}" if gene < @lower_bounds[i] || gene > @upper_bounds[i]
-  #     i += 1
-  #     gene
-  #   end
-  # end
-
-  # def correct_gene(gene, lower_bound, upper_bound)
-  #   corrected_gene = nil
-  #   if gene.between? lower_bound, upper_bound
-  #     corrected_gene = gene
-  #   elsif gene < lower_bound
-  #     gene = 2 * lower_bound - gene
-  #     corrected_gene = correct_gene gene, lower_bound, upper_bound
-  #   elsif upper_bound < gene
-  #     gene = 2 * upper_bound - gene
-  #     corrected_gene = correct_gene gene, lower_bound, upper_bound
-  #   end
-  #   corrected_gene
-  # end
-
   # Method to generate the initial population of chromosomes
   # @return [void]
   # @note It also initialize the best chromosome
@@ -325,7 +286,7 @@ class CCHTGA < BaseGA
                                                chromosome.fitness <
                                                @best_chromosome.fitness
       end
-      
+
     end
   end
 
@@ -338,7 +299,7 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to apply the ICHTGA to each subsystem
+  # Method to apply the IHTGA to each subsystem
   # return [void]
   def apply_htga_to_subsystems
     @subsystems.map! do |subsystem|
@@ -373,7 +334,6 @@ class CCHTGA < BaseGA
       subsystem.each_with_index do |g, j|
         @chromosomes[i][g] = subchromo[j]
       end
-      # correct_chromosome_genes @chromosomes[i]
       evaluate_chromosome @chromosomes[i]
     end
   end
@@ -394,6 +354,7 @@ class CCHTGA < BaseGA
     end
     [sub_chromosomes, upper_bounds, lower_bounds]
   end
+
 end
 
 if __FILE__ == $PROGRAM_NAME
@@ -460,8 +421,8 @@ if __FILE__ == $PROGRAM_NAME
   #                 is_high_fit: false,
   #                 max_generation: 10_000
   # p cchtga.execute
-  
-  # f5 
+
+  # f5
 
   # cchtga = CCHTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(100, 50),

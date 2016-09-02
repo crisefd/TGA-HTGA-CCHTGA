@@ -12,27 +12,24 @@ require_relative 'cchtga/cchtga'
 
 # Manager class for running tests
 class TestRunner
-  
-  def initialize(continue)
-    @continue = continue
-  end
-  
   # Main method to execute tests
   # @param [Array<String>] paths_to_input_test_files
+  # @param [String] algorithm_name
   # @return [void]
-  def execute(paths_to_input_test_files)
+  def execute(paths_to_input_test_files, algorithm_name)
+    @algorithm_name = algorithm_name
     paths_to_input_test_files.each do |path|
       input_hash = load_input_test_file path
-      1.upto(@num_runs - 1) do |run|
+      0.upto(@num_runs - 1) do |run|
         p "========== RUN #{run} ============="
         output_hash = {}
-        if path.include? '/htga'
+        if algorithm_name == 'htga'
           htga = HTGA.new input_hash
           output_hash = htga.execute
-        elsif path.include? '/cchtga'
+        elsif algorithm_name == 'cchtga'
           cchtga = CCHTGA.new input_hash
           output_hash = cchtga.execute
-        elsif path.include? '/tga'
+        elsif algorithm_name == 'tga'
           tga = TGA.new input_hash
           output_hash = tga.execute
         end
@@ -65,17 +62,17 @@ class TestRunner
   # @return [void]
   def write_ouput_file(output_hash, path_to_input_test_file, run)
     splitted_path = path_to_input_test_file.split '/'
-    test_dir = splitted_path[1]
-    input_file_name = splitted_path[2].split('.')[0]
-    path_to_output_file = "test_cases/#{test_dir}/#{input_file_name}-OUTPUT.csv"
-    File.delete path_to_output_file if File.exist?(path_to_output_file) &&
-                                       run == 1
-    #File.delete path_to_output_file if !@continue
-    file = open path_to_output_file, 'a'
-    if run == 1
-      file.puts "best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error"
+    input_file_name = splitted_path[-1].split('.')[0]
+    path_to_output_file = "#{splitted_path.slice(0..-2).join('/')}/#{input_file_name}-OUTPUT.csv"
+    file = open path_to_output_file, 'w'
+    if run == 0
+      if @algorithm_name != 'cchtga'
+        file.puts "best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error"
+      else
+        file.puts "best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error,subsystems"
+      end
     end
-    file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},#{output_hash[:func_evals_of_best_fit]},#{output_hash[:optimal_func_val]},#{output_hash[:relative_error]} #{output_hash[:num_subsystems]}"
+    file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},#{output_hash[:func_evals_of_best_fit]},#{output_hash[:optimal_func_val]},#{output_hash[:relative_error]},#{output_hash[:num_subsystems]}"
     file.close
   end
 
@@ -122,7 +119,8 @@ class TestRunner
     when 'crossover rate'
       hash = { cross_rate: second_word.to_f }
     when 'beta values'
-      fail "Invalid beta values #{second_word}" unless second_word == 'discrete' || second_word == 'uniform distribution'
+      fail "Invalid beta values #{second_word}" unless second_word == 'discrete' ||
+                                                       second_word == 'uniform distribution'
       hash = { beta_values:  second_word.to_s }
     when 'max number of generations'
       hash = { max_generation: second_word.to_i }
@@ -165,16 +163,17 @@ class TestRunner
 end
 
 if __FILE__ == $PROGRAM_NAME
-  arg = ARGV[0].to_s
-  continue = false
-  continue = true if ARGV[1].to_s == 'continue'
-  paths_to_input_test_files = []
-  if arg == 'htga' || arg == 'tga' || arg == 'cchtga' || arg == 'htga2' || arg == 'htga3'
-    paths_to_input_test_files += Dir["test_cases/#{arg}/*.ini"]
+  fail "Invalid number of arguments #{ARGV.size}, expected 2 " if ARGV.size != 2
+  algorithm_name = ARGV[0].downcase
+  fail "#{name_algorithm} is not a valid name" unless algorithm_name == 'tga' ||
+                                                      algorithm_name == 'htga' ||
+                                                      algorithm_name == 'cchtga'
+  path = ARGV[1].to_s
+  if File.directory? path
+    path = Dir["#{path}/*.ini"]
   else
-    paths_to_input_test_files << "test_cases/#{arg}"
+    path = [path]
   end
-  tr = TestRunner.new continue
-  tr.execute paths_to_input_test_files
-
+  tr = TestRunner.new
+  tr.execute path, algorithm_name
 end
