@@ -62,9 +62,9 @@ class TestRunner
   # @return [void]
   def write_ouput_file(output_hash, path_to_input_test_file, run)
     splitted_path = path_to_input_test_file.split '/'
-    # test_dir = splitted_path[-2]
     input_file_name = splitted_path[-1].split('.')[0]
     path_to_output_file = "#{splitted_path.slice(0..-2).join('/')}/#{input_file_name}-OUTPUT.csv"
+    File.delete(path_to_output_file) if File.exists?(path_to_output_file) && run == 0
     file = open path_to_output_file, 'a'
     if run == 0
       if @algorithm_name != 'cchtga'
@@ -175,6 +175,7 @@ if __FILE__ == $PROGRAM_NAME
   else
     path = [path]
   end
+<<<<<<< HEAD
 
   tr = TestRunner.new
   tr.execute path, algorithm_name
@@ -187,4 +188,8 @@ if __FILE__ == $PROGRAM_NAME
   # end
   # tr = TestRunner.new continue
   # tr.execute paths_to_input_test_files
+=======
+  tr = TestRunner.new
+  tr.execute path, algorithm_name
+>>>>>>> c6cc3b0afce560ee6547466b8b2d1b6641e06e3c
 end
