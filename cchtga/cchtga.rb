@@ -106,7 +106,6 @@ class CCHTGA < BaseGA
   end
 
   # Method that selects the most suitable Taguchi array
-  # @param [Integer] chrom_size, the number of variables of the function
   # @return [void]
   def select_taguchi_array
     closest = 0
@@ -149,7 +148,7 @@ class CCHTGA < BaseGA
           flags[i] = true
         end
         if i != (@num_genes / i) && 0 != (@num_genes / i) &&
-          1 != (@num_genes / i) && !flags[@num_genes / i]
+           1 != (@num_genes / i) && !flags[@num_genes / i]
 
           divisors << @num_genes / i
           flags[@num_genes / i] = true
@@ -188,14 +187,14 @@ class CCHTGA < BaseGA
   # Method to perform cooperative coevolution subroutine
   # @return [void]
   def cooperative_coevolution
-    @subsystems.each do |subsystem|
+    @subsystems.map! do |subsystem|
       (0...@pop_size).each do |i|
         update_subsystem_best_experiences subsystem, i
         update_subsystem_best_chromosome subsystem, i
       end
       update_best_chromosome subsystem
       evaluate_chromosome @best_chromosome
-      # subsystem
+      subsystem
     end
   end
 

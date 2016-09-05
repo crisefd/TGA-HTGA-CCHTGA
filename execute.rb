@@ -175,21 +175,6 @@ if __FILE__ == $PROGRAM_NAME
   else
     path = [path]
   end
-<<<<<<< HEAD
-
   tr = TestRunner.new
   tr.execute path, algorithm_name
-  # arg = ARGV[0].to_s
-  # paths_to_input_test_files = []
-  # if arg == 'htga' || arg == 'tga' || arg == 'cchtga' || arg == 'htga2' || arg == 'htga3'
-  #   paths_to_input_test_files += Dir["test_cases/#{arg}/*.ini"]
-  # else
-  #   paths_to_input_test_files << "test_cases/#{arg}"
-  # end
-  # tr = TestRunner.new continue
-  # tr.execute paths_to_input_test_files
-=======
-  tr = TestRunner.new
-  tr.execute path, algorithm_name
->>>>>>> c6cc3b0afce560ee6547466b8b2d1b6641e06e3c
 end
