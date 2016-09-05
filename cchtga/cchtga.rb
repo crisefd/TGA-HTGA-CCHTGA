@@ -188,14 +188,14 @@ class CCHTGA < BaseGA
   # Method to perform cooperative coevolution subroutine
   # @return [void]
   def cooperative_coevolution
-    @subsystems.each do |subsystem|
+    @subsystems.map! do |subsystem|
       (0...@pop_size).each do |i|
         update_subsystem_best_experiences subsystem, i
         update_subsystem_best_chromosome subsystem, i
       end
       update_best_chromosome subsystem
       evaluate_chromosome @best_chromosome
-      # subsystem
+      subsystem
     end
   end
 

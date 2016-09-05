@@ -132,8 +132,12 @@ module TestFunctions
       end
       sum * -1
     end,
-    lambda do |x| # function 8
-      0
+    lambda do |x| # function 8 Brown function
+      sum = 0.0
+      (0...(x.size - 1)).each do |i|
+        sum += (x[i]**2)**(x[i + 1]**2 + 1) + (x[i + 1]**2)**(x[i]**2 + 1)
+      end
+      sum
     end,
     lambda do |x| # function 9
       sum = 0.0
