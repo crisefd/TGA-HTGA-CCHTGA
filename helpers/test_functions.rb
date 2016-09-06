@@ -147,7 +147,7 @@ module TestFunctions
       end
       sum * 1.0 / d
     end,
-    lambda do |x| # function 10
+    lambda do |x| # function 10 Rosenbrok function
       res = 0.0
       first_term = 0.0
       second_term = 0.0
