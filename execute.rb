@@ -17,6 +17,7 @@ class TestRunner
   # @param [String] algorithm_name
   # @return [void]
   def execute(paths_to_input_test_files, algorithm_name)
+    @start_time = Time.now
     @algorithm_name = algorithm_name
     paths_to_input_test_files.each do |path|
       input_hash = load_input_test_file path
@@ -63,7 +64,7 @@ class TestRunner
   def write_ouput_file(output_hash, path_to_input_test_file, run)
     splitted_path = path_to_input_test_file.split '/'
     input_file_name = splitted_path[-1].split('.')[0]
-    path_to_output_file = "#{splitted_path.slice(0..-2).join('/')}/#{input_file_name}-OUTPUT.csv"
+    path_to_output_file = "#{splitted_path.slice(0..-2).join('/')}/#{input_file_name}-OUTPUT-#{@start_time}.csv"
     File.delete(path_to_output_file) if File.exists?(path_to_output_file) && run == 0
     file = open path_to_output_file, 'a'
     if run == 0

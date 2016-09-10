@@ -198,6 +198,11 @@ class CCHTGA < BaseGA
     end
   end
 
+  # Method that replace the subchromosome's genes in the best chromosome
+  # and calculates the fitness for the that temp best chromosome.
+  # @param [Subsystem] subsystem
+  # @param [Chromosome] chromosome
+  # @return [Chromosome]
   def best(subsystem, chromosome)
     best_chromosome = @best_chromosome.clone
     subsystem.each_with_index do |g, k|
@@ -297,6 +302,8 @@ class CCHTGA < BaseGA
     end
   end
 
+  # Updates the previous best chromosome
+  # @return [void]
   def update_prev_best_chhromosome
     @prev_best_chromosome = @best_chromosome.clone
     if @is_high_fit
@@ -413,7 +420,7 @@ if __FILE__ == $PROGRAM_NAME
   # p cchtga.execute
 
 
-  # f4 se acerco al valor reportado
+  # f4 se acerco al valor reportado con subsystems= 4
 
   # cchtga = CCHTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(100, 600),
