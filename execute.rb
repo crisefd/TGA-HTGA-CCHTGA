@@ -1,3 +1,4 @@
+#!/home/crisefd/.rvm/rubies/ruby-2.2.1/bin/ruby
 # language: english
 # encoding: utf-8
 # Program: execute.rb
@@ -64,8 +65,8 @@ class TestRunner
   def write_ouput_file(output_hash, path_to_input_test_file, run)
     splitted_path = path_to_input_test_file.split '/'
     input_file_name = splitted_path[-1].split('.')[0]
-    path_to_output_file = "#{splitted_path.slice(0..-2).join('/')}/#{input_file_name}-OUTPUT-#{@start_time}.csv"
-    File.delete(path_to_output_file) if File.exists?(path_to_output_file) && run == 0
+    path_to_output_file = "#{splitted_path.slice(0..-2).join('/')}/#{input_file_name}-OUTPUT.csv"
+   # File.delete(path_to_output_file) if File.exists?(path_to_output_file) && run == 0
     file = open path_to_output_file, 'a'
     if run == 0
       if @algorithm_name != 'cchtga'
