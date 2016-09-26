@@ -117,8 +117,6 @@ class HTGA < BaseGA
     chromosome
   end
 
-  # validate(:mutate) { |*args, &blk| args.reduce(:+) == 6 }
-
   # Method to perfom SNR calculation used in the HTGA
   # @param [Chromosome] chromosome, the chromosome
   # @return [void]
@@ -126,10 +124,10 @@ class HTGA < BaseGA
     n = chromosome.size.to_f
     if @is_high_fit # What happens when the gene is 0 ?
       chromosome.snr = -10.0 * Math.log10((1.0 / n) *
-      chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
+                        chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
     else
       chromosome.snr = -10.0 * Math.log10((1.0 / n) *
-      chromosome.map { |gene| gene**2.0 }.reduce(:+))
+                        chromosome.map { |gene| gene**2.0 }.reduce(:+))
     end
   end
 

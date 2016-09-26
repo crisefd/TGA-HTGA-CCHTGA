@@ -8,6 +8,15 @@
 
 # @author Cristhian Fuertes
 module TestFunctions
+  
+  KNAPSACK_FUNCTION = lambda do |x, v|
+    sum = 0
+    (0...x.size).each do |i|
+      sum += x[i] * v[i]
+    end
+    sum
+  end
+  
   OPTIMAL_FUNCTION_VALUES = [
     0, # value 1
     0, # value 2
