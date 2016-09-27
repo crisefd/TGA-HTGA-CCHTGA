@@ -77,74 +77,73 @@ class HTGAKnapsack < HTGA
     end
   end
   
-  
-    def correct_chromosome(chromosome)
-      corrected_chromosome = chromosome.clone
-      ones_positions = chromosome.ones_positions.clone
-      num_available_ones = ones_positions.size
-      num_chosen_ones = 0
-      list_unchosen_ones = ones_positions.clone
-      list_chosen_ones = []
-      weight_sum = 0
-      range = (0...num_available_ones).to_a
-      # p "max_weight #{@max_weight}"
-      # p "weights #{@weights}"
-      # p "range #{range}"
-      # p "ones #{ list_unchosen_ones}"
-       while range.size > 0 do
-         # p "num_available_ones #{num_available_ones}"
-         # p "num_chosen_ones #{num_chosen_ones}"
-          j = range.delete_at(rand(range.size))
-          i = ones_positions[j]
-          fail "ones_positions: #{ones_positions} #{ones_positions.size}" if i >= @weights.size
-        #  p "i=#{i} j=#{j}"
-          if weight_sum + @weights[i] < @max_weight
-         #   p "0)  weight_sum = #{weight_sum} weights[i] = #{@weights[i]}"
-            weight_sum += @weights[i]
-            num_chosen_ones += 1
-            num_available_ones -= 1
-            list_unchosen_ones.delete(j)
-            list_chosen_ones << j
-          #  p "ones #{ list_unchosen_ones}"
-          elsif weight_sum + @weights[i] == @max_weight
-           # p "1)  weight_sum = #{weight_sum} weights[i] = #{@weights[i]}"
-            num_chosen_ones += 1
-            num_available_ones -= 1
-            weight_sum += @weights[i]
-            list_unchosen_ones.delete(j)
-            list_chosen_ones << j
-            list_unchosen_ones.each do |k|
-              corrected_chromosome[k] = 0
-            end
-            corrected_chromosome[i] = 1
-            # p "ones #{ list_unchosen_ones}"
-            break
-          else
-            # p "2)  weight_sum = #{weight_sum} weights[i] = #{@weights[i]}"
-            corrected_chromosome[i] = 0
-            list_unchosen_ones.delete(j)
-            # p "ones #{ list_unchosen_ones}"
-            next if weight_sum < @max_weight
-            list_unchosen_ones.each do |k|
-              corrected_chromosome[k] = 0
-            end
-            break
-          end
-      end
-      corrected_chromosome.ones_positions = list_chosen_ones
-      corrected_chromosome.weight = weight_sum
-      # p "ones #{ list_chosen_ones}"
-      # p "=================="
-      # p "corrected_chromosome: #{corrected_chromosome}"
-      # p "ones pos: #{corrected_chromosome.ones_positions}"
-      return corrected_chromosome
+  #   def correct_chromosome(chromosome)
+  #     corrected_chromosome = chromosome.clone
+  #     ones_positions = chromosome.ones_positions.clone
+  #     num_available_ones = ones_positions.size
+  #     num_chosen_ones = 0
+  #     list_unchosen_ones = ones_positions.clone
+  #     list_chosen_ones = []
+  #     weight_sum = 0
+  #     range = (0...num_available_ones).to_a
+  #     # p "max_weight #{@max_weight}"
+  #     # p "weights #{@weights}"
+  #     # p "range #{range}"
+  #     # p "ones #{ list_unchosen_ones}"
+  #     while range.size > 0 do
+  #       # p "num_available_ones #{num_available_ones}"
+  #       # p "num_chosen_ones #{num_chosen_ones}"
+  #         j = range.delete_at(rand(range.size))
+  #         i = ones_positions[j]
+  #         fail "ones_positions: #{ones_positions} #{ones_positions.size}" if i >= @weights.size
+  #       #  p "i=#{i} j=#{j}"
+  #         if weight_sum + @weights[i] < @max_weight
+  #       #   p "0)  weight_sum = #{weight_sum} weights[i] = #{@weights[i]}"
+  #           weight_sum += @weights[i]
+  #           num_chosen_ones += 1
+  #           num_available_ones -= 1
+  #           list_unchosen_ones.delete(j)
+  #           list_chosen_ones << j
+  #         #  p "ones #{ list_unchosen_ones}"
+  #         elsif weight_sum + @weights[i] == @max_weight
+  #         # p "1)  weight_sum = #{weight_sum} weights[i] = #{@weights[i]}"
+  #           num_chosen_ones += 1
+  #           num_available_ones -= 1
+  #           weight_sum += @weights[i]
+  #           list_unchosen_ones.delete(j)
+  #           list_chosen_ones << j
+  #           list_unchosen_ones.each do |k|
+  #             corrected_chromosome[k] = 0
+  #           end
+  #           corrected_chromosome[i] = 1
+  #           # p "ones #{ list_unchosen_ones}"
+  #           break
+  #         else
+  #           # p "2)  weight_sum = #{weight_sum} weights[i] = #{@weights[i]}"
+  #           corrected_chromosome[i] = 0
+  #           list_unchosen_ones.delete(j)
+  #           # p "ones #{ list_unchosen_ones}"
+  #           next if weight_sum < @max_weight
+  #           list_unchosen_ones.each do |k|
+  #             corrected_chromosome[k] = 0
+  #           end
+  #           break
+  #         end
+  #     end
+  #     corrected_chromosome.ones_positions = list_chosen_ones
+  #     corrected_chromosome.weight = weight_sum
+  #     # p "ones #{ list_chosen_ones}"
+  #     # p "=================="
+  #     # p "corrected_chromosome: #{corrected_chromosome}"
+  #     # p "ones pos: #{corrected_chromosome.ones_positions}"
+  #     return corrected_chromosome
     
-  end
+  # end
   
   def evaluate_chromosome(chromosome)
-    chromosome = correct_chromosome chromosome
+    # chromosome = correct_chromosome chromosome
     @num_evaluations += 1
-    chromosome.fitness = @knapsack_func.call chromosome, @values
+    chromosome.fitness = @knapsack_func.call chromosome, @values, @weights, @max_weight
     chromosome
   end
   

@@ -9,12 +9,15 @@
 # @author Cristhian Fuertes
 module TestFunctions
   
-  KNAPSACK_FUNCTION = lambda do |x, v|
-    sum = 0
+  KNAPSACK_FUNCTION = lambda do |x, v, w, max_w|
+    sum_w = 0
+    sum_v = 0
     (0...x.size).each do |i|
-      sum += x[i] * v[i]
+      break if sum_w + x[i] * w[i] > max_w
+      sum_w +=  x[i] * w[i]
+      sum_v += x[i] * v[i]
     end
-    sum
+    sum_v
   end
   
   OPTIMAL_FUNCTION_VALUES = [
