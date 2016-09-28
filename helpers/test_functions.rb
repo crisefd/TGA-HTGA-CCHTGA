@@ -12,7 +12,9 @@ module TestFunctions
   KNAPSACK_FUNCTION = lambda do |x, v, w, max_w|
     sum_w = 0
     sum_v = 0
-    (0...x.size).each do |i|
+    range = (0...x.size).to_a
+    while range.size > 0 
+      i = range.delete_at(rand(range.size))
       break if sum_w + x[i] * w[i] > max_w
       sum_w +=  x[i] * w[i]
       sum_v += x[i] * v[i]
