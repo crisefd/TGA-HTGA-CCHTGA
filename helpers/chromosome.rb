@@ -11,6 +11,7 @@ require 'bundler/setup'
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
 class Chromosome < Array
+  
   # @attr [Float] fitness, the fitness value for the chromosome
   attr_accessor :fitness
   # @attr [Float] norm_fitness, the normalized fitness value fo the chromosome
@@ -21,4 +22,9 @@ class Chromosome < Array
   attr_accessor :snr
   # @attr [Float] fit_sum, accumulated fitness
   attr_accessor :fit_sum
+  
+  
+end
+
+if __FILE__ == $PROGRAM_NAME
 end

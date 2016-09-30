@@ -8,6 +8,29 @@
 
 # @author Cristhian Fuertes
 module TestFunctions
+  
+  KNAPSACK_FUNCTION = lambda do |x, v, w, max_w|
+    sum_w = Array.new(w.size, 0)
+    sum_v = 0
+    range = (0...x.size).to_a
+    while range.size > 0 
+      i = range.delete_at(rand(range.size))
+      contraint_broke = false
+      (0...sum_w.size).each do |j|
+        if sum_w[j] + x[i] * w[j][i] > max_w[j]
+          contraint_broke = true
+          break
+        else
+          sum_w[j] += x[i]*w[j][i]
+        end
+      end
+      
+      break if contraint_broke
+      sum_v += x[i] * v[i]
+    end
+    sum_v
+  end
+  
   OPTIMAL_FUNCTION_VALUES = [
     0, # value 1
     0, # value 2

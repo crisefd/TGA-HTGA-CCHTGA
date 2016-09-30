@@ -69,7 +69,8 @@ class BaseGA
     @max_generation = input[:max_generation]
     @num_evaluations = 0
   end
-      def has_stopping_criterion_been_met?(best_fit)
+  
+  def has_stopping_criterion_been_met?(best_fit)
     if @is_high_fit
       answer = best_fit >= @optimal_func_val
     else
@@ -82,6 +83,7 @@ class BaseGA
 
   # @return [Integer] offset of the selected chromosomes
   def roulette_select
+    # exit if @chromosomes.first.fitness.nil?
     Roulette.calculate_probabilities @chromosomes
     selected_chromos_indexes = []
     num_selections = @pop_size * @cross_rate
