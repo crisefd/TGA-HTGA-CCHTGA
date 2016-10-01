@@ -44,7 +44,7 @@ class HTGA < BaseGA
         @generation += 1
       end
       relative_error = (((output_hash[:best_fit] + 1) /
-      (@optimal_func_val + 1)) - 1).abs
+                          (@optimal_func_val + 1)) - 1).abs
       output_hash[:relative_error] = relative_error
       output_hash[:optimal_func_val] = @optimal_func_val
     rescue StandardError => error
