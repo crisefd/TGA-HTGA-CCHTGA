@@ -116,7 +116,7 @@ class IHTGA < HTGA
         gene = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
                                               best_experience[i]).abs
       end
-        chromosome[i] = correct_gene gene, @lower_bounds[i], @upper_bounds[i]
+      chromosome[i] = correct_gene gene, @lower_bounds[i], @upper_bounds[i]
     end
     chromosome
   end

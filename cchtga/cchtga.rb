@@ -106,7 +106,6 @@ class CCHTGA < BaseGA
   end
 
   # Method that selects the most suitable Taguchi array
-  # @param [Integer] chrom_size, the number of variables of the function
   # @return [void]
   def select_taguchi_array
     closest = 0
@@ -149,7 +148,7 @@ class CCHTGA < BaseGA
           flags[i] = true
         end
         if i != (@num_genes / i) && 0 != (@num_genes / i) &&
-          1 != (@num_genes / i) && !flags[@num_genes / i]
+           1 != (@num_genes / i) && !flags[@num_genes / i]
 
           divisors << @num_genes / i
           flags[@num_genes / i] = true
@@ -199,6 +198,20 @@ class CCHTGA < BaseGA
     end
   end
 
+  # Method that replace the subchromosome's genes in the best chromosome
+  # and calculates the fitness for the that temp best chromosome.
+  # @param [Subsystem] subsystem
+  # @param [Chromosome] chromosome
+  # @return [Chromosome]
+  def best(subsystem, chromosome)
+    best_chromosome = @best_chromosome.clone
+    subsystem.each_with_index do |g, k|
+      best_chromosome[g] = chromosome[k]
+    end
+    evaluate_chromosome best_chromosome
+    best_chromosome
+  end
+
   # Method to update the best chromosomes' experiences of a subsystem
   # @param [Subsystem] subsystem
   # @param [Integer] i
@@ -207,8 +220,8 @@ class CCHTGA < BaseGA
     if @is_high_fit
       fail 'not implemented'
     else
-      if subsystem.chromosomes[i].fitness <
-         subsystem.best_chromosomes_experiences[i].fitness
+      if best(subsystem, subsystem.chromosomes[i]).fitness <
+         best(subsystem, subsystem.best_chromosomes_experiences[i]).fitness
 
         subsystem.best_chromosomes_experiences[i] = subsystem.chromosomes[i].clone
       end
@@ -223,8 +236,8 @@ class CCHTGA < BaseGA
     if @is_high_fit
       fail 'not implemented'
     else
-      if subsystem.best_chromosomes_experiences[i].fitness <
-         subsystem.best_chromosome.fitness
+      if best(subsystem, subsystem.best_chromosomes_experiences[i]).fitness <
+         best(subsystem, subsystem.best_chromosome).fitness
 
         subsystem.best_chromosome = subsystem.best_chromosomes_experiences[i].clone
       end
@@ -233,13 +246,12 @@ class CCHTGA < BaseGA
 
   # Method to update the best chromosome using the jth part of a subsystem
   # @param [Subsystem] subsystem
-  # @param [Integer] i
   # @return [void]
   def update_best_chromosome(subsystem)
     if @is_high_fit
       fail 'not implemented'
     else
-      if subsystem.best_chromosome.fitness < @best_chromosome.fitness
+      if best(subsystem, subsystem.best_chromosome).fitness < @best_chromosome.fitness
         replace_subsystem_part_in_chromosome subsystem
       end
     end
@@ -290,6 +302,8 @@ class CCHTGA < BaseGA
     end
   end
 
+  # Updates the previous best chromosome
+  # @return [void]
   def update_prev_best_chhromosome
     @prev_best_chromosome = @best_chromosome.clone
     if @is_high_fit
@@ -406,7 +420,7 @@ if __FILE__ == $PROGRAM_NAME
   # p cchtga.execute
 
 
-  # f4 se acerco al valor reportado
+  # f4 se acerco al valor reportado con subsystems= 4
 
   # cchtga = CCHTGA.new beta_values: 'discrete',
   #                 upper_bounds: Array.new(100, 600),
