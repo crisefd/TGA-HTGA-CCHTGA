@@ -68,9 +68,9 @@ class HTGAKnapsack < HTGA
     if @optimal_func_val
       relative_error = (((output_hash[:best_fit] + 1) /
                             (@optimal_func_val + 1)) - 1).abs
+      output_hash[:optimal_func_val] = @optimal_func_val
       output_hash[:relative_error] = relative_error
     end
-    output_hash[:optimal_func_val] = @optimal_func_val
     p output_hash
     output_hash
   end

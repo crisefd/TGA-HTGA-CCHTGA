@@ -1,4 +1,3 @@
-#!/home/crisefd/.rvm/rubies/ruby-2.2.1/bin/ruby
 # language: english
 # encoding: utf-8
 # Program: execute.rb

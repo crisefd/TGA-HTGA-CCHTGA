@@ -13,8 +13,9 @@ require File.join(File.dirname(__FILE__), '..', 'tga.rb')
 
 # @author Cristhian Fuertes
 # 
-
 class TGAKnapsack < TGA
+
+  # Method to initize attributes
   def initialize(**input)
     @pop_size = input[:pop_size]
     @num_genes = input[:num_genes]
@@ -34,6 +35,7 @@ class TGAKnapsack < TGA
     @values = input[:values]
     @weights = input[:weights]
     @max_weight = input[:max_weight]
+    @optimal_func_val = input[:optimal_func_val]
   end
   
    # Main method
@@ -50,13 +52,18 @@ class TGAKnapsack < TGA
         mutate_matingpool
         insert_new_generation
         update_output_hash output_hash
-        output_hash
+        break if has_stopping_criterion_been_met? output_hash[:best_fit]
         @generation += 1
       end
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
-      exit
+    end
+    if @optimal_func_val
+      relative_error = (((output_hash[:best_fit] + 1) /
+                            (@optimal_func_val + 1)) - 1).abs
+      output_hash[:optimal_func_val] = @optimal_func_val
+      output_hash[:relative_error] = relative_error
     end
     output_hash
   end
@@ -66,7 +73,6 @@ class TGAKnapsack < TGA
   def update_output_hash(output_hash)
       if(@best_fit < output_hash[:best_fit] && !@is_high_fit) ||
         (@best_fit > output_hash[:best_fit] && @is_high_fit)
-      p ":p"
       output_hash[:best_fit] = @best_fit
       output_hash[:gen_of_best_fit] = @generation
       output_hash[:func_evals_of_best_fit] = @num_evaluations
@@ -77,7 +83,6 @@ class TGAKnapsack < TGA
   # @param [Chromosome] chromosome
   # @return void
   def evaluate_chromosome(chromosome)
-    
     @num_evaluations += 1
     chromosome.fitness = @knapsack_func.call chromosome, @values, @weights, @max_weight
   end
