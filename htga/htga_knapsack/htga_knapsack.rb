@@ -31,6 +31,7 @@ class HTGAKnapsack < HTGA
     @values = input[:values]
     @weights = input[:weights]
     @max_weight = input[:max_weight]
+    @optimal_func_val = input[:optimal_func_val]
     @num_evaluations = 0
   end
   
@@ -44,6 +45,7 @@ class HTGAKnapsack < HTGA
     begin
       init_population
       p 'population initialized'
+      update_output_hash output_hash
       select_taguchi_array
       p "the selected taguchi array is L#{@taguchi_array.size}"
       while @generation < @max_generation
@@ -56,13 +58,20 @@ class HTGAKnapsack < HTGA
           p "Generation: #{@generation}- Fitness: #{@chromosomes.first.fitness}"
         end
         update_output_hash output_hash
+        break if has_stopping_criterion_been_met? output_hash[:best_fit]
         @generation += 1
       end
     rescue StandardError => error
       p error.message
       p error.backtrace.inspect
-      exit
     end
+    if @optimal_func_val
+      relative_error = (((output_hash[:best_fit] + 1) /
+                            (@optimal_func_val + 1)) - 1).abs
+      output_hash[:optimal_func_val] = @optimal_func_val
+      output_hash[:relative_error] = relative_error
+    end
+    p output_hash
     output_hash
   end
   
@@ -84,7 +93,6 @@ class HTGAKnapsack < HTGA
   # @param [Chromosome] chromosome
   # @return void
   def evaluate_chromosome(chromosome)
-    # chromosome = correct_chromosome chromosome
     @num_evaluations += 1
     chromosome.fitness = @knapsack_func.call chromosome, @values, @weights, @max_weight
   end
@@ -156,28 +164,28 @@ if __FILE__ == $PROGRAM_NAME
     
     
       # optimum 6120
-      # weights = [ 
-      #             [8, 24, 13, 80, 70, 80, 45, 15, 28, 90, 130, 32, 20, 120, 40,30, 20, 6, 3, 180],
-      #             [8, 44, 13, 100, 100, 90, 75, 25, 28, 120, 130, 32, 40, 160, 40, 60, 55, 10, 6, 240],
-      #             [3, 6, 4, 20, 20, 30, 8, 3, 12, 14, 40, 6, 3, 20, 5, 0, 5, 3, 0, 20],
-      #             [5, 9, 6, 40, 30, 40, 16, 5, 18, 24, 60, 16, 11, 30, 25, 10, 13, 5, 1, 80],
-      #             [5, 11, 7, 50, 40, 40, 19, 7, 18, 29, 70, 21, 17, 30, 25, 15, 25, 5, 1, 100],
-      #             [5, 11, 7, 55, 40, 40, 21, 9, 18, 29, 70, 21, 17, 35, 25, 20, 25, 5, 2, 110],
-      #             [0, 0, 1, 10, 4, 10, 0, 6, 0, 6, 32, 3, 0, 70, 10, 0, 0, 0, 0, 0],
-      #             [3, 4, 5, 20, 14, 20, 6, 12, 10, 18, 42, 9, 12, 100, 20, 5, 6, 4, 1, 20],
-      #             [3, 6, 9, 30, 29, 20, 12, 12, 10, 30, 42, 18, 18, 110, 20, 15, 18, 7, 2, 40],
-      #             [3, 8, 9, 35, 29, 20, 16, 15, 10, 30, 42, 20, 18, 120, 20, 20, 22, 7, 3, 50]
-      #           ]
+      weights = [ 
+                  [8, 24, 13, 80, 70, 80, 45, 15, 28, 90, 130, 32, 20, 120, 40,30, 20, 6, 3, 180],
+                  [8, 44, 13, 100, 100, 90, 75, 25, 28, 120, 130, 32, 40, 160, 40, 60, 55, 10, 6, 240],
+                  [3, 6, 4, 20, 20, 30, 8, 3, 12, 14, 40, 6, 3, 20, 5, 0, 5, 3, 0, 20],
+                  [5, 9, 6, 40, 30, 40, 16, 5, 18, 24, 60, 16, 11, 30, 25, 10, 13, 5, 1, 80],
+                  [5, 11, 7, 50, 40, 40, 19, 7, 18, 29, 70, 21, 17, 30, 25, 15, 25, 5, 1, 100],
+                  [5, 11, 7, 55, 40, 40, 21, 9, 18, 29, 70, 21, 17, 35, 25, 20, 25, 5, 2, 110],
+                  [0, 0, 1, 10, 4, 10, 0, 6, 0, 6, 32, 3, 0, 70, 10, 0, 0, 0, 0, 0],
+                  [3, 4, 5, 20, 14, 20, 6, 12, 10, 18, 42, 9, 12, 100, 20, 5, 6, 4, 1, 20],
+                  [3, 6, 9, 30, 29, 20, 12, 12, 10, 30, 42, 18, 18, 110, 20, 15, 18, 7, 2, 40],
+                  [3, 8, 9, 35, 29, 20, 16, 15, 10, 30, 42, 20, 18, 120, 20, 20, 22, 7, 3, 50]
+                ]
 
-      # htga = HTGAKnapsack.new pop_size: 200,
-      #                       cross_rate: 0.1,
-      #                       mut_rate: 0.02,
-      #                       num_genes: 20,
-      #                       is_negative_fit: false,
-      #                       is_high_fit: true,
-      #                       values: [100, 220, 90, 400, 300, 400, 205, 120, 160, 580, 400, 140, 100, 1300, 650, 320, 480, 80, 60, 2550],
-      #                       weights: weights,
-      #                       max_weight: [550, 700, 130, 240, 280, 310, 110, 205, 260, 275],
-      #                       max_generation: 1000
-      # p htga.execute
-  end
+      htga = HTGAKnapsack.new pop_size: 200,
+                            cross_rate: 0.1,
+                            mut_rate: 0.02,
+                            num_genes: 20,
+                            is_negative_fit: false,
+                            is_high_fit: true,
+                            values: [100, 220, 90, 400, 300, 400, 205, 120, 160, 580, 400, 140, 100, 1300, 650, 320, 480, 80, 60, 2550],
+                            weights: weights,
+                            max_weight: [550, 700, 130, 240, 280, 310, 110, 205, 260, 275],
+                            max_generation: 1000
+      p htga.execute
+end
