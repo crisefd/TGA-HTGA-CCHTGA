@@ -71,6 +71,7 @@ class BaseGA
   end
   
   def has_stopping_criterion_been_met?(best_fit)
+    return false if @optimal_func_val.nil?
     if @is_high_fit
       answer = best_fit >= @optimal_func_val
     else
