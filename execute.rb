@@ -128,6 +128,8 @@ class TestRunner
       hash = { beta_values:  second_word.to_s }
     when 'max number of generations'
       hash = { max_generation: second_word.to_i }
+    when 'optimum'
+        hash = { optimal_func_val: second_word.to_f }
     when 'upper bounds'
       begin
         if second_word == 'pi'

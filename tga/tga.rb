@@ -18,6 +18,7 @@ class TGA < BaseGA
   
   def initialize(**input)
     @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
+    @optimal_func_val = input[:optimal_func_val] if @optimal_func_val.nil?
     @pop_size = input[:pop_size]
     @upper_bounds = input[:upper_bounds]
     @lower_bounds = input[:lower_bounds]

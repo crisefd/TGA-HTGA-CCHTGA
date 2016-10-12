@@ -38,7 +38,7 @@ module TestFunctions
     0, # value 4
     0, # value 5
     0, # value 6
-    -99.2784, # value 7
+    nil, # value 7 <= -28.53 for N=30; -99.27 for N=100
     0, # value 8
     -78.33236, # value 9
     0, # value 10
@@ -50,7 +50,7 @@ module TestFunctions
   ]
 
   TEST_FUNCTIONS = [
-    lambda do |x| # function 1
+    lambda do |x| # 1: Schwefel function
       sum = 0.0
       d = x.size
       x.each do |xi|
@@ -58,14 +58,14 @@ module TestFunctions
       end
       sum + (418.9829 * d)
     end,
-    lambda do |x| # function 2
+    lambda do |x| # 2: Rastrigin function
       sum = 0.0
       x.each do |xi|
         sum += xi**2 - 10 * Math.cos(2 * Math::PI * xi) + 10
       end
       sum
     end,
-    lambda do |x| # function 3 Shifted Ackley's function
+    lambda do |x| # 3: Ackley's function
       sum_square_x = 0.0
       sum_cos = 0.0
       x.each do |xi|
@@ -78,7 +78,7 @@ module TestFunctions
       second_term = -1 * Math.exp(sum_cos)
       first_term + second_term + 20.0 + Math.exp(1)
     end,
-    lambda do |x| # function 4 Shifted Griewank's function
+    lambda do |x| # 4: Griewank function
       sum = 0.0
       prod = 1.0
       i = 1
@@ -89,7 +89,7 @@ module TestFunctions
       end
       ((1.0 / 4000) * sum) - prod + 1
     end,
-    lambda do |x| # function 5
+    lambda do |x| # 5: Levy function #1
       yi = lambda do |xi|
         1.0 + (xi + 1) / 4.0
       end
@@ -120,7 +120,7 @@ module TestFunctions
       res += sum2
       res
     end,
-    lambda do |x| # function 6
+    lambda do |x| # 6: Levy function #2
       u = lambda do |xi, a, k, m|
         r = 0.0
         if xi > a
@@ -146,7 +146,7 @@ module TestFunctions
       res += sum2
       res
     end,
-    lambda do |x| # function 7
+    lambda do |x| # 7: Michalewicz function
       i = 1
       sum = 0.0
       x.each do |xi|
@@ -155,14 +155,14 @@ module TestFunctions
       end
       sum * -1
     end,
-    lambda do |x| # function 8 Brown function
+    lambda do |x| # 8: Brown function
       sum = 0.0
       (0...(x.size - 1)).each do |i|
         sum += (x[i]**2)**(x[i + 1]**2 + 1) + (x[i + 1]**2)**(x[i]**2 + 1)
       end
       sum
     end,
-    lambda do |x| # function 9
+    lambda do |x| # 9: Styblinki-Tang function
       sum = 0.0
       d = x.size
       x.each do |xi|
@@ -170,7 +170,7 @@ module TestFunctions
       end
       sum * 1.0 / d
     end,
-    lambda do |x| # function 10 Rosenbrok function
+    lambda do |x| # 10: Rosenbrok function
       res = 0.0
       first_term = 0.0
       second_term = 0.0
@@ -181,14 +181,14 @@ module TestFunctions
       end
       res
     end,
-    lambda do |x| # function 11 Shifted sphere function
+    lambda do |x| # 11: Sphere function
       sum = 0.0
       x.each do |xi|
         sum += xi**2
       end
       sum
     end,
-    lambda do |x| # function 12
+    lambda do |x| # 12: Quartic function with noise
       sum = 0.0
       x.each do |xi|
         sum += xi**4
@@ -196,7 +196,7 @@ module TestFunctions
       sum += rand(0.0...1.0)
       sum
     end,
-    lambda do |x| # function 13
+    lambda do |x| # 13: Schwefel 2.22 function
       sum = 0.0
       prod = 1.0
       x.each do |xi|
@@ -205,7 +205,7 @@ module TestFunctions
       end
       sum + prod
     end,
-    lambda do |x| # function 14
+    lambda do |x| # 14: Schwefel 1.2 function
       sum_i = 0.0
       (0...x.size).each do |i|
         sum_j = 0.0
@@ -216,7 +216,7 @@ module TestFunctions
       end
       sum_i
     end,
-    lambda do |x| # function 15 Schwefel's function
+    lambda do |x| # 15: Schwefel 2.21 function 
       x.max_by { |xi| xi.abs }.abs
     end
   ]
