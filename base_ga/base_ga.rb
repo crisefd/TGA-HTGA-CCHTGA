@@ -10,7 +10,6 @@ require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'helpers/roulette.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/sus.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
-require File.join(File.dirname(__FILE__), '..', 'helpers/validator.rb')
 
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
@@ -18,8 +17,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/validator.rb')
 class BaseGA
   # Modules for roulette selection operation and test functions
   extend Roulette, SUS
-  include TestFunctions
-
+  include TestFunctions, AbstractInterface
 
   # @!attribute [Array] lower_bounds, lower bounds for the variables
   attr_accessor :lower_bounds
@@ -47,6 +45,11 @@ class BaseGA
   # @!attribute [Boolean] continuous, flag to signal if functions is discrete or
   # continuous
   attr_accessor :continuous
+  
+  # Method to be implemented in subclasses
+  def execute
+    BaseGA.api_not_implemented(self)
+  end
   
   def has_stopping_criterion_been_met?(best_fit)
     return false if @optimal_func_val.nil?
