@@ -17,7 +17,7 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 class BaseGA
   # Modules for roulette selection operation and test functions
   extend Roulette, SUS
-  include TestFunctions, AbstractInterface
+  include TestFunctions
 
   # @!attribute [Array] lower_bounds, lower bounds for the variables
   attr_accessor :lower_bounds
