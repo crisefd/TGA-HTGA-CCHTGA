@@ -8,6 +8,7 @@ update_subsys_exp_test_vars = {}
 
 
 Given(/^the subsystem's population of chromosomes:$/) do |table|
+  pending
   table = table.raw
   subsystem = Subsystem.new [1, 2, 3]
   subsystem.chromosomes = []

@@ -7,6 +7,7 @@
 update_subsys_best_chromo_test_vars = {}
 
 Given(/^a subsystem's best chromosome:$/) do |table|
+  pending
   table = table.raw
   chromosome = Chromosome.new
   table.first.each{ |item| chromosome << item.to_f }

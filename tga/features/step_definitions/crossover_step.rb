@@ -9,6 +9,7 @@
 # licence: GPL
 
 Given(/^the chromosomes:$/) do |table|
+  pending
   table = table.raw
   @chromosome_x = Chromosome.new
   @chromosome_y = Chromosome.new

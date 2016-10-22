@@ -6,6 +6,7 @@
 # creation date: 2015-15-11
 
 Given(/^the positive fitness values of some chromosomes:$/) do |table|
+  pending
   table = table.raw
   table = table[0]
   @chromosomes = []
@@ -34,6 +35,7 @@ end
 
 ###################################
 Given(/^the negative fitness values of some chromosomes:$/) do |table|
+  pendig
   table = table.raw
   table = table[0]
   @chromosomes = []
