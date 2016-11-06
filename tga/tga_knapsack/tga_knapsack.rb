@@ -14,7 +14,7 @@ require File.join(File.dirname(__FILE__), '..', 'tga.rb')
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class TGAKnapsack < TGA
 
-  # Method to initize attributes
+  # @param [Hash] input The input values for the algorithm
   def initialize(**input)
     @pop_size = input[:pop_size]
     @num_genes = input[:num_genes]
@@ -70,7 +70,7 @@ class TGAKnapsack < TGA
   
    # Updates the output variables
    # @param [Hash] output_hash
-   # @return [void]
+   # @return [nil]
   def update_output_hash(output_hash)
     if(@best_fit < output_hash[:best_fit] && !@is_high_fit) ||
       (@best_fit > output_hash[:best_fit] && @is_high_fit)
@@ -82,14 +82,14 @@ class TGAKnapsack < TGA
 
   # Evaluates the fitness of a chromosome for the knapsack problem
   # @param [Chromosome] chromosome
-  # @return void
+  # @return nil
   def evaluate_chromosome(chromosome)
     @num_evaluations += 1
     chromosome.fitness = @knapsack_func.call chromosome, @values, @weights, @max_weight
   end
   
   # Mutates the chromosomes in mating pool
-  # @return [void]
+  # @return [nil]
   def mutate_matingpool
     (0...@mating_pool.size).each do |i|
       j = rand 0...@num_genes
@@ -102,7 +102,7 @@ class TGAKnapsack < TGA
   end
   
    # Insert the new chromosomes into the population
-  # @return [void]
+  # @return [nil]
   def insert_new_generation
     (0...@new_generation.size).each do |i|
       evaluate_chromosome @new_generation[i]
@@ -115,7 +115,7 @@ class TGAKnapsack < TGA
   end
   
   # Method to generate the initial population of chromosomes
-  # @return [void]
+  # @return [nil]
   def init_population
      (0...@pop_size).each do
       chromosome = Chromosome.new

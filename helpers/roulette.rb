@@ -7,7 +7,7 @@
 require 'rubygems'
 require 'bundler/setup'
 
-# Module helper for the roulette selection
+# Helper  module for the roulette selection
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 module Roulette

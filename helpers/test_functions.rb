@@ -9,6 +9,12 @@
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 module TestFunctions
 
+  # Knapsack 0-1 test function. It includes chromosome correction
+  # @param [Chromosome] x The chromosome to be evaluated
+  # @param [Array] v The benefits
+  # @param [Array<Array>] w The list of constraints or weigths
+  # @param [Array] max_w The RHS of the contraints
+  # @return [Float] The fitness value
   KNAPSACK_FUNCTION = lambda do |x, v, w, max_w|
     sum_w = Array.new(w.size, 0)
     sum_v = 0
@@ -31,6 +37,7 @@ module TestFunctions
     sum_v
   end
   
+  # Array of the known optimal values for the test functions
   OPTIMAL_FUNCTION_VALUES = [
     0, # value 1
     0, # value 2
@@ -49,6 +56,7 @@ module TestFunctions
     0 # value 15
   ]
 
+  # Array of Test Functions
   TEST_FUNCTIONS = [
     lambda do |x| # 1: Schwefel function
       sum = 0.0

@@ -13,17 +13,24 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class TGA < BaseGA
-  # @!attribute[Array] subset of chromosomes selected to be reproduce
+
+  # @!attribute [r] mating_pool
+  # =>@return [Array] The subset of chromosomes selected to be crossed/mutated
   attr_reader :mating_pool
-  # @!attribute[Array] next generation chromosomes
+  # @!attribute [r] new_generation
+  # =>@return [Array] The next generation's chromosomes
   attr_reader :new_generation
-  # @!attribute[Integer] number of genes
+  # @!attribute [r] num_genes
+  # =>@return [Integer] The size of the chromosome
   attr_reader :num_genes
-  # @!attribute[Array<Chromosome>] population
+  # @!attribute [r] chromosomes
+  # =>@return [Array<Chromosome>] The population of chromosomes
   attr_reader :chromosomes
-  # @!attribute[Integer] population size
+  # @!attribute [r] pop_size
+  # =>@return [Array<Chromosome>] The number of chromosomes in the population
   attr_reader :pop_size
   
+  # @param [Hash] input The input values for the algorithm
   def initialize(**input)
     @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
     @optimal_func_val = input[:optimal_func_val] if @optimal_func_val.nil?
@@ -74,7 +81,7 @@ class TGA < BaseGA
   end
 
   # Method to select chromosomes by tournamet default  k=2
-  # @return [void]
+  # @return [nil]
   def tournament
     k = 2
     x = -1
@@ -106,7 +113,7 @@ class TGA < BaseGA
   end
 
   # Crossing the chrosomes in the mating pool
-  # @return [void]
+  # @return [nil]
   def cross_cut_point_mating_pool
     cut_point = rand(0...@num_genes)
     chromosome_x = @mating_pool[0].clone
@@ -121,7 +128,7 @@ class TGA < BaseGA
   end
 
   # Mutates the chromosomes in the mating pool
-  # @return [void]
+  # @return [nil]
   def mutate_matingpool
     (0...@mating_pool.size).each do |i|
       gene = -1
@@ -138,7 +145,7 @@ class TGA < BaseGA
   end
 
   # Insert the new chromosomes into the population
-  # @return [void]
+  # @return [nil]
   def insert_new_generation
     (0...@new_generation.size).each do |i|
       evaluate_chromosome @new_generation[i]
@@ -153,7 +160,7 @@ class TGA < BaseGA
 
   # Verify if the chromosome has a better fitness
   # @param [Chromosome] chromosome
-  # @return [void]
+  # @return [nil]
   def verify_best_fit(chromosome)
     if @is_high_fit
       @best_fit = chromosome.fitness if @best_fit.nil? || chromosome.fitness > @best_fit
@@ -167,7 +174,7 @@ class TGA < BaseGA
   end
 
   # Method to generate the initial population of chromosomes
-  # @return [void]
+  # @return [nil]
   def init_population
     (0...@pop_size).each do
       chromosome = Chromosome.new

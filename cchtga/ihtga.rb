@@ -13,13 +13,18 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class IHTGA < HTGA
-  # @!attribute [Chromosome] the best chromosome
+
+  # @!attribute [w] best_chromosome
+  # =>@param [Chromosome] the best chromosome
   attr_writer :best_chromosome
-  # @!attribute [Subsystem] the subsystem
+  # @!attribute subsystem
+  # =>@return [Subsystem] The subsystem
   attr_accessor :subsystem
-  # @!attribute [Proc] The selected function
+  # @!attribute [w] selected_func
+  # =>@param [Proc] The function object
   attr_writer :selected_func
 
+  # @param [Hash] input The input values for the algorithm
   def initialize(**input)
     @beta_values = input[:beta_values]
     @upper_bounds = input[:upper_bounds]
@@ -46,7 +51,7 @@ class IHTGA < HTGA
   end
 
   # Main method to execute the IHTGA
-  # @return [void]
+  # @return [nil]
   def execute
     find_best_chromosome
     cross_inviduals
@@ -58,7 +63,7 @@ class IHTGA < HTGA
   end
 
   # Finds the current genenration's best chromosome
-  # @return [void]
+  # @return [nil]
   def find_best_chromosome
     @chromosomes.map! do |chromo|
       evaluate_chromosome chromo
@@ -120,7 +125,7 @@ class IHTGA < HTGA
   end
 
   # Mutates the chromosomes
-  # @return [void]
+  # @return [nil]
   def mutate_individuals
     m = @pop_size
     (0...m).each do |x|
@@ -159,7 +164,7 @@ class IHTGA < HTGA
   end
 
   # Crosses the chromosomes
-  # @return [void]
+  # @return [nil]
   def cross_inviduals
     m = @chromosomes.size
     (0...m).each do |x|
@@ -180,7 +185,7 @@ class IHTGA < HTGA
 
   # Perfoms SNR calculation
   # @param [Chromosome] chromosome
-  # @return [void]
+  # @return [nil]
   def calculate_snr(chromosome)
     if @is_high_fit
       fail "CCHTGA's SNR calculation for maximization not implemented yet"

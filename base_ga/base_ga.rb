@@ -18,31 +18,38 @@ class BaseGA
   extend Roulette, SUS
   include TestFunctions
 
-  # @!attribute [Array] lower_bounds, lower bounds for the variables
+  #@!attribute lower_bounds
+  # =>@return [Array] The lower bounds for the genes
   attr_accessor :lower_bounds
-  # @!attribute [Array] upper_bounds, upper bounds for the variables
+  #@!attribute upper_bounds
+  # =>@return [Array] The upper bounds for the variables
   attr_accessor :upper_bounds
-  # @!attribute [Array] pop_size, the number of chromosomes
+  #@!attribute [w] pop_size
+  # =>@param [Array] The number of chromosomes
   attr_writer :pop_size
-  # @!attribute [Array] chromosomes, the candidate solutions
+  #@!attribute chromosomes
+  # =>@return [Array] The population of chromosomes
   attr_accessor :chromosomes
-  # @!attribute [Proc] selected_func, the selected function to optimize
+  #@!attribute [w] selected_func
+  # =>@param [Proc] The selected function to optimize
   attr_writer :selected_func
-  # @!attribute [Float], the optimal function value for the selected function
+  #@!attribute [w] optimal_func_val
+  # =>@param [Float] Function value for the selected function
   attr_writer :optimal_func_val
-  # @!attribute [Boolean] is_high_fit, a flag indicating if what is sought is a
-  # high fitness
+  #@!attribute [w] is_high_fit
+  # =>@param [Boolean] A flag indicating if the problem is of maximization or minimization
   attr_writer :is_high_fit
-  # @!attribute [Integer] generation, the counting variables of the number of
-  # generations
+  #@!attribute [r] generation
+  # =>@return [Integer] The counter variable of the number of generations
   attr_reader :generation
-  # @!attribute [Integer] max_generation, the maximum allow number of
-  # generations
+  #@!attribute [r] max_generation
+  # =>@param [Integer] The maximum allow number of generations
   attr_writer :max_generation
-  # @!attribute [Integer] num_genes, the length of the chromosome
+  #@!attribute num_genes
+  # =>@return [Integer] The length of the chromosome
   attr_accessor :num_genes
-  # @!attribute [Boolean] continuous, flag to signal if functions is discrete or
-  # continuous
+  #@!attribute continuous 
+  # =>@return [Boolean] Flag to signal if functions is discrete or continuous
   attr_accessor :continuous
 
   # Checks if the known best fitness value has been reached
@@ -116,7 +123,7 @@ class BaseGA
   end
 
   # SUS selection operation method
-  # @return [Array<Chromosome>] selected chromosomes
+  # @return [Array<Chromosome>] The selected chromosomes
   def sus_select
     pointers = SUS.sample @chromosomes, @pop_size,
     is_high_fit: @is_high_fit,
@@ -137,7 +144,7 @@ class BaseGA
 
   # Method to evaluate an assign a fitness value to a chromosome
   # @param [Chromosome] chromosome
-  # @return [void]
+  # @return [nil]
   def evaluate_chromosome(chromosome)
     @num_evaluations += 1
     chromosome.fitness = @selected_func.call chromosome

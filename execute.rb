@@ -17,7 +17,7 @@ class TestRunner
   # Main method to execute tests
   # @param [Array<String>] paths_to_input_test_files
   # @param [String] algorithm_name
-  # @return [void]
+  # @return [nil]
   def execute(paths_to_input_test_files, algorithm_name)
     @start_time = Time.now
     @algorithm_name = algorithm_name
@@ -62,7 +62,7 @@ class TestRunner
   # @param [Hash] output_hash
   # @param [String] path_to_input_test_file
   # @param [Integer] run
-  # @return [void]
+  # @return [nil]
   def write_ouput_file(output_hash, path_to_input_test_file, run)
     splitted_path = path_to_input_test_file.split '/'
     input_file_name = splitted_path[-1].split('.')[0]
@@ -84,7 +84,7 @@ class TestRunner
   # Processes the input test file lines
   # @param [String] first_word
   # @param [String] second word
-  # @param [Hash] input_hash
+  # @param [Hash]
   def return_hash(first_word, second_word, input_hash)
     hash = {}
     case first_word
@@ -172,10 +172,11 @@ end
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
 class KnapsackTestRunner < TestRunner
+
   # Main method to execute tests
   # @param [Array<String>] paths_to_input_test_files
   # @param [String] algorithm_name
-  # @return [void]
+  # @return [nil]
   def execute(paths_to_input_test_files, algorithm_name)
     @start_time = Time.now
     @algorithm_name = algorithm_name
@@ -195,6 +196,7 @@ class KnapsackTestRunner < TestRunner
       end
     end
   end
+
   # Reads input test files
   # @param [String] path_to_input_test_file
   # @return [Hash]

@@ -14,6 +14,7 @@ require File.join(File.dirname(__FILE__), '..', 'htga.rb')
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class HTGAKnapsack < HTGA
 
+  # @param [Hash] input The input values for the algorithm
   def initialize(**input)
     @pop_size = input[:pop_size]
     @cross_rate = input[:cross_rate]
@@ -74,7 +75,7 @@ class HTGAKnapsack < HTGA
   end
   
    # Generate the initial population of chromosomes
-  # @return [void]
+  # @return [nil]
   def init_population
      (0...@pop_size).each do
       chromosome = Chromosome.new
@@ -89,7 +90,7 @@ class HTGAKnapsack < HTGA
   
   # Evaluate the fitness of a chromosome for the knapsack problem
   # @param [Chromosome] chromosome
-  # @return void
+  # @return [nil]
   def evaluate_chromosome(chromosome)
     @num_evaluations += 1
     chromosome.fitness = @knapsack_func.call chromosome, @values, @weights, @max_weight
@@ -98,7 +99,7 @@ class HTGAKnapsack < HTGA
   # Crossover operator method
   # @param [Chromosome] chromosome_x
   # @param [Chromosome] chromosome_y
-  # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.
+  # @return [Array<Chromosome>]  the resulting crossovered chromosomes
   def crossover(chromosome_x, chromosome_y)
     k = rand(0...chromosome_y.size)
     # swap right side of chromosomes x and y
@@ -109,8 +110,8 @@ class HTGAKnapsack < HTGA
   end
   
   # Mutation operator method for the chromosomes
-  # @param [Chromosome] chromosome, the chromosome to mutate
-  # @return [Chromosome] the resulting mutated chromosome
+  # @param [Chromosome] chromosome
+  # @return [Chromosome] The resulting mutated chromosome
   def mutate(chromosome)
     gene_pos = ((0...@num_genes).to_a).sample
     gene = chromosome[gene_pos]

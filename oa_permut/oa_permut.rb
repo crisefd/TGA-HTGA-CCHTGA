@@ -32,16 +32,19 @@ require 'matrix'
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
 module OAPermut
-  # @attr [String] ouput, this contains the output string to be writen in files
+
+  # @!attribute ouput 
+  # =>@return [String] The output string to be writen in a file
   @@output = ''
-  # @attr [String] file_name, this contains the name of the file to be writen
+  # @!attribute file_name
+  # =>@return [String] The name of the file to be writen in
   @@file_name = ''
 
   # Main function for the algorithm
-  # @param [Integer] q, the number of levels of the Array
-  # @param [Integer] n, a number that satisfy the equation N = (Q^J - 1)/(Q - 1)
-  # @param [Integer] j, a number that satisfy the equation J = ln(N(Q - 1) + 1)/ln(Q - 1)
-  # @return [Matrix] the generated Taguchi array
+  # @param [Integer] q The number of levels of the Array
+  # @param [Integer] n A number that satisfy the equation N = (Q^J - 1)/(Q - 1)
+  # @param [Integer] j A number that satisfy the equation J = ln(N(Q - 1) + 1)/ln(Q - 1)
+  # @return [Matrix] The generated Taguchi array
   def self.oa_permut(q, n, j)
     @@output = ''
     @@file_name = ''
@@ -75,10 +78,9 @@ module OAPermut
     _A
   end
 
-  # Auxiliar function for the algorithm, it is tasked with printing the matrix
-  # on a file
-  # @param [Matrix] matrix, the matrix object to be printed
-  # @return [void]
+  # Prints the array values in file
+  # @param [Matrix] matrix the matrix object to be printed
+  # @return [nil]
   def self.print_matrix(matrix)
     matrix_file = open("../taguchi_orthogonal_arrays/#{@@file_name}", 'w')
     (0...matrix.row_size).each do |i|
@@ -92,8 +94,13 @@ module OAPermut
   end
 
 private
-  # Auxiliar function for the algorithm, it is tasked with replacing a column with
-  # another column in a matrix
+  # Replaces a column with another column in a matrix
+  # @param [Matrix] _A
+  # @param [Integer] s
+  # @param [Integer] t
+  # @param [Integer] _J
+  # @param [Integer] q
+  # @param [Integer] x
   def self.replace_column(_A, s, t, _J, q, x)
     col_s = _A.column(s)
     col_J = _A.column(_J)
@@ -107,10 +114,10 @@ private
 end
 
 if __FILE__ == $PROGRAM_NAME
-  # q = ARGV[0].to_i
-  # n = ARGV[1].to_i
-  # j = ARGV[2].to_i
+  q = ARGV[0].to_i
+  n = ARGV[1].to_i
+  j = ARGV[2].to_i
 
-  # matrix = OAPermut.oa_permut(q, n, j)
-  # OAPermut.print_matrix(matrix)
+  matrix = OAPermut.oa_permut(q, n, j)
+  OAPermut.print_matrix(matrix)
 end

@@ -14,10 +14,28 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class HTGA < BaseGA
 
-  # @!attribute [taguchi_array] the selected Taguchi array for matrix
-  # experiments
+  # @!attribute taguchi_array
+  # =>@return [Array<Array>] The selected Taguchi array for matrix experiments
   attr_accessor :taguchi_array
-
+  
+  # @param [Hash] input The input values for the algorithm
+  # @option opts [String] :beta_values The type of random numbers 
+  # (discrete | uniform distribution) to be use in #init_population
+  # @option opts [Array] :upper_bounds The upper bounds for the genes
+  # @option opts [Array] :lower_bounds The lower bounds for the genes
+  # @option opts [Integer] :pop_size The number of chromosomes the population
+  # @option opts [Float] :cross_rate The crossover rate
+  # @option opts [Float] :mut_rate The mutation rate
+  # @option opts [Integer] :num_genes The number of genes in a chromosome
+  # @option opts [Boolean] :continuous Flag to indicate if the problem being 
+  # solved is continuous or discrete
+  # @option opts [Integer] :selected_function The number of the test function 
+  # (f1, f2,...,f15)  to solved
+  # @option opts [Boolean] :is_high_fit Flat to indicate if the problem to be 
+  # resolved is a maximization or minimization problem
+  # @option opts [Float] :optimal_func_val The best known value for the problem
+  # being solved
+  # @option opts [Integer] :max_generation The max number of generations
   def initialize(**input)
     @beta_values = input[:beta_values]
     @upper_bounds = input[:upper_bounds]
@@ -32,16 +50,15 @@ class HTGA < BaseGA
     @selected_func = TEST_FUNCTIONS[input[:selected_func] - 1]
     @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
     @optimal_func_val = input[:optimal_func_val] if @optimal_func_val.nil?
-    # @is_negative_fit = input[:is_negative_fit]
     @is_high_fit = input[:is_high_fit]
-    # @is_negative_fit = false if @is_negative_fit.nil?
     @is_high_fit = false if @is_high_fit.nil?
     @max_generation = input[:max_generation]
     @num_evaluations = 0
   end
 
   # Main method for the HTGA
-  # @return [Hash]
+  # @return [Hash] The output variables: best fitness, number of generations,
+  # number of fitness evaluation, relative error and optimal value
   def execute
     @generation = 0
     output_hash = {
@@ -78,8 +95,9 @@ class HTGA < BaseGA
     output_hash
   end
 
+  # Updates the output variables
   # @param [Hash] output_hash
-  # @return [void]
+  # @return [nil]
   def update_output_hash(output_hash)
     if output_hash[:best_fit].nil? ||
        (@chromosomes.first.fitness < output_hash[:best_fit] && !@is_high_fit) ||
@@ -118,7 +136,7 @@ class HTGA < BaseGA
   end
 
   # Mutation operator method for the chromosomes
-  # @param [Chromosome] chromosome, the chromosome to mutate
+  # @param [Chromosome] chromosome
   # @return [Chromosome] the resulting mutated chromosome
   def mutate(chromosome) # Does not work for discrete functions
     beta = rand(0..10) / 10.0
@@ -143,7 +161,7 @@ class HTGA < BaseGA
 
   # Perfoms SNR calculation
   # @param [Chromosome] chromosome
-  # @return [void]
+  # @return [nil]
   def calculate_snr(chromosome)
     n = chromosome.size.to_f
     if @is_high_fit # What happens when the gene is 0 ?
@@ -156,9 +174,9 @@ class HTGA < BaseGA
   end
 
   # Performs crossover operation over chromosomes
-  # @param [Array] selected_indexes, the selected chromosomes' indexes
-  # @param [Symbol] selected_method
-  # @return [void]
+  # @param [Array] selected_indexes the selected chromosomes' indexes
+  # @param [Symbol] select_method the selection method
+  # @return [nil]
   def cross_individuals(selected_indexes, select_method: :roulette)
     if select_method == :roulette
       m = selected_indexes.size
@@ -167,7 +185,6 @@ class HTGA < BaseGA
         y = selected_indexes.sample
         new_chrom_x, new_chrom_y =
         crossover @chromosomes[x].clone, @chromosomes[y].clone
-
         evaluate_chromosome new_chrom_x
         evaluate_chromosome new_chrom_y
         @chromosomes << new_chrom_x << new_chrom_y
@@ -186,7 +203,7 @@ class HTGA < BaseGA
   end
 
   # Performs mutation operation over the chromosomes
-  # @return [void]
+  # @return [nil]
   def mutate_individuals
     m = @chromosomes.size
     (0...m).each do |x|
@@ -199,7 +216,7 @@ class HTGA < BaseGA
   end
 
   # Selects the best M (pop_size) chromosomes for the next generation
-  # @return [void]
+  # @return [nil]
   def select_next_generation
     if @is_high_fit
       # sort in decreasing order by fitness values
@@ -216,8 +233,7 @@ class HTGA < BaseGA
   end
 
   # Selects the most suitable Taguchi array
-  # @param [Integer] chrom_size, the number of variables of the function
-  # @return [void]
+  # @return [nil]
   def select_taguchi_array
     closest = 0
     [8, 16, 32, 64, 128, 256, 512, 1024].each do |n|
@@ -232,7 +248,7 @@ class HTGA < BaseGA
 
   # Loads Taguchi array from file
   # @param [String] filename
-  # @return [void]
+  # @return [nil]
   def load_array_from_file(filename)
     @taguchi_array = []
     path_to_file = File.join(File.dirname(__FILE__), '..',
@@ -279,7 +295,7 @@ class HTGA < BaseGA
   end
 
   # Generates offspring using the Taguchi method
-  # @return [void]
+  # @return [nil]
   def generate_offspring_by_taguchi_method
     expected_number = 0.5 * @pop_size * @cross_rate
     n = 0
@@ -300,8 +316,8 @@ class HTGA < BaseGA
   end
 
   # Generates experiments matrix for Taguchi crossover
-  # @param [Chromosome] chromosome_x, the first chromosome
-  # @param [Chromosome] chromosome_y, the second chromosome
+  # @param [Chromosome] chromosome_x
+  # @param [Chromosome] chromosome_y
   # @return [Array<Chromosome>]
   def generate_experiment_matrix(chromosome_x, chromosome_y)
     experiment_matrix = []
@@ -320,7 +336,7 @@ class HTGA < BaseGA
   end
 
   # Generate the initial population of chromosomes
-  # @return [void]
+  # @return [nil]
   def init_population
     (0...@pop_size).each do
       chromosome = Chromosome.new

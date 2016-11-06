@@ -11,19 +11,23 @@ require_relative 'chromosome'
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class Subsystem < Array
 
-  # @!attribute [Chromosome] best chromosome of subsystem
+  # @!attribute best_chromosome
+  # =>@return [Chromosome] The best chromosome of the subsysmte
   attr_accessor :best_chromosome
-  # @!attribute [Array<Chromosome>] population of chromosomes of the subsystem
+  # @!attribute chromosomes
+  # =>@return [Array<Chromosome>] population of chromosomes of the subsystem
   attr_accessor :chromosomes
-  # @!attribute [Array<Chromosome>] the best experiences of each chromosome
+  # @!attribute best_chromosomes_experiences
+  # =>@return [Array<Chromosome>] The best experiences of each chromosome
   attr_accessor :best_chromosomes_experiences
-  # @!attribute [Integer] the number of fitness evaluations
+  # @!attribute num_evaluations
+  # =>@return [Integer] The number of fitness evaluations of the subsystem
   attr_accessor :num_evaluations
 
   # Initialize the chromosomes and best chromosome's experiences
-  # @param [Integer] pop_size
-  # @param [Array<Chromosomes>] macro_cromosomes
-  # @return [void]
+  # @param [Integer] pop_size The number of chromosomes in the population
+  # @param [Array<Chromosomes>] macro_cromosomes The original population of chromosomes
+  # @return [nil]
   def init_chromosomes(pop_size, macro_cromosomes)
     (0...pop_size).each do |j|
       chromo = Chromosome.new

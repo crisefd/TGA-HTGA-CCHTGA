@@ -7,20 +7,25 @@
 require 'rubygems'
 require 'bundler/setup'
 
-# Chromosome helper class for genetic algorithms
+# Helper class for coding solution in genetic algorithms
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class Chromosome < Array
 
-  # @!attribute [Float] fitness, the fitness value for the chromosome
+  # @!attribute fitness
+  # =>@return [Float] The fitness value for the chromosome
   attr_accessor :fitness
-  # @!attribute [Float] norm_fitness, the normalized fitness value fo the chromosome
+  # @!attribute [Float] norm_fitness
+  # =>@return [Float] The normalized fitness value of the chromosome
   attr_accessor :norm_fitness
-  # @!attribute [Float] prob, the probability value for the chromosome
+  # @!attribute prob
+  # =>@return [Float] The probability value for the chromosome
   attr_accessor :prob
-  # @!attribute [Float] snr, the value of the SNR
+  # @!attribute snr
+  # =>@return [Float] The SNR value
   attr_accessor :snr
-  # @!attribute [Float] fit_sum, accumulated fitness
+  # @!attribute fit_sum
+  # =>@return [Float] The accumulated fitness
   attr_accessor :fit_sum
 
 end
