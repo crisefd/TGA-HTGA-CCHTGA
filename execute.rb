@@ -80,7 +80,6 @@ class TestRunner
     file.close
   end
 
-
   # Processes the input test file lines
   # @param [String] first_word
   # @param [String] second word
@@ -129,7 +128,7 @@ class TestRunner
     when 'max number of generations'
       hash = { max_generation: second_word.to_i }
     when 'optimum'
-        hash = { optimal_func_val: second_word.to_f }
+      hash = { optimal_func_val: second_word.to_f }
     when 'upper bounds'
       begin
         if second_word == 'pi'
