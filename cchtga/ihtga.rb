@@ -1,27 +1,25 @@
-# language: english
+# language: en
 # encoding: utf-8
-# Program: htga.rb
-# Authors: Cristhian Fuertes,  Oscar Tigreros
-# Email: cristhian.fuertes@correounivalle.edu.co,
-#        oscar.tigreros@correounivalle.edu.co
-# Creation date: 2016-05-18
+# program: ihtga.rb
+# creation date: 2016-05-18
+# last modified: 2016-11-06
 
 require 'rubygems'
 require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'htga/htga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
-# @author Cristhian Fuertes
 # Main class for the Improved Hybrid-Taguchi Genetic Algorithm
+# @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
+# @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class IHTGA < HTGA
-  # @!attribute [Chromosome] best_chromosome
+  # @!attribute [Chromosome] the best chromosome
   attr_writer :best_chromosome
-  # @!attribute [Subsystem] subsystem
+  # @!attribute [Subsystem] the subsystem
   attr_accessor :subsystem
-	# @!attribute [Proc] selected_func
+  # @!attribute [Proc] The selected function
   attr_writer :selected_func
 
-  # @param [Hash] input, hash list for the initialization
   def initialize(**input)
     @beta_values = input[:beta_values]
     @upper_bounds = input[:upper_bounds]
@@ -29,7 +27,6 @@ class IHTGA < HTGA
     @pop_size = input[:pop_size]
     @cross_rate = input[:cross_rate]
     @mut_rate = input[:mut_rate]
-    # @num_genes = input[:num_genes]
     @chromosomes = input[:chromosomes]
     @continuous = input[:continuous]
     input[:selected_func] = 0 if input[:selected_func].nil?
@@ -48,7 +45,7 @@ class IHTGA < HTGA
     @subsystem.chromosomes = @chromosomes
   end
 
-  # Main method to execute the ICHTGA
+  # Main method to execute the IHTGA
   # @return [void]
   def execute
     find_best_chromosome
@@ -60,7 +57,7 @@ class IHTGA < HTGA
     @subsystem.num_evaluations = @num_evaluations
   end
 
-  # Method to find the current genenration's best chromosome
+  # Finds the current genenration's best chromosome
   # @return [void]
   def find_best_chromosome
     @chromosomes.map! do |chromo|
@@ -79,12 +76,13 @@ class IHTGA < HTGA
     @subsystem.best_chromosome = @best_chromosome
   end
 
-  # Method to recursively correct a gene that is outside the bounds.
-  # @note In this method the search space is doubled in each dimensino and
-  # reconected from the opposite bounds to avoid discontinuities
+  # It recursively corrects a gene that is outside the bounds
   # @param [Float] gene
   # @param [Float] lower_bound
   # @param [Float] upper_bound
+  # @return [Float]
+  # @note In this method the search space is doubled in each dimensino and
+  # reconected from the opposite bounds to avoid discontinuities
   def correct_gene(gene, lower_bound, upper_bound)
     corrected_gene = nil
     if gene >= lower_bound && gene <= upper_bound
@@ -121,7 +119,7 @@ class IHTGA < HTGA
     chromosome
   end
 
-  # Method to mutate the individuals according to a mutation rate
+  # Mutates the chromosomes
   # @return [void]
   def mutate_individuals
     m = @pop_size
@@ -134,7 +132,7 @@ class IHTGA < HTGA
     end
   end
 
-  # Crossover operator method use in HTGA
+  # Crossover operator
   # @param [Chromosome] chromosome_x
   # @param [Chromosome] chromosome_y
   # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.
@@ -160,7 +158,7 @@ class IHTGA < HTGA
     [chromosome_x, chromosome_y]
   end
 
-  # Method to cross individuals according to a crossover rate
+  # Crosses the chromosomes
   # @return [void]
   def cross_inviduals
     m = @chromosomes.size
@@ -180,11 +178,10 @@ class IHTGA < HTGA
     end
   end
 
-  # Method to perfom SNR calculation used in the CCHTGA
-  # @param [Chromosome] chromosome, the chromosome
+  # Perfoms SNR calculation
+  # @param [Chromosome] chromosome
   # @return [void]
   def calculate_snr(chromosome)
-
     if @is_high_fit
       fail "CCHTGA's SNR calculation for maximization not implemented yet"
     else

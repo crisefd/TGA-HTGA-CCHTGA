@@ -1,10 +1,8 @@
-# language: english
+# language: en
 # encoding: utf-8
-# Program: cchtga.rb
-# Authors: Cristhian Fuertes,  Oscar Tigreros
-# Email: cristhian.fuertes@correounivalle.edu.co,
-#        oscar.tigreros@correounivalle.edu.co
-# Creation date: 2016-04-02
+# program: cchtga.rb
+# creation date: 2016-04-02
+# last modified: 2016-11-06
 
 require 'rubygems'
 require 'bundler/setup'
@@ -13,17 +11,23 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/subsystem.rb')
 require_relative 'ihtga'
 
-# @author Cristhian Fuertes
 # Main class for the Cooperative Coevolutive Hybrid-Taguchi Genetic Algorithm
+# @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
+# @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class CCHTGA < BaseGA
+  # @!attributes [Chromosome] current best chromosome
   attr_accessor :best_chromosome
+  # @!attributes [Chromosome] previous best chromosome
   attr_reader :prev_best_chromosome
+  # @!attributes [Array<Subsystem>] list of subsystems
   attr_reader :subsystems
+  # @!attributes [Integer] number of genes
   attr_writer :num_genes
+  # @!attributes [Array<Chromosome>] population
   attr_writer :chromosomes
+  # @!attributes [Integer] the number of the selected function
   attr_writer :selected_func
 
-  # Constructor
   def initialize(**input)
     @beta_values = input[:beta_values]
     @upper_bounds = input[:upper_bounds]
@@ -38,9 +42,7 @@ class CCHTGA < BaseGA
     @selected_func = TEST_FUNCTIONS[input[:selected_func] - 1]
     @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
     @optimal_func_val = input[:optimal_func_val] if @optimal_func_val.nil?
-    # @is_negative_fit = input[:is_negative_fit]
     @is_high_fit = input[:is_high_fit]
-    # @is_negative_fit = false if @is_negative_fit.nil?
     @is_high_fit = false if @is_high_fit.nil?
     @max_generation = input[:max_generation]
     @num_evaluations = 0
@@ -48,8 +50,8 @@ class CCHTGA < BaseGA
     @prev_best_chromosome = nil
   end
 
-  # Method to execute the CCHTGA
-  # @return [void]
+  # Main method
+  # @return [Hash]
   def execute
     @generation = 0
     output_hash = {
@@ -73,7 +75,6 @@ class CCHTGA < BaseGA
         if @generation % 50 == 0 && @generation > 1
           p "Generation: #{@generation} - current best fitness: #{output_hash[:best_fit]} current best fit gen: #{output_hash[:gen_of_best_fit]} "
           p "Best chromo fitness: #{@best_chromosome.fitness}"
-          # p "#{best_chromosome}"
         end
         update_output_hash output_hash
         break if has_stopping_criterion_been_met? output_hash[:best_fit]
@@ -91,6 +92,7 @@ class CCHTGA < BaseGA
     output_hash
   end
 
+  # Updates the output variables
   # @param [Hash] output_hash
   # @return [void]
   def update_output_hash(output_hash)
@@ -104,8 +106,8 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to determine if this generation has improved with respect to the
-  # previous one.
+  # Determines if this generation has improved with respect to the
+  # previous one
   # @return [Boolean]
   def has_best_fit_not_improved?
     answer = false
@@ -123,7 +125,7 @@ class CCHTGA < BaseGA
     answer
   end
 
-  # Method that selects the most suitable Taguchi array
+  # Selects the most suitable Taguchi array
   # @return [void]
   def select_taguchi_array
     closest = 0
@@ -137,9 +139,9 @@ class CCHTGA < BaseGA
     @taguchi_array = load_array_from_file file_name
   end
 
-  # Auxiliar method for #select_taguchi_array, it loads the array from a file
-  # @param [String] filename, the name of the file which contains the array
-  # @param [Integer] chrom_size, the number of variables of the function
+  # Loads the Taguchi array from file
+  # @param [String] filename
+  # @param [Integer] chrom_size
   # @return [void]
   def load_array_from_file(filename)
     taguchi_array = []
@@ -153,7 +155,7 @@ class CCHTGA < BaseGA
     taguchi_array
   end
 
-  # Method to calculate a list of divisors for n = number of variables
+  # Calculate a list of divisors for n = number of variables
   # @return [Array<Integer>]
   def calculate_divisors
     divisors = []
@@ -176,11 +178,11 @@ class CCHTGA < BaseGA
     divisors
   end
 
-  # Method to divide the variables in K subsystems
+  # Divides the N variables into K subsystems
+  # @return [void]
   # @note A random value s in chosen from the a list of divisor
   # (see #calculate_divisors), then K = n / s. Where n is the number of
   # variables
-  # @return [void]
   def divide_variables
     divisors = calculate_divisors
     s = divisors.sample
@@ -189,7 +191,7 @@ class CCHTGA < BaseGA
     @subsystems = Array.new(k) { Subsystem.new }
   end
 
-  # Method to perform random grouping
+  # Performs random grouping
   # @return [void]
   def random_grouping
     available_genes = (0...@num_genes).to_a
@@ -202,8 +204,11 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to perform cooperative coevolution subroutine
+  # Performs cooperative coevolution subroutine
   # @return [void]
+  # @note Cooperation is achieved through the use of bes_chromosome and 
+  # prev_best_chromosome attributes. Coevolution is achieved through the use of
+  # the #best function
   def cooperative_coevolution
     @subsystems.map! do |subsystem|
       (0...@pop_size).each do |i|
@@ -216,8 +221,8 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method that replace the subchromosome's genes in the best chromosome
-  # and calculates the fitness for the that temp best chromosome.
+  # Replaces the subchromosome's genes in the best chromosome
+  # and calculates the fitness for the this temp best chromosome.
   # @param [Subsystem] subsystem
   # @param [Chromosome] chromosome
   # @return [Chromosome]
@@ -230,7 +235,7 @@ class CCHTGA < BaseGA
     best_chromosome
   end
 
-  # Method to update the best chromosomes' experiences of a subsystem
+  # Updates the best chromosomes' experiences of a subsystem
   # @param [Subsystem] subsystem
   # @param [Integer] i
   # @return [void]
@@ -246,7 +251,7 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to update the best chromosome of a subsystem
+  # Updates the best chromosome of a subsystem
   # @param [Subsystem] subsystem
   # @param [Integer] i
   # @return [void]
@@ -262,7 +267,7 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to update the best chromosome using the jth part of a subsystem
+  # Updates the best chromosome using the jth part of a subsystem
   # @param [Subsystem] subsystem
   # @return [void]
   def update_best_chromosome(subsystem)
@@ -275,7 +280,7 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to replace the jth parth (subsystem's variables) in
+  # Replaces the jth parth (subsystem's variables) in
   # the best chromosome
   # @return [void]
   def replace_subsystem_part_in_chromosome(subsystem)
@@ -285,7 +290,7 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to generate the initial population of chromosomes
+  # Generates the initial population of chromosomes
   # @return [void]
   # @note It also initialize the best chromosome
   def init_population
@@ -331,7 +336,7 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to apply the IHTGA to each subsystem
+  # Apply the IHTGA subroutine to each subsystem
   # return [void]
   def apply_htga_to_subsystems
     @subsystems.map! do |subsystem|
@@ -357,7 +362,7 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to rejoin the subchromosomes into chromosomes
+  # Rejoin the subchromosomes into chromosomes
   # @param [Subsystem] subsystem
   # @return [void]
   def rejoin_chromosomes(subsystem)
@@ -370,7 +375,7 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Method to create sub chromosomes for the ICHTGA' subsystems
+  # Creates sub chromosomes
   # @param [Subsystem] subsystem
   # @return [Array<Chromosomes>, Array<Float>, Array<Float>]
   def decompose_chromosomes(subsystem)

@@ -12,7 +12,7 @@ Given(/^a population of any five chromosomes$/) do
     (0..5).each do
       chr << rand(0..10)
     end
-    @tga.evaluate_chromosomes chr
+    @tga.evaluate_chromosome chr
     @tga.chromosomes << chr
   end
 end

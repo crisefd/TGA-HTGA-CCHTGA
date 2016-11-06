@@ -1,20 +1,28 @@
-# language: english
+# language: en
 # encoding: utf-8
-# Program: htga.rb
-# Authors: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
-# Email: cristhian.fuertes@correounivalle.edu.co,
-#        oscar.tigreros@correounivalle.edu.co
-# Creation date: 07-03-2015
+# program: tga.rb
+# creation date: 2016-03-07
+# last modified: 2016-11-06
+
 require 'rubygems'
 require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
-# @author Oscar Tigreros
 # Main class for the Traditional Genetic Algorithm
+# @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
+# @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class TGA < BaseGA
-  
-  attr_reader :mating_pool, :new_generation, :num_genes, :chromosomes, :pop_size
+  # @!attribute[Array] subset of chromosomes selected to be reproduce
+  attr_reader :mating_pool
+  # @!attribute[Array] next generation chromosomes
+  attr_reader :new_generation
+  # @!attribute[Integer] number of genes
+  attr_reader :num_genes
+  # @!attribute[Array<Chromosome>] population
+  attr_reader :chromosomes
+  # @!attribute[Integer] population size
+  attr_reader :pop_size
   
   def initialize(**input)
     @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
@@ -61,6 +69,7 @@ class TGA < BaseGA
       p error.message
       p error.backtrace.inspect
     end
+    p output_hash
     output_hash
   end
 

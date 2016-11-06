@@ -1,14 +1,14 @@
 # language: en
 # encoding: utf-8
-# Program: test_functions.rb
-# Authors: Cristhian Fuertes & Oscar Tigreros
-# Email: cristhian.fuertes@correounivalle.edu.co,
-#        oscar.tigreros@correounivalle.edu.co
-# Creation date: 2016-02-26
+# program: test_functions.rb
+# creation date: 2016-02-26
+# last modified: 2016-11-06
 
-# @author Cristhian Fuertes
+# Helper module for benchmark test functions
+# @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
+# @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 module TestFunctions
-  
+
   KNAPSACK_FUNCTION = lambda do |x, v, w, max_w|
     sum_w = Array.new(w.size, 0)
     sum_v = 0
@@ -220,4 +220,5 @@ module TestFunctions
       x.max_by { |xi| xi.abs }.abs
     end
   ]
+
 end

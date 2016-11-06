@@ -35,7 +35,7 @@ end
 
 ###################################
 Given(/^the negative fitness values of some chromosomes:$/) do |table|
-  pendig
+  pending
   table = table.raw
   table = table[0]
   @chromosomes = []

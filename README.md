@@ -1,1 +1,1 @@
-ruby-beautify -c 2 -s --overwrite <path_to_file>
+# Implementation of a Traditional Genetic Algorithm, the Hybrid-Taguchi Genetic Algorithm and the Cooperative Coevolutive Hybrid-Taguchi Genetic Algorithm

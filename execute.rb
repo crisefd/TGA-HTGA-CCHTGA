@@ -1,10 +1,8 @@
-# language: english
+# language: en
 # encoding: utf-8
-# Program: execute.rb
-# Authors: Cristhian Fuertes,  Oscar Tigreros
-# Email: cristhian.fuertes@correounivalle.edu.co,
-#        oscar.tigreros@correounivalle.edu.co
-# Creation date: 2016-03-25
+# program: execute.rb
+# creation date: 2016-03-25
+# last modified: 2016-11-06
 
 require_relative 'htga/htga'
 require_relative 'htga/htga_knapsack/htga_knapsack'
@@ -13,6 +11,8 @@ require_relative 'tga/tga_knapsack/tga_knapsack'
 require_relative 'cchtga/cchtga'
 
 # Manager class for running tests
+# @author Cristhian Fuertes
+# @author Oscar Tigreros
 class TestRunner
   # Main method to execute tests
   # @param [Array<String>] paths_to_input_test_files
@@ -41,7 +41,7 @@ class TestRunner
     end
   end
 
-  # Method to read input test files
+  # Reads input test files
   # @param [String] path_to_input_test_file
   # @return [Hash]
   def load_input_test_file(path_to_input_test_file)
@@ -58,7 +58,7 @@ class TestRunner
     input_hash
   end
 
-  # Method to write the output of a test
+  # Writes the output of a test to a file
   # @param [Hash] output_hash
   # @param [String] path_to_input_test_file
   # @param [Integer] run
@@ -81,7 +81,7 @@ class TestRunner
   end
 
 
-  # Method to process the input test file lines
+  # Processes the input test file lines
   # @param [String] first_word
   # @param [String] second word
   # @param [Hash] input_hash
@@ -169,6 +169,8 @@ class TestRunner
 end
 
 # Manager class for running tests with Knapsack 0-1 problem
+# @author Cristhian Fuertes
+# @author Oscar Tigreros
 class KnapsackTestRunner < TestRunner
   # Main method to execute tests
   # @param [Array<String>] paths_to_input_test_files
@@ -193,7 +195,7 @@ class KnapsackTestRunner < TestRunner
       end
     end
   end
-  # Method to read input test files
+  # Reads input test files
   # @param [String] path_to_input_test_file
   # @return [Hash]
   def load_input_test_file(path_to_input_test_file)
@@ -268,7 +270,7 @@ if __FILE__ == $PROGRAM_NAME
   else
     path = [path]
   end
-  if algorithm_name.match /_knapsack$/
+  if algorithm_name.match(/_knapsack$/)
     tr = KnapsackTestRunner.new
     tr.execute path, algorithm_name
   else

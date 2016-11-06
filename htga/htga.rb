@@ -1,24 +1,23 @@
-# language: english
+# language: en
 # encoding: utf-8
-# Program: htga.rb
-# Authors: Cristhian Fuertes,  Oscar Tigreros
-# Email: cristhian.fuertes@correounivalle.edu.co,
-#        oscar.tigreros@correounivalle.edu.co
-# Creation date: 2015-10-05
+# program: htga.rb
+# creation date: 2015-10-05
+# last modified: 2016-11-06
 
 require 'rubygems'
 require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', 'base_ga/base_ga.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 
-# @author Cristhian Fuertes
 # Main class for the Hybrid-Taguchi Genetic Algorithm
+# @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
+# @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class HTGA < BaseGA
+
   # @!attribute [taguchi_array] the selected Taguchi array for matrix
   # experiments
   attr_accessor :taguchi_array
-  
-  # @param [Hash] input, hash list for the initialization
+
   def initialize(**input)
     @beta_values = input[:beta_values]
     @upper_bounds = input[:upper_bounds]
@@ -42,6 +41,7 @@ class HTGA < BaseGA
   end
 
   # Main method for the HTGA
+  # @return [Hash]
   def execute
     @generation = 0
     output_hash = {
@@ -74,6 +74,7 @@ class HTGA < BaseGA
       p error.message
       p error.backtrace.inspect
     end
+    p output_hash
     output_hash
   end
 
@@ -90,7 +91,7 @@ class HTGA < BaseGA
     end
   end
 
-  # Crossover operator method use in HTGA
+  # Crossover operator method
   # @param [Chromosome] chromosome_x
   # @param [Chromosome] chromosome_y
   # @return [Chromosome, Chromosome]  the resulting crossovered chromosomes.
@@ -140,8 +141,8 @@ class HTGA < BaseGA
     chromosome
   end
 
-  # Method to perfom SNR calculation used in the HTGA
-  # @param [Chromosome] chromosome, the chromosome
+  # Perfoms SNR calculation
+  # @param [Chromosome] chromosome
   # @return [void]
   def calculate_snr(chromosome)
     n = chromosome.size.to_f
@@ -154,9 +155,9 @@ class HTGA < BaseGA
     end
   end
 
-  # Method to perform crossover operation over chromosomes
-  # @param [Integer] offset for the selected chromosomes by the #roulette_select
-  # method
+  # Performs crossover operation over chromosomes
+  # @param [Array] selected_indexes, the selected chromosomes' indexes
+  # @param [Symbol] selected_method
   # @return [void]
   def cross_individuals(selected_indexes, select_method: :roulette)
     if select_method == :roulette
@@ -184,7 +185,7 @@ class HTGA < BaseGA
     end
   end
 
-  # Method to perform mutation operation over the chromosomes
+  # Performs mutation operation over the chromosomes
   # @return [void]
   def mutate_individuals
     m = @chromosomes.size
@@ -197,7 +198,7 @@ class HTGA < BaseGA
     end
   end
 
-  # Method that select the best M chromosomes for the next generation
+  # Selects the best M (pop_size) chromosomes for the next generation
   # @return [void]
   def select_next_generation
     if @is_high_fit
@@ -214,8 +215,9 @@ class HTGA < BaseGA
     @chromosomes.slice!(@pop_size..@chromosomes.size)
   end
 
-  # Method that selects the most suitable Taguchi array
+  # Selects the most suitable Taguchi array
   # @param [Integer] chrom_size, the number of variables of the function
+  # @return [void]
   def select_taguchi_array
     closest = 0
     [8, 16, 32, 64, 128, 256, 512, 1024].each do |n|
@@ -228,8 +230,8 @@ class HTGA < BaseGA
     load_array_from_file file_name
   end
 
-  # Auxiliar method for #select_taguchi_array, it loads the array from a file
-  # @param [String] filename, the name of the file which contains the array
+  # Loads Taguchi array from file
+  # @param [String] filename
   # @return [void]
   def load_array_from_file(filename)
     @taguchi_array = []
@@ -242,10 +244,10 @@ class HTGA < BaseGA
     array_file.close
   end
 
-  # Method to generate the optimal crossovered chromosome
-  # @param [Chromosome] chromosome_x, the first chromosome
-  # @param [Chromosome] chromosome_y, the second chromosome
-  # @return [Chromosome] the optimal chromosome
+  # Generates the optimal crossovered chromosome
+  # @param [Chromosome] chromosome_x
+  # @param [Chromosome] chromosome_y
+  # @return [Chromosome]
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
     optimal_chromosome = Chromosome.new
     experiment_matrix = generate_experiment_matrix chromosome_x, chromosome_y
@@ -276,7 +278,7 @@ class HTGA < BaseGA
     optimal_chromosome
   end
 
-  # Method to generate offspring using the Taguchi method
+  # Generates offspring using the Taguchi method
   # @return [void]
   def generate_offspring_by_taguchi_method
     expected_number = 0.5 * @pop_size * @cross_rate
@@ -297,11 +299,10 @@ class HTGA < BaseGA
     end
   end
 
-  # Auxiliar method to generate experiments matrix for the optimal crossovered
-  # chromosome
+  # Generates experiments matrix for Taguchi crossover
   # @param [Chromosome] chromosome_x, the first chromosome
   # @param [Chromosome] chromosome_y, the second chromosome
-  # @param [Array<Chromosome>] an array of chromosomes
+  # @return [Array<Chromosome>]
   def generate_experiment_matrix(chromosome_x, chromosome_y)
     experiment_matrix = []
     (0...@taguchi_array.size).each do |i|
@@ -318,13 +319,12 @@ class HTGA < BaseGA
     experiment_matrix
   end
 
-  # Method to generate the initial population of chromosomes
+  # Generate the initial population of chromosomes
   # @return [void]
   def init_population
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
-        # beta = 0
         if @beta_values == 'discrete'
           beta = rand(0..10) / 10.0
         elsif @beta_values == 'uniform distribution'

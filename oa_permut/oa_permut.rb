@@ -1,14 +1,14 @@
 # encoding: utf-8
+# language: en
 # Program: oa_permut.rb
-# Email: cristhian.fuertes@correounivalle.edu.co,
-#        oscar.tigreros@correounivalle.edu.co
-# Creation date: 2015-10-05
+# creation date: 2015-10-05
+# last modified: 2016-11-06
+
 require 'rubygems'
 require 'bundler/setup'
 require 'matrix'
 
-# @author Cristhian Fuertes
-# @author Oscar Tigreros
+# Module for the Orthogonal Array Permutation algorithm
 # Generate an Orthogonal Array using simple permutation method. The
 # algorithm was provided in the paper Leung et al.
 #
@@ -25,11 +25,12 @@ require 'matrix'
 # Computation, IEEE Transactions on , vol.5, % no.1, pp.41,53, Feb 2001,
 # doi: 10.1109/4235.910464
 #
-# This is a Ruby implementation by Cristhian Fuertes and Oscar Tigreros,
-# cristhian.fuertes@correounivalle.edu.co oscar.tigreros@correounivalle.edu.co
+# This is a Ruby implementation 
 # based on the original implementation in Matlab by
 # Natasha Y Jeppu, natasha.jeppu@gmail.com
 # visit http://www.mathworks.com/matlabcentral/fileexchange/47218-orthogonal-array
+# @author Cristhian Fuertes
+# @author Oscar Tigreros
 module OAPermut
   # @attr [String] ouput, this contains the output string to be writen in files
   @@output = ''
@@ -106,10 +107,10 @@ private
 end
 
 if __FILE__ == $PROGRAM_NAME
-  q = ARGV[0].to_i
-  n = ARGV[1].to_i
-  j = ARGV[2].to_i
+  # q = ARGV[0].to_i
+  # n = ARGV[1].to_i
+  # j = ARGV[2].to_i
 
-  matrix = OAPermut.oa_permut(q, n, j)
-  OAPermut.print_matrix(matrix)
+  # matrix = OAPermut.oa_permut(q, n, j)
+  # OAPermut.print_matrix(matrix)
 end

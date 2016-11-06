@@ -1,18 +1,17 @@
 # language: english
 # encoding: utf-8
 # Program: htga.rb
-# Authors: Cristhian Fuertes,  Oscar Tigreros
-# Email: cristhian.fuertes@correounivalle.edu.co,
-#        oscar.tigreros@correounivalle.edu.co
-# Creation date: 2016-09-29
+# creation date: 2016-09-29
+# last modified: 2016-11-06
 
 require 'rubygems'
 require 'bundler/setup'
 require File.join(File.dirname(__FILE__), '..', '..', 'helpers/chromosome.rb')
 require File.join(File.dirname(__FILE__), '..', 'tga.rb')
 
-# @author Cristhian Fuertes
-# 
+# TGA adaptation for the knapsack 0-1 problem
+# @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
+# @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class TGAKnapsack < TGA
 
   # Method to initize attributes
@@ -37,8 +36,9 @@ class TGAKnapsack < TGA
     @max_weight = input[:max_weight]
     @optimal_func_val = input[:optimal_func_val]
   end
-  
+
    # Main method
+   # @return [Hash]
   def execute
     output_hash = { best_fit: nil, gen_of_best_fit:0, func_evals_of_best_fit:0}
     @generation = 1
@@ -68,18 +68,19 @@ class TGAKnapsack < TGA
     output_hash
   end
   
+   # Updates the output variables
    # @param [Hash] output_hash
    # @return [void]
   def update_output_hash(output_hash)
-      if(@best_fit < output_hash[:best_fit] && !@is_high_fit) ||
-        (@best_fit > output_hash[:best_fit] && @is_high_fit)
-      output_hash[:best_fit] = @best_fit
-      output_hash[:gen_of_best_fit] = @generation
-      output_hash[:func_evals_of_best_fit] = @num_evaluations
+    if(@best_fit < output_hash[:best_fit] && !@is_high_fit) ||
+      (@best_fit > output_hash[:best_fit] && @is_high_fit)
+        output_hash[:best_fit] = @best_fit
+        output_hash[:gen_of_best_fit] = @generation
+        output_hash[:func_evals_of_best_fit] = @num_evaluations
     end
   end
-  
-   # Method to evaluate the fitness of a chromosome
+
+  # Evaluates the fitness of a chromosome for the knapsack problem
   # @param [Chromosome] chromosome
   # @return void
   def evaluate_chromosome(chromosome)
@@ -87,7 +88,7 @@ class TGAKnapsack < TGA
     chromosome.fitness = @knapsack_func.call chromosome, @values, @weights, @max_weight
   end
   
-  # Mutates the chromosomes in the mating pool
+  # Mutates the chromosomes in mating pool
   # @return [void]
   def mutate_matingpool
     (0...@mating_pool.size).each do |i|

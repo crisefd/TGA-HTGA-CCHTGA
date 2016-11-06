@@ -1,9 +1,8 @@
 # encoding: utf-8
-# Program: htga.rb
-# Authors: Cristhian Fuertes & Oscar Tigreros
-# Email: cristhian.fuertes@correounivalle.edu.co,
-#        oscar.tigreros@correounivalle.edu.co
-# Creation date: 2015-10-05
+# language: en
+# program: base_ga.rb
+# creation date: 2015-10-05
+# last modified: 2016-11-06
 
 require 'rubygems'
 require 'bundler/setup'
@@ -11,11 +10,11 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/roulette.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/sus.rb')
 require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 
-# @author Cristhian Fuertes
-# @author Oscar Tigreros
-# Mixin class for TGA, HTGA & CCHTGA
+# Mixin base class for TGA, HTGA and CCHTGA
+# @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
+# @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class BaseGA
-  # Modules for roulette selection operation and test functions
+  # Modules for roulette, SUS  test functions
   extend Roulette, SUS
   include TestFunctions
 
@@ -45,12 +44,10 @@ class BaseGA
   # @!attribute [Boolean] continuous, flag to signal if functions is discrete or
   # continuous
   attr_accessor :continuous
-  
-  # Method to be implemented in subclasses
-  def execute
-    BaseGA.api_not_implemented(self)
-  end
-  
+
+  # Checks if the known best fitness value has been reached
+  # @param [Float] best_fit
+  # @return [Bool]
   def has_stopping_criterion_been_met?(best_fit)
     return false if @optimal_func_val.nil?
     if @is_high_fit
@@ -62,52 +59,33 @@ class BaseGA
   end
 
   # Roulette selection operation method
-
-  # @return [Integer] offset of the selected chromosomes
+  # @return [Array] selected chromosome indexes
   def roulette_select
-    # exit if @chromosomes.first.fitness.nil?
     Roulette.calculate_probabilities @chromosomes
     selected_chromos_indexes = []
     num_selections = @pop_size * @cross_rate
     while selected_chromos_indexes.size < num_selections
-      #r = rand 0..10 / 10.0
       r = rand 0.0..1.0
-      # p "roulette_select rand #{r}"
       m = @pop_size - 1
-      # p "m = #{m}"
-      # a = gets.chomp
-      # p a
       (0...m).each do |i|
         a = @chromosomes[i].prob
         b = @chromosomes[i + 1].prob
-        # p "i = #{i}" if i%10 == 0
         if !(a <= b)
           p "#{a} is not < #{b}"
           fail 'a is not < b'
         end
         selected_chromos_indexes << i if r >= a && r < b
         selected_chromos_indexes << m if r == 1.0
-        # p "selected size = #{selected_chromos_indexes.size}"
       end
     end
-    # copied_chromosomes = @chromosomes.clone and @chromosomes.clear
-    # r = rand(0.0..1.0)
-    # rejected_chromosomes = []
-    # (0...@pop_size).each do |i|
-    #   if r < copied_chromosomes[i].prob
-    #     @chromosomes << copied_chromosomes[i]
-    #   else
-    #     rejected_chromosomes << copied_chromosomes[i]
-    #   end
-    # end
-    # selected_offset = @chromosomes.size
-    # @chromosomes += rejected_chromosomes.reverse!
-    # selected_offset
     selected_chromos_indexes
   end
-
+  
+  # Tournament selection method
+  # @param [Integer] k
+  # @return [Array] selected chromosome indexes
+  # @note This function is unused, should be decreated soon
   def tournament_select(k)
-    # k = @pop_size * @cross_rate # for htga
     selected_chromos_indexes = []
     1.upto(k) do
       x = -1
@@ -137,22 +115,9 @@ class BaseGA
     selected_chromos_indexes
   end
 
-
-  # calculate the fitness of bunch of chromosomes
-  def evaluate_chromosomes(*chromosomes)
-    # p chromosomes_clust.size
-    (0...chromosomes.size).each do |i|
-      chromosomes[i].fitness = @selected_func.call chromosomes[i]
-      @num_evaluations += 1
-    end
-  end
-
   # SUS selection operation method
   # @return [Array<Chromosome>] selected chromosomes
   def sus_select
-    # pointers = Selection::SUS.sample @chromosomes, @pop_size * @cross_rate,
-    #                                 is_high_fit: @is_high_fit,
-    #                                is_negative_fit: @is_negative_fit
     pointers = SUS.sample @chromosomes, @pop_size,
     is_high_fit: @is_high_fit,
     is_negative_fit: @is_negative_fit
@@ -172,10 +137,9 @@ class BaseGA
 
   # Method to evaluate an assign a fitness value to a chromosome
   # @param [Chromosome] chromosome
-  # @note fitness equals the function value
+  # @return [void]
   def evaluate_chromosome(chromosome)
     @num_evaluations += 1
     chromosome.fitness = @selected_func.call chromosome
-    # fail "erroneous fitness value #{chromosome}" if chromosome.fitness < 0 && chromosome.size >= 30
   end
 end
