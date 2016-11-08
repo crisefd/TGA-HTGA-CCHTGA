@@ -12,16 +12,16 @@ require_relative 'chromosome'
 class Subsystem < Array
 
   # @!attribute best_chromosome
-  # =>@return [Chromosome] The best chromosome of the subsysmte
+  #	@return [Chromosome] The best chromosome of the subsysmte
   attr_accessor :best_chromosome
   # @!attribute chromosomes
-  # =>@return [Array<Chromosome>] population of chromosomes of the subsystem
+  #	@return [Array<Chromosome>] population of chromosomes of the subsystem
   attr_accessor :chromosomes
   # @!attribute best_chromosomes_experiences
-  # =>@return [Array<Chromosome>] The best experiences of each chromosome
+  #	@return [Array<Chromosome>] The best experiences of each chromosome
   attr_accessor :best_chromosomes_experiences
   # @!attribute num_evaluations
-  # =>@return [Integer] The number of fitness evaluations of the subsystem
+  #	@return [Integer] The number of fitness evaluations of the subsystem
   attr_accessor :num_evaluations
 
   # Initialize the chromosomes and best chromosome's experiences

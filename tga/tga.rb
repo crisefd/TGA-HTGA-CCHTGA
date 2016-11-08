@@ -15,22 +15,32 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 class TGA < BaseGA
 
   # @!attribute [r] mating_pool
-  # =>@return [Array] The subset of chromosomes selected to be crossed/mutated
+  # @return [Array] The subset of chromosomes selected to be crossed/mutated
   attr_reader :mating_pool
   # @!attribute [r] new_generation
-  # =>@return [Array] The next generation's chromosomes
+  # @return [Array] The next generation's chromosomes
   attr_reader :new_generation
   # @!attribute [r] num_genes
-  # =>@return [Integer] The size of the chromosome
+  # @return [Integer] The size of the chromosome
   attr_reader :num_genes
   # @!attribute [r] chromosomes
-  # =>@return [Array<Chromosome>] The population of chromosomes
+  # @return [Array<Chromosome>] The population of chromosomes
   attr_reader :chromosomes
   # @!attribute [r] pop_size
-  # =>@return [Array<Chromosome>] The number of chromosomes in the population
+  # @return [Array<Chromosome>] The number of chromosomes in the population
   attr_reader :pop_size
   
   # @param [Hash] input The input values for the algorithm
+  # @option input [String] :beta_values The type of random numbers (discrete | uniform distribution) to be use in {#init_population}
+  # @option input [Array] :upper_bounds The upper bounds for the genes
+  # @option input [Array] :lower_bounds The lower bounds for the genes
+  # @option input [Integer] :pop_size The number of chromosomes the population
+  # @option input [Integer] :num_genes The number of genes in a chromosome
+  # @option input [Boolean] :continuous Flag to indicate if the problem being solved is continuous or discrete
+  # @option input [Integer] :selected_function The number of the test function (f1, f2,...,f15) to solved
+  # @option input [Boolean] :is_high_fit Flag to indicate if the problem to be resolved is a maximization or minimization problem
+  # @option input [Float] :optimal_func_val The best known value for the problem being solved
+  # @option input [Integer] :max_generation The max number of generations
   def initialize(**input)
     @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
     @optimal_func_val = input[:optimal_func_val] if @optimal_func_val.nil?
@@ -53,7 +63,8 @@ class TGA < BaseGA
     @best_fit = nil
   end
 
-  # Main methon for TGA.
+  # Main method
+  # @return [Hash] The output variables: best fitness, number of generations, number of fitness evaluation, relative error and optimal value
   def execute
     output_hash = {}
     @generation = 1
@@ -80,7 +91,7 @@ class TGA < BaseGA
     output_hash
   end
 
-  # Method to select chromosomes by tournamet default  k=2
+  # Method to select chromosomes by tournamet (default  k = 2)
   # @return [nil]
   def tournament
     k = 2
@@ -112,7 +123,7 @@ class TGA < BaseGA
     end
   end
 
-  # Crossing the chrosomes in the mating pool
+  # Crosses the chrosomes in the mating pool
   # @return [nil]
   def cross_cut_point_mating_pool
     cut_point = rand(0...@num_genes)
@@ -144,7 +155,7 @@ class TGA < BaseGA
     end
   end
 
-  # Insert the new chromosomes into the population
+  # Inserts the new chromosomes into the population
   # @return [nil]
   def insert_new_generation
     (0...@new_generation.size).each do |i|
@@ -158,7 +169,7 @@ class TGA < BaseGA
     @new_generation.clear
   end
 
-  # Verify if the chromosome has a better fitness
+  # Verifies if the chromosome has a better fitness
   # @param [Chromosome] chromosome
   # @return [nil]
   def verify_best_fit(chromosome)
@@ -173,7 +184,7 @@ class TGA < BaseGA
     end
   end
 
-  # Method to generate the initial population of chromosomes
+  # Generates the initial population of chromosomes
   # @return [nil]
   def init_population
     (0...@pop_size).each do

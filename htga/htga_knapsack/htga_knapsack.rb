@@ -10,11 +10,23 @@ require File.join(File.dirname(__FILE__), '..', '..', 'helpers/chromosome.rb')
 require File.join(File.dirname(__FILE__), '..', 'htga.rb')
 
 # HTGA adaptation for the knapsack 0-1 problem
+# @note The tested problems were found in http://people.brunel.ac.uk/~mastjjb/jeb/orlib/mknapinfo.html
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class HTGAKnapsack < HTGA
 
   # @param [Hash] input The input values for the algorithm
+  # @option input [Integer] :pop_size The number of chromosomes the population
+  # @option input [Integer] :num_genes The number of genes in a chromosome
+  # @option input [Float] :mut_rate The mutation rate
+  # @option input [Float] :cross_rate The crossover rate
+  # @option input [Boolean] :is_high_fit Flag to indicate if a high fitness value is desired or not
+  # @option input [Boolean] :is_negative_fit Flag to indicate if the problem to be resolved is a maximization or minimization problem
+  # @option input [Integer] :max_generation The max number of generations
+  # @option input [Array] :values Benefits of the objects
+  # @option input [Array<Array>] :weights Bidimensional array for the knapsack constratints
+  # @option input [Array] :max_weight RHS values for the constraints
+  # @option input [Float] :optimal_func_val The optimal known value for the problem
   def initialize(**input)
     @pop_size = input[:pop_size]
     @cross_rate = input[:cross_rate]
@@ -35,7 +47,7 @@ class HTGAKnapsack < HTGA
   end
   
   # Main method
-  # @return [Hash]
+  # @return [Hash] The output variables: best fitness, number of generations, number of fitness evaluation, relative error and optimal value
   def execute
     @generation = 0
     output_hash = {
@@ -89,7 +101,7 @@ class HTGAKnapsack < HTGA
   end
   
   # Evaluate the fitness of a chromosome for the knapsack problem
-  # @param [Chromosome] chromosome
+  # @param [Chromosome] chromosome The chromosome to be evaluated
   # @return [nil]
   def evaluate_chromosome(chromosome)
     @num_evaluations += 1
@@ -97,8 +109,8 @@ class HTGAKnapsack < HTGA
   end
   
   # Crossover operator method
-  # @param [Chromosome] chromosome_x
-  # @param [Chromosome] chromosome_y
+  # @param [Chromosome] chromosome_x First parent chromosome
+  # @param [Chromosome] chromosome_y Second parent chromosome
   # @return [Array<Chromosome>]  the resulting crossovered chromosomes
   def crossover(chromosome_x, chromosome_y)
     k = rand(0...chromosome_y.size)
@@ -110,7 +122,7 @@ class HTGAKnapsack < HTGA
   end
   
   # Mutation operator method for the chromosomes
-  # @param [Chromosome] chromosome
+  # @param [Chromosome] chromosome The parent chromosome
   # @return [Chromosome] The resulting mutated chromosome
   def mutate(chromosome)
     gene_pos = ((0...@num_genes).to_a).sample

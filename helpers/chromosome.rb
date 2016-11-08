@@ -13,19 +13,19 @@ require 'bundler/setup'
 class Chromosome < Array
 
   # @!attribute fitness
-  # =>@return [Float] The fitness value for the chromosome
+  #	@return [Float] The fitness value for the chromosome
   attr_accessor :fitness
   # @!attribute [Float] norm_fitness
-  # =>@return [Float] The normalized fitness value of the chromosome
+  #	@return [Float] The normalized fitness value of the chromosome
   attr_accessor :norm_fitness
   # @!attribute prob
-  # =>@return [Float] The probability value for the chromosome
+  #	@return [Float] The probability value for the chromosome
   attr_accessor :prob
   # @!attribute snr
-  # =>@return [Float] The SNR value
+  #	@return [Float] The SNR value
   attr_accessor :snr
   # @!attribute fit_sum
-  # =>@return [Float] The accumulated fitness
+  #	@return [Float] The accumulated fitness
   attr_accessor :fit_sum
 
 end

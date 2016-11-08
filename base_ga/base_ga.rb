@@ -19,37 +19,37 @@ class BaseGA
   include TestFunctions
 
   #@!attribute lower_bounds
-  # =>@return [Array] The lower bounds for the genes
+  #	@return [Array] The lower bounds for the genes
   attr_accessor :lower_bounds
   #@!attribute upper_bounds
-  # =>@return [Array] The upper bounds for the variables
+  #	@return [Array] The upper bounds for the variables
   attr_accessor :upper_bounds
   #@!attribute [w] pop_size
-  # =>@param [Array] The number of chromosomes
+  #	@return [Array] The number of chromosomes in the population
   attr_writer :pop_size
   #@!attribute chromosomes
-  # =>@return [Array] The population of chromosomes
+  #	@return [Array] The population of chromosomes
   attr_accessor :chromosomes
   #@!attribute [w] selected_func
-  # =>@param [Proc] The selected function to optimize
+  #	@return [Proc] The selected function to optimize
   attr_writer :selected_func
   #@!attribute [w] optimal_func_val
-  # =>@param [Float] Function value for the selected function
+  #	@return [Float] Function value for the selected function
   attr_writer :optimal_func_val
   #@!attribute [w] is_high_fit
-  # =>@param [Boolean] A flag indicating if the problem is of maximization or minimization
+  #	@return [Boolean] A flag indicating if the problem is of maximization or minimization
   attr_writer :is_high_fit
   #@!attribute [r] generation
-  # =>@return [Integer] The counter variable of the number of generations
+  #	@return [Integer] The counter variable of the number of generations
   attr_reader :generation
   #@!attribute [r] max_generation
-  # =>@param [Integer] The maximum allow number of generations
+  #	@return [Integer] The maximum allow number of generations
   attr_writer :max_generation
   #@!attribute num_genes
-  # =>@return [Integer] The length of the chromosome
+  #	@return [Integer] The length of the chromosome
   attr_accessor :num_genes
-  #@!attribute continuous 
-  # =>@return [Boolean] Flag to signal if functions is discrete or continuous
+  #@!attribute continuous
+  #	@return [Boolean] Flag to signal if functions is discrete or continuous
   attr_accessor :continuous
 
   # Checks if the known best fitness value has been reached
@@ -87,7 +87,7 @@ class BaseGA
     end
     selected_chromos_indexes
   end
-  
+
   # Tournament selection method
   # @param [Integer] k
   # @return [Array] selected chromosome indexes
@@ -105,16 +105,16 @@ class BaseGA
       fit_chromo_x = @chromosomes[x].fitness
       fit_chromo_y = @chromosomes[y].fitness
       if @is_high_fit
-        if (fit_chromo_x >= fit_chromo_y) then 
-          selected_chromos_indexes << x 
-        else 
-          selected_chromos_indexes << y 
+        if (fit_chromo_x >= fit_chromo_y) then
+          selected_chromos_indexes << x
+        else
+          selected_chromos_indexes << y
         end
       else
-        if (fit_chromo_x <= fit_chromo_y) then 
-          selected_chromos_indexes << x 
-        else 
-          selected_chromos_indexes << y 
+        if (fit_chromo_x <= fit_chromo_y) then
+          selected_chromos_indexes << x
+        else
+          selected_chromos_indexes << y
         end
       end
     end

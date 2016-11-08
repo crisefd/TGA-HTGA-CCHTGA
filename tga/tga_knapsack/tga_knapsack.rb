@@ -10,11 +10,15 @@ require File.join(File.dirname(__FILE__), '..', '..', 'helpers/chromosome.rb')
 require File.join(File.dirname(__FILE__), '..', 'tga.rb')
 
 # TGA adaptation for the knapsack 0-1 problem
+# @note The tested problems were found in http://people.brunel.ac.uk/~mastjjb/jeb/orlib/mknapinfo.html
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class TGAKnapsack < TGA
 
   # @param [Hash] input The input values for the algorithm
+  # @option input [Integer] :pop_size The number of chromosomes the population
+  # @option input [Integer] :num_genes The number of genes in a chromosome
+  # @option input [Boolean] :continuous Flag to indicate if the problem being solved is continuous or discrete
   def initialize(**input)
     @pop_size = input[:pop_size]
     @num_genes = input[:num_genes]
@@ -37,8 +41,8 @@ class TGAKnapsack < TGA
     @optimal_func_val = input[:optimal_func_val]
   end
 
-   # Main method
-   # @return [Hash]
+  # Main method
+  # @return [Hash] The output variables: best fitness, number of generations, number of fitness evaluation, relative error and optimal value
   def execute
     output_hash = { best_fit: nil, gen_of_best_fit:0, func_evals_of_best_fit:0}
     @generation = 1
@@ -69,7 +73,7 @@ class TGAKnapsack < TGA
   end
   
    # Updates the output variables
-   # @param [Hash] output_hash
+   # @param [Hash] output_hash The hash with the ouput variables
    # @return [nil]
   def update_output_hash(output_hash)
     if(@best_fit < output_hash[:best_fit] && !@is_high_fit) ||
@@ -81,7 +85,7 @@ class TGAKnapsack < TGA
   end
 
   # Evaluates the fitness of a chromosome for the knapsack problem
-  # @param [Chromosome] chromosome
+  # @param [Chromosome] chromosome The chromosome to be evaluated
   # @return nil
   def evaluate_chromosome(chromosome)
     @num_evaluations += 1

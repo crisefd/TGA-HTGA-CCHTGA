@@ -29,15 +29,15 @@ require 'matrix'
 # based on the original implementation in Matlab by
 # Natasha Y Jeppu, natasha.jeppu@gmail.com
 # visit http://www.mathworks.com/matlabcentral/fileexchange/47218-orthogonal-array
-# @author Cristhian Fuertes
-# @author Oscar Tigreros
+# @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
+# @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 module OAPermut
 
   # @!attribute ouput 
-  # =>@return [String] The output string to be writen in a file
+  #	@return [String] The output string to be writen in a file
   @@output = ''
   # @!attribute file_name
-  # =>@return [String] The name of the file to be writen in
+  #	@return [String] The name of the file to be writen in
   @@file_name = ''
 
   # Main function for the algorithm
