@@ -5,7 +5,7 @@
 - [HTGA](https://pdfs.semanticscholar.org/9798/536bb2654af9f0fe668a28694ae3ea514b88.pdf)
 - [CCHTGA](http://www.nt.ntnu.no/users/skoge/prost/proceedings/ifac2014/media/files/2299.pdf)
 
-## Installation
+## Installation in Ubuntu
 ### RVM (Ruby Version Manager)
 
 - Getting mpapis public key
@@ -54,7 +54,7 @@
 
 `$ ruby <algorithm> <path to ini test file(s)>`
 
-The avaiable values for `<algorithm>` are `tga`, `htga`, `cchtga`, `tga_knapsack` and `htga_knapsack`
+The available values for `<algorithm>` are `tga`, `htga`, `cchtga`, `tga_knapsack` and `htga_knapsack`
 
 `<path to ini test file(s)>` is usually a .ini file or subdirectory in the `test_cases/` directory
 
