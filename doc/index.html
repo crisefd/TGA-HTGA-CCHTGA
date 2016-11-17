@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!file.README.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'>
+<h1 id="label-Implementation+of+a+Traditional+Genetic+Algorithm-2C+the+Hybrid-Taguchi+Genetic+Algorithm+and+the+Cooperative+Coevolutive+Hybrid-Taguchi+Genetic+Algorithm">Implementation of a Traditional Genetic Algorithm, the Hybrid-Taguchi Genetic Algorithm and the Cooperative Coevolutive Hybrid-Taguchi Genetic Algorithm</h1>
+
+<h2 id="label-References">References</h2>
+<ul><li>
+<p><a
+href="http://eisc.univalle.edu.co/~angarcia/ce/ce_clases/ce-02_GA.pdf">TGA</a></p>
+</li><li>
+<p><a
+href="https://pdfs.semanticscholar.org/9798/536bb2654af9f0fe668a28694ae3ea514b88.pdf">HTGA</a></p>
+</li><li>
+<p><a
+href="http://www.nt.ntnu.no/users/skoge/prost/proceedings/ifac2014/media/files/2299.pdf">CCHTGA</a></p>
+</li></ul>
+
+<h2 id="label-Installation">Installation</h2>
+
+<h3 id="label-RVM+-28Ruby+Version+Manager-29">RVM (Ruby Version Manager)</h3>
+<ul><li>
+<p>Getting mpapis public key</p>
+</li></ul>
+
+<p><code>$ gpg --keyserver hkp://keys.gnupg.net --recv-keys
+409B6B1796C275462A1703113804BB82D39DC0E3</code></p>
+<ul><li>
+<p>Download an install with curl</p>
+</li></ul>
+
+<p><code>$ \curl -sSL https://get.rvm.io | bash -s stable --ruby</code></p>
+<ul><li>
+<p>Source (you should probably add this to your .bashrc or .bash_profile)</p>
+</li></ul>
+
+<p><code>$ source ~/.rvm/scripts/rvm</code></p>
+
+<h3 id="label-Ruby+-282.2.1+version-29">Ruby (2.2.1 version)</h3>
+<ul><li>
+<p>Update sources lists</p>
+</li></ul>
+
+<p><code>$ apt-get update</code></p>
+<ul><li>
+<p>Install with RVM</p>
+</li></ul>
+
+<p><code>$ rvm install 2.2.1</code></p>
+<ul><li>
+<p>Install documentation for that version (optional)</p>
+</li></ul>
+
+<p><code>$ rvm docs generate-ri</code></p>
+<ul><li>
+<p>Select the version</p>
+</li></ul>
+
+<p><code>$ rvm use 2.2.1</code></p>
+
+<h3 id="label-Required+Gems">Required Gems</h3>
+<ul><li>
+<p>First install bundler</p>
+</li></ul>
+
+<p><code>$ gem install bundler</code></p>
+<ul><li>
+<p>Now go to the project&#39;s root folder and install the rest of the gems
+with</p>
+</li></ul>
+
+<p><code>$ bundler install</code></p>
+
+<h2 id="label-Running">Running</h2>
+<ul><li>
+<p>You run the genetic algorithms with</p>
+</li></ul>
+
+<p><code>$ ruby &lt;algorithm&gt; &lt;path to ini test file(s)&gt;</code></p>
+
+<p>The avaiable values for <code>&lt;algorithm&gt;</code> are
+<code>tga</code>, <code>htga</code>, <code>cchtga</code>,
+<code>tga_knapsack</code> and <code>htga_knapsack</code></p>
+
+<p><code>&lt;path to ini test file(s)&gt;</code> is usually a .ini file or
+subdirectory in the <code>test_cases/</code> directory</p>
+
+<p>For example: <code>$ ruby htga test_cases/htga/dummy/f2_test.ini</code></p>
+<ul><li>
+<p>Running the tests</p>
+</li></ul>
+
+<p>You go to each of the algorithms folders and execute: <code>$ bundle exec
+cucumber</code></p>
+</div></div>
+
+    <div id="footer">
+  Generated on Thu Nov 17 10:20:26 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.2.1).
+</div>
+
+  </body>
+</html>

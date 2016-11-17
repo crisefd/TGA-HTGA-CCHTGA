@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: SUS
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!SUS.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (S)</a> &raquo;
+    
+    
+    <span class="title">SUS</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: SUS
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1">Included in:</dt>
+    <dd class="r1"><span class='object_link'><a href="BaseGA.html" title="BaseGA (class)">BaseGA</a></span></dd>
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">helpers/sus.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Helper module for the stochastic universal sampling selection</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>Cristhian Fuertes &lt;cristhian.fuertes@correounivalle.edu.co&gt;</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>Oscar Tigreros &lt;oscar.tigreros@correounivalle.edu.co&gt;</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div>
+
+
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sample-class_method" title="sample (class method)">+ (Array) <strong>sample</strong>(chromosomes, num_required_selects, is_high_fit: true, is_negative_fit: true) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Calculates the pointers for the selection of the chromosomes.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="sample-class_method">
+  
+    + (<tt>Array</tt>) <strong>sample</strong>(chromosomes, num_required_selects, is_high_fit: true, is_negative_fit: true) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>The third and fourth parameters are unused, should be deprecated soon</p>
+</div>
+  </div>
+
+
+<p>Calculates the pointers for the selection of the chromosomes</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>chromosomes</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="Chromosome.html" title="Chromosome (class)">Chromosome</a></span>&gt;</tt>)</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>num_required_selects</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>is_high_fit</span>
+      
+      
+        <span class='type'>(<tt>Bool</tt>)</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>is_negative_fit</span>
+      
+      
+        <span class='type'>(<tt>Bool</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'helpers/sus.rb', line 22</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_sample'>sample</span><span class='lparen'>(</span><span class='id identifier rubyid_chromosomes'>chromosomes</span><span class='comma'>,</span> <span class='id identifier rubyid_num_required_selects'>num_required_selects</span><span class='comma'>,</span> <span class='label'>is_high_fit:</span> <span class='kw'>true</span><span class='comma'>,</span>
+                                                   <span class='label'>is_negative_fit:</span> <span class='kw'>true</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_minmax_chromos'>minmax_chromos</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_chromosomes'>chromosomes</span><span class='period'>.</span><span class='id identifier rubyid_minmax_by'>minmax_by</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:fitness</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_min_fit'>min_fit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_fit'>max_fit</span> <span class='op'>=</span> <span class='id identifier rubyid_minmax_chromos'>minmax_chromos</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_fitness'>fitness</span><span class='comma'>,</span> <span class='id identifier rubyid_minmax_chromos'>minmax_chromos</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_fitness'>fitness</span>
+  <span class='id identifier rubyid_fit_sum'>fit_sum</span> <span class='op'>=</span> <span class='float'>0.0</span>
+  <span class='id identifier rubyid_fit_factor'>fit_factor</span> <span class='op'>=</span> <span class='float'>1.0</span>
+  <span class='id identifier rubyid_max_fit'>max_fit</span> <span class='op'>+=</span> <span class='int'>1</span>
+  <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_max_fit'>max_fit</span> <span class='op'>+</span> <span class='id identifier rubyid_fit_factor'>fit_factor</span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_max_fit'>max_fit</span> <span class='op'>-</span> <span class='id identifier rubyid_min_fit'>min_fit</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_chromosomes'>chromosomes</span><span class='period'>.</span><span class='id identifier rubyid_map!'>map!</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_chromosome'>chromosome</span><span class='op'>|</span>
+    <span class='id identifier rubyid_chromosome'>chromosome</span><span class='period'>.</span><span class='id identifier rubyid_norm_fitness'>norm_fitness</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_base'>base</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='id identifier rubyid_chromosome'>chromosome</span><span class='period'>.</span><span class='id identifier rubyid_fitness'>fitness</span>
+    <span class='id identifier rubyid_fit_sum'>fit_sum</span> <span class='op'>+=</span> <span class='id identifier rubyid_chromosome'>chromosome</span><span class='period'>.</span><span class='id identifier rubyid_norm_fitness'>norm_fitness</span>
+    <span class='id identifier rubyid_chromosome'>chromosome</span><span class='period'>.</span><span class='id identifier rubyid_fit_sum'>fit_sum</span> <span class='op'>=</span> <span class='id identifier rubyid_fit_sum'>fit_sum</span>
+    <span class='id identifier rubyid_chromosome'>chromosome</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_step_size'>step_size</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_fit_sum'>fit_sum</span> <span class='op'>/</span> <span class='id identifier rubyid_num_required_selects'>num_required_selects</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
+  <span class='id identifier rubyid_start'>start</span> <span class='op'>=</span> <span class='id identifier rubyid_rand'>rand</span><span class='lparen'>(</span><span class='int'>0</span><span class='op'>..</span><span class='id identifier rubyid_step_size'>step_size</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_pointers'>pointers</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='lparen'>(</span><span class='int'>0</span><span class='op'>...</span><span class='id identifier rubyid_num_required_selects'>num_required_selects</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
+    <span class='id identifier rubyid_ptr'>ptr</span> <span class='op'>=</span> <span class='id identifier rubyid_start'>start</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='id identifier rubyid_i'>i</span> <span class='op'>*</span> <span class='id identifier rubyid_step_size'>step_size</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_pointers'>pointers</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_ptr'>ptr</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_pointers'>pointers</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Thu Nov 17 10:20:26 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.2.1).
+</div>
+
+  </body>
+</html>

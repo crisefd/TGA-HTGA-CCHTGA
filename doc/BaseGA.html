@@ -1,0 +1,1795 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: BaseGA
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!BaseGA.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (B)</a> &raquo;
+    
+    
+    <span class="title">BaseGA</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: BaseGA
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">BaseGA</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+      <dt class="r2">Extended by:</dt>
+      <dd class="r2"><span class='object_link'><a href="Roulette.html" title="Roulette (module)">Roulette</a></span>, <span class='object_link'><a href="SUS.html" title="SUS (module)">SUS</a></span></dd>
+      
+    
+  
+    
+      <dt class="r1">Includes:</dt>
+      <dd class="r1"><span class='object_link'><a href="TestFunctions.html" title="TestFunctions (module)">TestFunctions</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">base_ga/base_ga.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Mixin base class for TGA, HTGA and CCHTGA</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>Cristhian Fuertes &lt;cristhian.fuertes@correounivalle.edu.co&gt;</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>Oscar Tigreros &lt;oscar.tigreros@correounivalle.edu.co&gt;</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><div id="subclasses">
+  <h2>Direct Known Subclasses</h2>
+  <p class="children"><span class='object_link'><a href="CCHTGA.html" title="CCHTGA (class)">CCHTGA</a></span>, <span class='object_link'><a href="HTGA.html" title="HTGA (class)">HTGA</a></span>, <span class='object_link'><a href="TGA.html" title="TGA (class)">TGA</a></span></p>
+</div>
+
+  <h2>Constant Summary</h2>
+  
+
+
+
+  <h2>Constant Summary</h2>
+  
+  <h3 class="inherited">Constants included
+     from <span class='object_link'><a href="TestFunctions.html" title="TestFunctions (module)">TestFunctions</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="TestFunctions.html#KNAPSACK_FUNCTION-constant" title="TestFunctions::KNAPSACK_FUNCTION (constant)">TestFunctions::KNAPSACK_FUNCTION</a></span>, <span class='object_link'><a href="TestFunctions.html#OPTIMAL_FUNCTION_VALUES-constant" title="TestFunctions::OPTIMAL_FUNCTION_VALUES (constant)">TestFunctions::OPTIMAL_FUNCTION_VALUES</a></span>, <span class='object_link'><a href="TestFunctions.html#TEST_FUNCTIONS-constant" title="TestFunctions::TEST_FUNCTIONS (constant)">TestFunctions::TEST_FUNCTIONS</a></span></p>
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#chromosomes-instance_method" title="#chromosomes (instance method)">- (Array) <strong>chromosomes</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The population of chromosomes.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#continuous-instance_method" title="#continuous (instance method)">- (Boolean) <strong>continuous</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Flag to signal if functions is discrete or continuous.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#generation-instance_method" title="#generation (instance method)">- (Integer) <strong>generation</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The counter variable of the number of generations.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#is_high_fit%3D-instance_method" title="#is_high_fit= (instance method)">- (Boolean) <strong>is_high_fit</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+      <span class="note title writeonly">writeonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>A flag indicating if the problem is of maximization or minimization.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#lower_bounds-instance_method" title="#lower_bounds (instance method)">- (Array) <strong>lower_bounds</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The lower bounds for the genes.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#max_generation-instance_method" title="#max_generation (instance method)">- (Integer) <strong>max_generation</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The maximum allow number of generations.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#num_genes-instance_method" title="#num_genes (instance method)">- (Integer) <strong>num_genes</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The length of the chromosome.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#optimal_func_val%3D-instance_method" title="#optimal_func_val= (instance method)">- (Float) <strong>optimal_func_val</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+      <span class="note title writeonly">writeonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Function value for the selected function.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#pop_size%3D-instance_method" title="#pop_size= (instance method)">- (Array) <strong>pop_size</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+      <span class="note title writeonly">writeonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The number of chromosomes in the population.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#selected_func%3D-instance_method" title="#selected_func= (instance method)">- (Proc) <strong>selected_func</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+      <span class="note title writeonly">writeonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The selected function to optimize.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#upper_bounds-instance_method" title="#upper_bounds (instance method)">- (Array) <strong>upper_bounds</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The upper bounds for the variables.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#evaluate_chromosome-instance_method" title="#evaluate_chromosome (instance method)">- (nil) <strong>evaluate_chromosome</strong>(chromosome) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Method to evaluate an assign a fitness value to a chromosome.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#has_stopping_criterion_been_met%3F-instance_method" title="#has_stopping_criterion_been_met? (instance method)">- (Bool) <strong>has_stopping_criterion_been_met?</strong>(best_fit) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks if the known best fitness value has been reached.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#roulette_select-instance_method" title="#roulette_select (instance method)">- (Array) <strong>roulette_select</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Roulette selection operation method.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sus_select-instance_method" title="#sus_select (instance method)">- (Array&lt;Chromosome&gt;) <strong>sus_select</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>SUS selection operation method.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tournament_select-instance_method" title="#tournament_select (instance method)">- (Array) <strong>tournament_select</strong>(k) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Tournament selection method.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Roulette.html" title="Roulette (module)">Roulette</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Roulette.html#calculate_probabilities-class_method" title="Roulette.calculate_probabilities (method)">calculate_probabilities</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="SUS.html" title="SUS (module)">SUS</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="SUS.html#sample-class_method" title="SUS.sample (method)">sample</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id="chromosomes=-instance_method"></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="chromosomes-instance_method">
+  
+    - (<tt>Array</tt>) <strong>chromosomes</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns The population of chromosomes</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The population of chromosomes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+32
+33
+34</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 32</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_chromosomes'>chromosomes</span>
+  <span class='ivar'>@chromosomes</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="continuous=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="continuous-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>continuous</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns Flag to signal if functions is discrete or continuous</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Flag to signal if functions is discrete or continuous</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+53
+54
+55</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 53</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_continuous'>continuous</span>
+  <span class='ivar'>@continuous</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="generation-instance_method">
+  
+    - (<tt>Integer</tt>) <strong>generation</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns The counter variable of the number of generations</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The counter variable of the number of generations</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+44
+45
+46</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 44</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_generation'>generation</span>
+  <span class='ivar'>@generation</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="is_high_fit=-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>is_high_fit=</strong>(value)  <span class="extras">(writeonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns A flag indicating if the problem is of maximization or minimization</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A flag indicating if the problem is of maximization or minimization</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+41
+42
+43</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 41</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_is_high_fit='>is_high_fit=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='ivar'>@is_high_fit</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="lower_bounds=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="lower_bounds-instance_method">
+  
+    - (<tt>Array</tt>) <strong>lower_bounds</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns The lower bounds for the genes</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The lower bounds for the genes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+23
+24
+25</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 23</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_lower_bounds'>lower_bounds</span>
+  <span class='ivar'>@lower_bounds</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="max_generation=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="max_generation-instance_method">
+  
+    - (<tt>Integer</tt>) <strong>max_generation</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns The maximum allow number of generations</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The maximum allow number of generations</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+47</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 47</span>
+
+<span class='id identifier rubyid_attr_writer'>attr_writer</span> <span class='symbol'>:max_generation</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="num_genes=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="num_genes-instance_method">
+  
+    - (<tt>Integer</tt>) <strong>num_genes</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns The length of the chromosome</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The length of the chromosome</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+50
+51
+52</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 50</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_num_genes'>num_genes</span>
+  <span class='ivar'>@num_genes</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="optimal_func_val=-instance_method">
+  
+    - (<tt>Float</tt>) <strong>optimal_func_val=</strong>(value)  <span class="extras">(writeonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns Function value for the selected function</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Float</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Function value for the selected function</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+38
+39
+40</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 38</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_optimal_func_val='>optimal_func_val=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='ivar'>@optimal_func_val</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="pop_size=-instance_method">
+  
+    - (<tt>Array</tt>) <strong>pop_size=</strong>(value)  <span class="extras">(writeonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns The number of chromosomes in the population</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The number of chromosomes in the population</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+29
+30
+31</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 29</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_pop_size='>pop_size=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='ivar'>@pop_size</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="selected_func=-instance_method">
+  
+    - (<tt>Proc</tt>) <strong>selected_func=</strong>(value)  <span class="extras">(writeonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns The selected function to optimize</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The selected function to optimize</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+35
+36
+37</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 35</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_selected_func='>selected_func=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='ivar'>@selected_func</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="upper_bounds=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="upper_bounds-instance_method">
+  
+    - (<tt>Array</tt>) <strong>upper_bounds</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns The upper bounds for the variables</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The upper bounds for the variables</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+26
+27
+28</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 26</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_upper_bounds'>upper_bounds</span>
+  <span class='ivar'>@upper_bounds</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="evaluate_chromosome-instance_method">
+  
+    - (<tt>nil</tt>) <strong>evaluate_chromosome</strong>(chromosome) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Method to evaluate an assign a fitness value to a chromosome</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>chromosome</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Chromosome.html" title="Chromosome (class)">Chromosome</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+148
+149
+150
+151</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 148</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_evaluate_chromosome'>evaluate_chromosome</span><span class='lparen'>(</span><span class='id identifier rubyid_chromosome'>chromosome</span><span class='rparen'>)</span>
+  <span class='ivar'>@num_evaluations</span> <span class='op'>+=</span> <span class='int'>1</span>
+  <span class='id identifier rubyid_chromosome'>chromosome</span><span class='period'>.</span><span class='id identifier rubyid_fitness'>fitness</span> <span class='op'>=</span> <span class='ivar'>@selected_func</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span> <span class='id identifier rubyid_chromosome'>chromosome</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="has_stopping_criterion_been_met?-instance_method">
+  
+    - (<tt>Bool</tt>) <strong>has_stopping_criterion_been_met?</strong>(best_fit) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Checks if the known best fitness value has been reached</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>best_fit</span>
+      
+      
+        <span class='type'>(<tt>Float</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Bool</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+58
+59
+60
+61
+62
+63
+64
+65
+66</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 58</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_has_stopping_criterion_been_met?'>has_stopping_criterion_been_met?</span><span class='lparen'>(</span><span class='id identifier rubyid_best_fit'>best_fit</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='ivar'>@optimal_func_val</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='kw'>if</span> <span class='ivar'>@is_high_fit</span>
+    <span class='id identifier rubyid_answer'>answer</span> <span class='op'>=</span> <span class='id identifier rubyid_best_fit'>best_fit</span> <span class='op'>&gt;=</span> <span class='ivar'>@optimal_func_val</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_answer'>answer</span> <span class='op'>=</span> <span class='id identifier rubyid_best_fit'>best_fit</span> <span class='op'>&lt;=</span> <span class='ivar'>@optimal_func_val</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_answer'>answer</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="roulette_select-instance_method">
+  
+    - (<tt>Array</tt>) <strong>roulette_select</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Roulette selection operation method</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>selected chromosome indexes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 70</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_roulette_select'>roulette_select</span>
+  <span class='const'>Roulette</span><span class='period'>.</span><span class='id identifier rubyid_calculate_probabilities'>calculate_probabilities</span> <span class='ivar'>@chromosomes</span>
+  <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_num_selections'>num_selections</span> <span class='op'>=</span> <span class='ivar'>@pop_size</span> <span class='op'>*</span> <span class='ivar'>@cross_rate</span>
+  <span class='kw'>while</span> <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_num_selections'>num_selections</span>
+    <span class='id identifier rubyid_r'>r</span> <span class='op'>=</span> <span class='id identifier rubyid_rand'>rand</span> <span class='float'>0.0</span><span class='op'>..</span><span class='float'>1.0</span>
+    <span class='id identifier rubyid_m'>m</span> <span class='op'>=</span> <span class='ivar'>@pop_size</span> <span class='op'>-</span> <span class='int'>1</span>
+    <span class='lparen'>(</span><span class='int'>0</span><span class='op'>...</span><span class='id identifier rubyid_m'>m</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
+      <span class='id identifier rubyid_a'>a</span> <span class='op'>=</span> <span class='ivar'>@chromosomes</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_prob'>prob</span>
+      <span class='id identifier rubyid_b'>b</span> <span class='op'>=</span> <span class='ivar'>@chromosomes</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span> <span class='op'>+</span> <span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_prob'>prob</span>
+      <span class='kw'>if</span> <span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_a'>a</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_b'>b</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_p'>p</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_a'>a</span><span class='embexpr_end'>}</span><span class='tstring_content'> is not &lt; </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_b'>b</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>a is not &lt; b</span><span class='tstring_end'>&#39;</span></span>
+      <span class='kw'>end</span>
+      <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_i'>i</span> <span class='kw'>if</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_a'>a</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_b'>b</span>
+      <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_m'>m</span> <span class='kw'>if</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>==</span> <span class='float'>1.0</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="sus_select-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="Chromosome.html" title="Chromosome (class)">Chromosome</a></span>&gt;</tt>) <strong>sus_select</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>SUS selection operation method</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="Chromosome.html" title="Chromosome (class)">Chromosome</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The selected chromosomes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 127</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_sus_select'>sus_select</span>
+  <span class='id identifier rubyid_pointers'>pointers</span> <span class='op'>=</span> <span class='const'>SUS</span><span class='period'>.</span><span class='id identifier rubyid_sample'>sample</span> <span class='ivar'>@chromosomes</span><span class='comma'>,</span> <span class='ivar'>@pop_size</span><span class='comma'>,</span>
+  <span class='label'>is_high_fit:</span> <span class='ivar'>@is_high_fit</span><span class='comma'>,</span>
+  <span class='label'>is_negative_fit:</span> <span class='ivar'>@is_negative_fit</span>
+  <span class='id identifier rubyid_k'>k</span> <span class='op'>=</span> <span class='int'>0</span>
+  <span class='id identifier rubyid_selected_chromosomes'>selected_chromosomes</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_pointers'>pointers</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ptr'>ptr</span><span class='op'>|</span>
+    <span class='id identifier rubyid_loop'>loop</span> <span class='kw'>do</span>
+      <span class='kw'>break</span> <span class='kw'>if</span> <span class='ivar'>@chromosomes</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_fit_sum'>fit_sum</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_ptr'>ptr</span>
+      <span class='id identifier rubyid_k'>k</span> <span class='op'>+=</span> <span class='int'>1</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_selected_chromosomes'>selected_chromosomes</span> <span class='op'>&lt;&lt;</span> <span class='ivar'>@chromosomes</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span>
+
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>wrong number of selected chromosomes</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_selected_chromosomes'>selected_chromosomes</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>!=</span> <span class='ivar'>@pop_size</span>
+  <span class='id identifier rubyid_selected_chromosomes'>selected_chromosomes</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="tournament_select-instance_method">
+  
+    - (<tt>Array</tt>) <strong>tournament_select</strong>(k) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This function is unused, should be decreated soon</p>
+</div>
+  </div>
+
+
+<p>Tournament selection method</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>k</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>selected chromosome indexes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'base_ga/base_ga.rb', line 95</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_tournament_select'>tournament_select</span><span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='int'>1</span><span class='period'>.</span><span class='id identifier rubyid_upto'>upto</span><span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='rparen'>)</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_x'>x</span> <span class='op'>=</span> <span class='op'>-</span><span class='int'>1</span>
+    <span class='id identifier rubyid_y'>y</span> <span class='op'>=</span> <span class='op'>-</span><span class='int'>1</span>
+    <span class='id identifier rubyid_loop'>loop</span> <span class='kw'>do</span>
+      <span class='id identifier rubyid_x'>x</span> <span class='op'>=</span> <span class='id identifier rubyid_rand'>rand</span> <span class='int'>0</span><span class='op'>...</span><span class='ivar'>@pop_size</span>
+      <span class='id identifier rubyid_y'>y</span> <span class='op'>=</span> <span class='id identifier rubyid_rand'>rand</span> <span class='int'>0</span><span class='op'>...</span><span class='ivar'>@pop_size</span>
+      <span class='kw'>break</span> <span class='kw'>if</span> <span class='id identifier rubyid_x'>x</span> <span class='op'>!=</span> <span class='id identifier rubyid_y'>y</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_fit_chromo_x'>fit_chromo_x</span> <span class='op'>=</span> <span class='ivar'>@chromosomes</span><span class='lbracket'>[</span><span class='id identifier rubyid_x'>x</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_fitness'>fitness</span>
+    <span class='id identifier rubyid_fit_chromo_y'>fit_chromo_y</span> <span class='op'>=</span> <span class='ivar'>@chromosomes</span><span class='lbracket'>[</span><span class='id identifier rubyid_y'>y</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_fitness'>fitness</span>
+    <span class='kw'>if</span> <span class='ivar'>@is_high_fit</span>
+      <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_fit_chromo_x'>fit_chromo_x</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_fit_chromo_y'>fit_chromo_y</span><span class='rparen'>)</span> <span class='kw'>then</span>
+        <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_x'>x</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_y'>y</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_fit_chromo_x'>fit_chromo_x</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_fit_chromo_y'>fit_chromo_y</span><span class='rparen'>)</span> <span class='kw'>then</span>
+        <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_x'>x</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_y'>y</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>tournament size error</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>!=</span> <span class='id identifier rubyid_k'>k</span>
+  <span class='id identifier rubyid_selected_chromos_indexes'>selected_chromos_indexes</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Thu Nov 17 10:20:28 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.2.1).
+</div>
+
+  </body>
+</html>
