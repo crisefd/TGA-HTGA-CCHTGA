@@ -1,2 +1,3 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'oa_permut.rb')
-require 'rspec'
+require 'rspec/expectations'
+require 'matrix'
