@@ -12,5 +12,6 @@ group :test do
   gem 'spinach'
   gem 'rspec'
   gem 'rspec-expectations'
+  gem 'mocha'
+  gem 'simplecov', require: false
 end
-

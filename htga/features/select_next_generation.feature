@@ -1,25 +1,20 @@
-# language: en
-# encoding: utf-8
-# file: roulette_selection.feature
-# author: Cristhian Fuertes
-# email:  cristhian.fuertes@correounivalle.edu.co
-# creation date: 2015-29-11
+@feat_select_next_generation
+Feature: Select next generation
+  As a researcher,
+  In order to select chromosomes for the next generation in HTGA
+  I want the select next generation subroutine to work correctly.
+  
+  @sce_negative_fit_min_problem
+  Scenario: Negative fitnesses and a minimization problem
+  Given a population of D chromosomes with negative fitness values
+  And optimization problem being a minimization one
+  When the chromosomes are sort in increasing order to select the better M chromosomes (D > M)
+  Then the number of chromosomes for the next generation should be M
 
-Feature: select the better M chromosomes for the next generation
-  @test_select_next_generation_max
-  Scenario: Test the selection of the better M chromosomes to be parents of the next generation for a maximization problem
-  Given a population size (M) of 6
-  And the fitness values for the chromosomes are:
-  |-4|-8|-1|9|3|-2|4|11|12|-10|
-  When I sort the chromosomes by fitness in decreasing order and select the better M chromosomes
-  Then the fitness values of the parents for then next generation are:
-  |12|11|9|4|3|-1|
-
-  @test_select_next_generation_min
-  Scenario: Test the selection of the better M chromosomes to be parents of the next generation for a mimization problem
-  Given a population size (M) of 6
-  And the fitness values for the chromosomes are:
-  |-4|-8|-1|9|3|-2|4|11|12|-10|
-  When I sort the chromosomes by fitness in increasing order and select the better M chromosomes
-  Then the fitness values of the parents for then next generation are:
-  |-10|-8|-4|-2|-1|3|
+  @sce_positive_fit_max_problem
+  Scenario: Positive fitnesses and a maximization problem
+  Given a population of D chromosomes with positive fitness values
+  And optimization problem being a maximization one
+  When the chromosomes are sort in increasing order to select the better M chromosomes (D > M)
+  Then the number of chromosomes for the next generation should be M
+  
