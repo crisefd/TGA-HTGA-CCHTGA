@@ -92,7 +92,7 @@ class HTGAKnapsack < HTGA
      (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
-        gene = rand 0..1
+        gene = random 0..1
         chromosome << gene
       end
       evaluate_chromosome chromosome
@@ -113,7 +113,7 @@ class HTGAKnapsack < HTGA
   # @param [Chromosome] chromosome_y Second parent chromosome
   # @return [Array<Chromosome>]  the resulting crossovered chromosomes
   def crossover(chromosome_x, chromosome_y)
-    k = rand(0...chromosome_y.size)
+    k = random(0...chromosome_y.size)
     # swap right side of chromosomes x and y
     ((k + 1)...chromosome_y.size).each do |i|
       chromosome_x[i], chromosome_y[i] = chromosome_y[i], chromosome_x[i]

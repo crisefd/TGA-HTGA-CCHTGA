@@ -100,8 +100,8 @@ class TGA < BaseGA
     prev_chromo = -1
     k.times do
       until (x != y) && (x != prev_chromo) && (y != prev_chromo)
-        x = rand(0...@pop_size)
-        y = rand(0...@pop_size)
+        x = random(0...@pop_size)
+        y = random(0...@pop_size)
       end
       if @is_high_fit
         if @chromosomes[x].fitness <= @chromosomes[y].fitness
@@ -126,7 +126,7 @@ class TGA < BaseGA
   # Crosses the chrosomes in the mating pool
   # @return [nil]
   def cross_cut_point_mating_pool
-    cut_point = rand(0...@num_genes)
+    cut_point = random(0...@num_genes)
     chromosome_x = @mating_pool[0].clone
     chromosome_y = @mating_pool[1].clone
     (cut_point...@num_genes).each do |i|
@@ -143,12 +143,12 @@ class TGA < BaseGA
   def mutate_matingpool
     (0...@mating_pool.size).each do |i|
       gene = -1
-      mutate_point = rand(0...@num_genes)
+      mutate_point = random(0...@num_genes)
       chromosome = @mating_pool[i].clone
       if @continuous
-        gene = rand(lower_bounds[0].to_f..upper_bounds[0].to_f)
+        gene = random(lower_bounds[0].to_f..upper_bounds[0].to_f)
       else
-        gene = rand(lower_bounds[0].to_i..upper_bounds[0].to_i)
+        gene = random(lower_bounds[0].to_i..upper_bounds[0].to_i)
       end
       chromosome[mutate_point] = gene
       @new_generation << chromosome
@@ -160,7 +160,7 @@ class TGA < BaseGA
   def insert_new_generation
     (0...@new_generation.size).each do |i|
       evaluate_chromosome @new_generation[i]
-      j = rand 0...@chromosomes.size
+      j = random 0...@chromosomes.size
       @chromosomes.delete_at j
       verify_best_fit @new_generation[i]
       @chromosomes << @new_generation[i]
@@ -192,9 +192,9 @@ class TGA < BaseGA
       (0...@num_genes).each do |i|
         gene = nil
         if @continuous
-          gene = rand(lower_bounds[i].to_f..upper_bounds[i].to_f)
+          gene = random(lower_bounds[i].to_f..upper_bounds[i].to_f)
         else
-          gene = rand(lower_bounds[i].to_i..upper_bounds[i].to_i)
+          gene = random(lower_bounds[i].to_i..upper_bounds[i].to_i)
         end
         chromosome << gene
       end

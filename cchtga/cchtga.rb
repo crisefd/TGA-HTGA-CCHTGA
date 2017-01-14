@@ -216,7 +216,7 @@ class CCHTGA < BaseGA
     (0...@subsystems.size).each do |j|
       @subsystems[j].clear if @subsystems[j].size > 0
       (0...@genes_per_group).each do
-        gene = available_genes.delete_at(rand(available_genes.size))
+        gene = available_genes.delete_at(random(available_genes.size))
         @subsystems[j] << gene
       end
     end
@@ -315,9 +315,9 @@ class CCHTGA < BaseGA
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @beta_values == 'discrete'
-          beta = rand(0..10) / 10.0
+          beta = random(0..10) / 10.0
         elsif @beta_values == 'uniform distribution'
-          beta = rand 0.0..1.0
+          beta = random 0.0..1.0
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
         @lower_bounds[i])

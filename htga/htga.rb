@@ -108,8 +108,8 @@ class HTGA < BaseGA
   # @param [Chromosome] chromosome_y Second parent chromosome
   # @return [Array<Chromosome>]  the resulting crossovered chromosomes
   def crossover(chromosome_x, chromosome_y)
-    beta = rand(0..10) / 10.0
-    k = rand(0...chromosome_y.size)
+    beta = random(0..10) / 10.0
+    k = random(0...chromosome_y.size)
     # new values for kth genes x and y
     cut_point_x = chromosome_x[k]
     cut_point_y = chromosome_y[k]
@@ -133,12 +133,12 @@ class HTGA < BaseGA
   # @param [Chromosome] chromosome The parent chromosome
   # @return [Chromosome] The resulting mutated chromosome
   def mutate(chromosome) # Does not work for discrete functions
-    beta = rand(0..10) / 10.0
+    beta = random(0..10) / 10.0
     i = -1
     k = -1
     loop do
-      i = rand(0...chromosome.size)
-      k = rand(0...chromosome.size)
+      i = random(0...chromosome.size)
+      k = random(0...chromosome.size)
       break if i != k
     end
     gene_i = chromosome[i]
@@ -201,7 +201,7 @@ class HTGA < BaseGA
   def mutate_individuals
     m = @chromosomes.size
     (0...m).each do |x|
-      r = rand(0.0..1.0)
+      r = random(0.0..1.0)
       next if r > @mut_rate
       new_chrom = mutate @chromosomes[x].clone
       evaluate_chromosome new_chrom
@@ -296,8 +296,8 @@ class HTGA < BaseGA
     m = @chromosomes.size
     while n < expected_number
       loop do
-        x = rand(0...m)
-        y = rand(0...m)
+        x = random(0...m)
+        y = random(0...m)
         next if x == y
         chromosome_x = @chromosomes[x]
         chromosome_y = @chromosomes[y]
@@ -337,9 +337,9 @@ class HTGA < BaseGA
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
         if @beta_values == 'discrete'
-          beta = rand(0..10) / 10.0
+          beta = random(0..10) / 10.0
         elsif @beta_values == 'uniform distribution'
-          beta = rand(0.0..1.0)
+          beta = random(0.0..1.0)
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
         @lower_bounds[i])

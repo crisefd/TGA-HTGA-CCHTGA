@@ -125,8 +125,8 @@ class IHTGA < HTGA
   def mutate(chromosome, position)
     best_experience = @subsystem.best_chromosomes_experiences[position]
     (0...@num_genes).each do |i|
-      p = rand(0..10) / 10.0
-      r = rand(0..10) / 10.0
+      p = random(0..10) / 10.0
+      r = random(0..10) / 10.0
       if p < @mutation_prob
         gene = @lower_bounds[i] + r * (@upper_bounds[i] -
                                        @lower_bounds[i])
@@ -144,7 +144,7 @@ class IHTGA < HTGA
   def mutate_individuals
     m = @pop_size
     (0...m).each do |x|
-      r = rand 0.0..1.0
+      r = random 0.0..1.0
       next if r > @mut_rate
       new_chrom = mutate(@chromosomes[x].clone, x)
       evaluate_chromosome new_chrom
@@ -157,8 +157,8 @@ class IHTGA < HTGA
   # @param [Chromosome] chromosome_y Second parent chromosome
   # @return [Array<Chromosome>] the resulting crossovered chromosomes.
   def crossover(chromosome_x, chromosome_y)
-    beta = rand(0..10) / 10.0
-    k = rand(0...chromosome_y.size)
+    beta = random(0..10) / 10.0
+    k = random(0...chromosome_y.size)
     # new values for kth genes x and y
     cut_point_x = chromosome_x[k]
     cut_point_y = chromosome_y[k]
@@ -183,10 +183,10 @@ class IHTGA < HTGA
   def cross_inviduals
     m = @chromosomes.size
     (0...m).each do |x|
-      r = rand 0.0..1.0
+      r = random 0.0..1.0
       y = -1
       loop do
-        y = rand 0...m
+        y = random 0...m
         break if x != y
       end
       next if r > @cross_rate

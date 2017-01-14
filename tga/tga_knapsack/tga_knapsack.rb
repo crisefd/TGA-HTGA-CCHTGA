@@ -96,7 +96,7 @@ class TGAKnapsack < TGA
   # @return [nil]
   def mutate_matingpool
     (0...@mating_pool.size).each do |i|
-      j = rand 0...@num_genes
+      j = random 0...@num_genes
       chromosome = @mating_pool[i].clone
       gene = chromosome[j] 
       if gene == 0 then gene = 1 else gene = 0 end
@@ -110,7 +110,7 @@ class TGAKnapsack < TGA
   def insert_new_generation
     (0...@new_generation.size).each do |i|
       evaluate_chromosome @new_generation[i]
-      j = rand 0...@chromosomes.size
+      j = random 0...@chromosomes.size
       @chromosomes.delete_at j
       @chromosomes << @new_generation[i]
     end
@@ -124,7 +124,7 @@ class TGAKnapsack < TGA
      (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
-        gene = rand 0..1
+        gene = random 0..1
         chromosome << gene
       end
       evaluate_chromosome chromosome

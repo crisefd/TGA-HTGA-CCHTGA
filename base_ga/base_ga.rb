@@ -72,7 +72,7 @@ class BaseGA
     selected_chromos_indexes = []
     num_selections = @pop_size * @cross_rate
     while selected_chromos_indexes.size < num_selections
-      r = rand 0.0..1.0
+      r = random 0.0..1.0
       m = @pop_size - 1
       (0...m).each do |i|
         a = @chromosomes[i].prob
@@ -98,8 +98,8 @@ class BaseGA
       x = -1
       y = -1
       loop do
-        x = rand 0...@pop_size
-        y = rand 0...@pop_size
+        x = random 0...@pop_size
+        y = random 0...@pop_size
         break if x != y
       end
       fit_chromo_x = @chromosomes[x].fitness
@@ -148,5 +148,13 @@ class BaseGA
   def evaluate_chromosome(chromosome)
     @num_evaluations += 1
     chromosome.fitness = @selected_func.call chromosome
+  end
+
+  # Wrapper method for Kernel#rand
+  # @param [Range] range 
+  # @return Mixed
+  # @note This method is used to make it easier to test the code
+  def random(range)
+    rand(range)
   end
 end
