@@ -3,7 +3,7 @@ Feature: Select next generation
   As a researcher,
   In order to select chromosomes for the next generation in HTGA
   I want the select next generation subroutine to work correctly.
-  
+
   @sce_negative_fit_min_problem
   Scenario: Negative fitnesses and a minimization problem
   Given a population of D chromosomes with negative fitness values
@@ -17,4 +17,3 @@ Feature: Select next generation
   And optimization problem being a maximization one
   When the chromosomes are sort in increasing order to select the better M chromosomes (D > M)
   Then the number of chromosomes for the next generation should be M
-  
