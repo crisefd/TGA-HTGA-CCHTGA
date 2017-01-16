@@ -1,6 +1,6 @@
 class Spinach::Features::GenerateInitialPopulation < Spinach::FeatureSteps
   step 'a population size of 30' do
-    @input = { }
+    @input = { continuous: true }
     @input[:pop_size] = 30
   end
 

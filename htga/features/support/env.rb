@@ -1,5 +1,9 @@
 require 'simplecov'
-SimpleCov.start
+
+SimpleCov.start do
+    add_filter '/features/'
+    add_filter '/htga_knapsack/'
+end
 
 require File.join(File.dirname(__FILE__), '..', '..', 'htga.rb')
 require File.join(File.dirname(__FILE__), '..', '..', '..',

@@ -115,12 +115,11 @@ class HTGA < BaseGA
     cut_point_y = chromosome_y[k]
     cut_point_x += beta * (cut_point_y - cut_point_x)
     cut_point_y = lower_bounds[k] + beta * (@upper_bounds[k] - @lower_bounds[k])
-    if @continuous # Doesn't work with discrete functions
+    if @continuous
       chromosome_x[k] = cut_point_x
       chromosome_y[k] = cut_point_y
     else
-      chromosome_x[k] = cut_point_x.floor
-      chromosome_y[k] = cut_point_y.floor
+      fail "not implemented"
     end
     # swap right side of chromosomes x and y
     ((k + 1)...chromosome_y.size).each do |i|
@@ -143,12 +142,11 @@ class HTGA < BaseGA
     end
     gene_i = chromosome[i]
     gene_k = chromosome[k]
-    if @continuous # Doesn't work for discrete functions
+    if @continuous
       chromosome[i] = (1 - beta) * gene_i + beta * gene_k
       chromosome[k] = beta * gene_i + (1 - beta) * gene_k
     else
-      chromosome[i] = ((1 - beta) * gene_i + beta * gene_k).floor
-      chromosome[k] = (beta * gene_i + (1 - beta) * gene_k).floor
+      fail "not implemented"
     end
     chromosome
   end
@@ -343,10 +341,10 @@ class HTGA < BaseGA
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
         @lower_bounds[i])
-        if @continuous # Wrong for discrete functions
+        if @continuous
           chromosome << gene
         else
-          chromosome << gene.floor
+          fail "not implemented yet"
         end
       end
       evaluate_chromosome chromosome
