@@ -1,7 +1,7 @@
 @feat_roulette_calculation_of_probabilites
 Feature: Roulette's calculation of probabilites
   As a researcher,
-  In order to perform roulette selection for the set of chromosomes
+  in order to perform roulette selection for the set of chromosomes,
   I want the calculation of probabilities for chromosomes to work correctly.
 
   @sce_roulette_selection_positive_fit

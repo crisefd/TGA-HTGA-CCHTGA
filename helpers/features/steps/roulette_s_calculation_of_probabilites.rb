@@ -1,5 +1,4 @@
 class Spinach::Features::RouletteSCalculationOfProbabilites < Spinach::FeatureSteps
-  include RSpec::Matchers
   step 'a set of chromosomes with positive fitness values' do
     @are_there_negative_fit = false
     @input = { }
