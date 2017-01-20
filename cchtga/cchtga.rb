@@ -19,12 +19,12 @@ class CCHTGA < BaseGA
   # @!attribute best_chromosome
   #	@return [Chromosome] current best chromosome
   attr_accessor :best_chromosome
-  # @!attribute [r] prev_best_chromosome
+  # @!attribute prev_best_chromosome
   #	@return [Chromosome] The best chromosome of the previous generation
-  attr_reader :prev_best_chromosome
-  # @!attribute [r] subsystems
+  attr_accessor :prev_best_chromosome
+  # @!attribute subsystems
   #	@return [Array<Subsystem>] The list of subsystems
-  attr_reader :subsystems
+  attr_accessor :subsystems
   # @!attribute [w] num_genes
   #	@return [Integer] The length of the chromosome
   attr_writer :num_genes

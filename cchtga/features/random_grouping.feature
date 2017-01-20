@@ -1,12 +1,12 @@
-# language: en
-# encoding: utf-8
-# author:Cristhian Fuertes
-# email: cristhian.fuertes@correounivalle.edu.co
-# creation date: 2016-05-03
-Feature: randomg grouping of variables
+@feat_random_grouping
+Feature: Random grouping
 
-    @test_random_grouping_of_variables
-    Scenario: perform random grouping operation
-        Given a chromosome with number of genes 200:
-        When the random grouping operation is apply
-        Then each of the resulting subsystems should have the same number of variables & the sum should be equal to the total number of variables
+  @test_odd
+  Scenario: Odd number of variables
+    Given a chromosome with an odd number of genes
+    When the random grouping is apply, each subsystems should've the same size and the sum should be equal to the total number of variables
+
+  @test_even
+  Scenario: Even number of variables
+    Given a chromosome with an even number of genes
+    When the random grouping is apply, each subsystems should've the same size and the sum should be equal to the total number of variables
