@@ -53,7 +53,8 @@ module TestFunctions
     0, # value 12
     0, # value 13
     0, # value 14
-    0 # value 15
+    0, # value 15
+    0, # value 16
   ]
 
   # Array of Test Functions
@@ -226,6 +227,13 @@ module TestFunctions
     end,
     lambda do |x| # 15: Schwefel 2.21 function 
       x.max_by { |xi| xi.abs }.abs
+    end,
+    lambda do |x| # 16. Negative Rastrigin
+      sum = 0.0
+      x.each do |xi|
+        sum += xi**2 - 10 * Math.cos(2 * Math::PI * xi) + 10
+      end
+      sum * -1
     end
   ]
 

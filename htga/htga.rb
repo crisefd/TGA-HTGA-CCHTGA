@@ -18,6 +18,8 @@ class HTGA < BaseGA
   #	@return [Array<Array>] The selected Taguchi array for matrix experiments
   attr_accessor :taguchi_array
   
+  attr_accessor :best_chromosome
+  
   # @param [Hash] input The input values for the algorithm
   # @option input [String] :beta_values The type of random numbers (discrete | uniform distribution) to be use in {#init_population}
   # @option input [Array] :upper_bounds The upper bounds for the genes
@@ -157,13 +159,10 @@ class HTGA < BaseGA
   # @param [Chromosome] chromosome The chromosome at which its SNR value is calculated
   # @return [nil]
   def calculate_snr(chromosome)
-    n = chromosome.size.to_f
     if @is_high_fit # What happens when the gene is 0 ?
-      chromosome.snr = -10.0 * Math.log10((1.0 / n) *
-                        chromosome.map { |gene| 1.0 / gene**2.0 }.reduce(:+))
+      chromosome.snr = (chromosome.fitness - @best_chromosome.fitness)**2
     else
-      chromosome.snr = -10.0 * Math.log10((1.0 / n) *
-                        chromosome.map { |gene| gene**2.0 }.reduce(:+))
+      chromosome.snr = (chromosome.fitness - @best_chromosome.fitness)**-2
     end
   end
 
@@ -224,6 +223,7 @@ class HTGA < BaseGA
       end
     end
     @chromosomes.slice!(@pop_size..@chromosomes.size)
+    @best_chromosome = @chromosomes.first.clone
   end
 
   # Selects the most suitable Taguchi array
@@ -261,10 +261,6 @@ class HTGA < BaseGA
   def generate_optimal_chromosome(chromosome_x, chromosome_y)
     optimal_chromosome = Chromosome.new
     experiment_matrix = generate_experiment_matrix chromosome_x, chromosome_y
-    # Calculate SNR values
-    experiment_matrix.each_index do |i|
-      calculate_snr experiment_matrix[i]
-    end
     # Calculate the effects of the various factors
     (0...experiment_matrix[0].size).each do |j|
       sum_lvl_1 = 0.0
@@ -325,6 +321,8 @@ class HTGA < BaseGA
           row_chromosome << chromosome_y[j]
         end
       end
+      evaluate_chromosome row_chromosome
+      calculate_snr row_chromosome
       experiment_matrix << row_chromosome
     end
     experiment_matrix
@@ -351,6 +349,15 @@ class HTGA < BaseGA
       end
       evaluate_chromosome chromosome
       @chromosomes << chromosome
+      if @is_high_fit
+        @best_chromosome = chromosome.clone if @best_chromosome.nil? ||
+                                               chromosome.fitness >
+                                               @best_chromosome.fitness
+      else
+        @best_chromosome = chromosome.clone if @best_chromosome.nil? ||
+                                               chromosome.fitness <
+                                               @best_chromosome.fitness
+      end
     end
   end
 
