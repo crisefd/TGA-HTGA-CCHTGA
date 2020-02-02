@@ -41,7 +41,7 @@ The available values for `<algorithm>` are `tga`, `htga`, `cchtga`, `tga_knapsac
 
 `<path to ini test file(s)>` is usually a .ini file or subdirectory in the `test_cases/` directory
 
-For example: `$ ruby htga test_cases/htga/dummy/f2_test.ini`
+For example: `$ ruby execute.rb htga test_cases/htga/f2_test.ini`
 
 - Running the tests
 

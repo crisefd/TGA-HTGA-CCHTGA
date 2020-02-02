@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # language: en
 # program: execute.rb
 # creation date: 2016-03-25
@@ -10,8 +12,8 @@ require_relative 'tga/tga_knapsack/tga_knapsack'
 require_relative 'cchtga/cchtga'
 
 # Manager class for running tests
-# @author Cristhian Fuertes
-# @author Oscar Tigreros
+# @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
+# @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class TestRunner
   # Main method to execute tests
   # @param [Array<String>] paths_to_input_test_files
@@ -45,7 +47,7 @@ class TestRunner
   # @return [Hash]
   def load_input_test_file(path_to_input_test_file)
     input_hash = {}
-    file = open path_to_input_test_file, 'r'
+    file = File.open path_to_input_test_file, 'r'
     file.each_line do |line|
       splitted_line = line.split(':')
       second_word = splitted_line[1].gsub(/\A\p{Space}*|\p{Space}*\z/, '')
@@ -65,14 +67,15 @@ class TestRunner
   def write_ouput_file(output_hash, path_to_input_test_file, run)
     splitted_path = path_to_input_test_file.split '/'
     input_file_name = splitted_path[-1].split('.')[0]
-    path_to_output_file = "#{splitted_path.slice(0..-2).join('/')}/#{input_file_name}-OUTPUT.csv"
-    File.delete(path_to_output_file) if File.exists?(path_to_output_file) && run == 0
-    file = open path_to_output_file, 'a'
-    if run == 0
+    path_to_output_file =
+      "#{splitted_path.slice(0..-2).join('/')}/#{input_file_name}-OUTPUT.csv"
+    File.delete(path_to_output_file) if File.exist?(path_to_output_file) && run.zero?
+    file = File.open path_to_output_file, 'a'
+    if run.zero?
       if @algorithm_name != 'cchtga'
-        file.puts "best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error"
+        file.puts 'best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error'
       else
-        file.puts "best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error,subsystems"
+        file.puts 'best fitness,generation of best fitness,function evaluations of best fitness,optimal value,relative error,subsystems'
       end
     end
     file.puts "#{output_hash[:best_fit]},#{output_hash[:gen_of_best_fit]},#{output_hash[:func_evals_of_best_fit]},#{output_hash[:optimal_func_val]},#{output_hash[:relative_error]},#{output_hash[:num_subsystems]}"
@@ -94,7 +97,7 @@ class TestRunner
       elsif second_word == 'no'
         hash = { is_high_fit: true }
       else
-        fail '#minization bad keyword, expected yes or no'
+        raise '#minization bad keyword, expected yes or no'
       end
     when 'continuous'
       if second_word == 'yes'
@@ -102,7 +105,7 @@ class TestRunner
       elsif second_word == 'no'
         hash = { continuous: false }
       else
-        fail '#continuous bad keyword, expected yes or no'
+        raise '#continuous bad keyword, expected yes or no'
       end
     when 'negative fitnesses'
       if second_word == 'yes'
@@ -110,7 +113,7 @@ class TestRunner
       elsif second_word == 'no'
         hash = { is_negative_fit: false }
       else
-        fail '#negative_fitness bad keyword, expected yes or no'
+        raise '#negative_fitness bad keyword, expected yes or no'
       end
     when 'population size'
       hash = { pop_size: second_word.to_i }
@@ -121,9 +124,10 @@ class TestRunner
     when 'crossover rate'
       hash = { cross_rate: second_word.to_f }
     when 'beta values'
-      fail "Invalid beta values #{second_word}" unless second_word == 'discrete' ||
-                                                       second_word == 'uniform distribution'
-      hash = { beta_values:  second_word.to_s }
+      raise "Invalid beta values #{second_word}" unless ['discrete',
+                                                         'uniform distribution']
+                                                        .include?(second_word)
+      hash = { beta_values: second_word.to_s }
     when 'max number of generations'
       hash = { max_generation: second_word.to_i }
     when 'optimum'
@@ -137,7 +141,7 @@ class TestRunner
         end
         bound = Float second_word
         hash = { upper_bounds: Array.new(input_hash[:num_genes], bound) }
-      rescue
+      rescue StandardError
         bound = second_word.gsub(/[\[\] ]/, '').split(',').map!(&:to_f)
         hash = { upper_bounds: bound }
       end
@@ -150,7 +154,7 @@ class TestRunner
         end
         bound = Float second_word
         hash = { lower_bounds: Array.new(input_hash[:num_genes], bound) }
-      rescue
+      rescue StandardError
         if second_word == 'pi'
           second_word = Math::PI.to_s
         elsif second_word == '-pi'
@@ -170,7 +174,6 @@ end
 # @author Cristhian Fuertes
 # @author Oscar Tigreros
 class KnapsackTestRunner < TestRunner
-
   # Main method to execute tests
   # @param [Array<String>] paths_to_input_test_files
   # @param [String] algorithm_name
@@ -211,9 +214,9 @@ class KnapsackTestRunner < TestRunner
                                          '').gsub(/\s+/, ' ')
       if !input_hash[:num_constraints].nil? && first_word == 'weights'
         temp = lines[(k + 1)...(input_hash[:num_constraints] + k + 1)].join
-        weights_str = temp.gsub("\n", '').gsub(" ", '')
+        weights_str = temp.gsub("\n", '').gsub(' ', '')
         weights = eval(weights_str)
-        input_hash.merge!({ weights: weights })
+        input_hash.merge!(weights: weights)
         k += input_hash[:num_constraints] + 1
         next
       end
@@ -222,59 +225,57 @@ class KnapsackTestRunner < TestRunner
     end
     input_hash
   end
-  
+
   # Method to process the input test file lines
   # @param [String] first_word
   # @param [String] second word
   # @param [Hash] input_hash
-  def return_hash(first_word, second_word, input_hash)
+  def return_hash(first_word, second_word, _input_hash)
     hash = {}
     case first_word
-      when 'population size'
-        hash = { pop_size: second_word.to_i }
-      when 'number of genes'
-        hash = { num_genes: second_word.to_i }
-      when 'mutation rate'
-        hash = { mut_rate: second_word.to_f }
-      when 'crossover rate'
-        hash = { cross_rate: second_word.to_f }
-      when 'number of constraints'
-        hash = { num_constraints: second_word.to_i }
-      when 'max weights'
-        hash = { max_weight: eval(second_word) }
-      when 'values'
-        hash = { values: eval(second_word) }
-      when 'max number of generations'
-        hash = { max_generation: second_word.to_i }
-      when 'optimum'
-        hash = { optimal_func_val: second_word.to_f }
-      else
-        @num_runs = second_word.to_i
+    when 'population size'
+      hash = { pop_size: second_word.to_i }
+    when 'number of genes'
+      hash = { num_genes: second_word.to_i }
+    when 'mutation rate'
+      hash = { mut_rate: second_word.to_f }
+    when 'crossover rate'
+      hash = { cross_rate: second_word.to_f }
+    when 'number of constraints'
+      hash = { num_constraints: second_word.to_i }
+    when 'max weights'
+      hash = { max_weight: eval(second_word) }
+    when 'values'
+      hash = { values: eval(second_word) }
+    when 'max number of generations'
+      hash = { max_generation: second_word.to_i }
+    when 'optimum'
+      hash = { optimal_func_val: second_word.to_f }
+    else
+      @num_runs = second_word.to_i
     end
     hash
   end
-  
 end
 
 if __FILE__ == $PROGRAM_NAME
-  fail "Invalid number of arguments #{ARGV.size}, expected 2 " if ARGV.size != 2
+  p ARGV
+  raise "Invalid number of arguments #{ARGV.size}, expected 2 " if ARGV.size != 2
   algorithm_name = ARGV[0].downcase
-  fail "#{algorithm_name} is not a valid name" unless algorithm_name == 'tga' ||
-                                                      algorithm_name == 'htga' ||
-                                                      algorithm_name == 'cchtga' ||
-                                                      algorithm_name == 'tga_knapsack' ||
-                                                      algorithm_name == 'htga_knapsack'
-  path = ARGV[1].to_s
-  if File.directory? path
-    path = Dir["#{path}/*.ini"]
-  else
-    path = [path]
-  end
-  if algorithm_name.match(/_knapsack$/)
-    tr = KnapsackTestRunner.new
-    tr.execute path, algorithm_name
-  else
-    tr = TestRunner.new
-    tr.execute path, algorithm_name
-  end
+  algorithms = %w[tga htga cchtga tga_knapsack htga_knapsack]
+  raise "#{algorithm_name} is not a valid name" unless algorithms
+                                                       .include?(algorithm_name)
+  path =
+    if File.directory? ARGV[1].to_s
+      Dir["#{path}/*.ini"]
+    else
+      [ARGV[1].to_s]
+    end
+  tr =
+    if algorithm_name.match(/_knapsack$/)
+      KnapsackTestRunner.new
+    else
+      TestRunner.new
+    end
+  tr.execute path, algorithm_name
 end
