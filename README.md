@@ -5,46 +5,29 @@
 - [HTGA](https://pdfs.semanticscholar.org/9798/536bb2654af9f0fe668a28694ae3ea514b88.pdf)
 - [CCHTGA](http://www.nt.ntnu.no/users/skoge/prost/proceedings/ifac2014/media/files/2299.pdf)
 
-## Installation in Ubuntu
-### RVM (Ruby Version Manager)
+## Installation in Unix Systems
+### ASDF Version Manager
 
-- Getting mpapis public key
+- Please follow the installation instructions outlined [here](https://asdf-vm.com/#/core-manage-asdf-vm)
+- Then proceed to install [ruby plugin](https://asdf-vm.com/#/core-manage-asdf-vm)
 
-`$ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
 
-- Download an install with curl
+### Ruby (2.7.0 version)
 
-`$ \curl -sSL https://get.rvm.io | bash -s stable --ruby`
+- Install the version
 
-- Source (you should probably add this to your .bashrc or .bash_profile)
+`$ asdf install ruby 2.7.0`
 
-`$ source ~/.rvm/scripts/rvm`
+- Set this version either as global or local
 
-### Ruby (2.2.1 version)
+`$ asdf global ruby 2.7.0`
 
-- Update sources lists
+`$ asdf local ruby 2.7.0`
 
-`$ apt-get update`
-
-- Install with RVM
-
-`$ rvm install 2.2.1`
-
-- Install documentation for that version (optional)
-
-`$ rvm docs generate-ri`
-
-- Select the version
-
-`$ rvm use 2.2.1`
 
 ### Required Gems
 
-- First install bundler
-
-`$ gem install bundler`
-
-- Now go to the project's root folder and install the rest of the gems with
+- Install the dependencies with
 
 `$ bundler install`
 
