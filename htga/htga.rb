@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 # language: en
-# encoding: utf-8
+
 # program: htga.rb
 # creation date: 2015-10-05
 # last modified: 2016-11-06
@@ -13,23 +15,28 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class HTGA < BaseGA
-
   # @!attribute taguchi_array
-  #	@return [Array<Array>] The selected Taguchi array for matrix experiments
+  # @return [Array<Array>] The selected Taguchi array for matrix experiments
   attr_accessor :taguchi_array
-  
+
   # @param [Hash] input The input values for the algorithm
-  # @option input [String] :beta_values The type of random numbers (discrete | uniform distribution) to be use in {#init_population}
+  # @option input [String] :beta_values The type of random numbers
+  # (discrete | uniform distribution) to be use in {#init_population}
   # @option input [Array] :upper_bounds The upper bounds for the genes
   # @option input [Array] :lower_bounds The lower bounds for the genes
   # @option input [Integer] :pop_size The number of chromosomes the population
   # @option input [Float] :cross_rate The crossover rate
   # @option input [Float] :mut_rate The mutation rate
   # @option input [Integer] :num_genes The number of genes in a chromosome
-  # @option input [Boolean] :continuous Flag to indicate if the problem being solved is continuous or discrete
-  # @option input [Integer] :selected_function The number of the test function (f1, f2,...,f15) to solved
-  # @option input [Boolean] :is_high_fit Flag to indicate if the problem to be resolved is a maximization or minimization problem
-  # @option input [Float] :optimal_func_val The best known value for the problem being solved
+  # @option input [Boolean] :continuous Flag to indicate if
+  # the problem being solved is continuous or discrete
+  # @option input [Integer] :selected_function
+  # The number of the test function (f1, f2,...,f15) to solved
+  # @option input [Boolean] :is_high_fit
+  # Flag to indicate if the problem to be resolved
+  # is a maximization or minimization problem
+  # @option input [Float] :optimal_func_val
+  # The best known value for the problem being solved
   # @option input [Integer] :max_generation The max number of generations
   def initialize(**input)
     @beta_values = input[:beta_values]
@@ -52,13 +59,13 @@ class HTGA < BaseGA
   end
 
   # Main method for the HTGA
-  # @return [Hash] The output variables: best fitness, number of generations, number of fitness evaluation, relative error and optimal value
+  # @return [Hash] The output variables:
+  # best fitness, number of generations,
+  # number of fitness evaluation, relative error and optimal value
   def execute
     @generation = 0
-    output_hash = {
-                    best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
-                    relative_error: nil, optimal_func_val: nil
-                  }
+    output_hash = { best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
+                    relative_error: nil, optimal_func_val: nil }
     begin
       init_population
       p 'population initialized'
@@ -70,20 +77,19 @@ class HTGA < BaseGA
         generate_offspring_by_taguchi_method
         mutate_individuals
         select_next_generation
-        if @generation % 50 == 0
+        if (@generation % 50).zero?
           p "Generation: #{@generation}- Fitness: #{@chromosomes.first.fitness}"
         end
         update_output_hash output_hash
         break if has_stopping_criterion_been_met? output_hash[:best_fit]
         @generation += 1
       end
-      relative_error = (((output_hash[:best_fit] + 1) /
-                          (@optimal_func_val + 1)) - 1).abs
+      relative_error = (((output_hash[:best_fit] + 1) / (@optimal_func_val + 1)) - 1).abs
       output_hash[:relative_error] = relative_error
       output_hash[:optimal_func_val] = @optimal_func_val
-    rescue StandardError => error
-      p error.message
-      p error.backtrace.inspect
+    rescue StandardError => e
+      p e.message
+      p e.backtrace.inspect
     end
     p output_hash
     output_hash
@@ -132,7 +138,8 @@ class HTGA < BaseGA
   # Mutation operator method for the chromosomes
   # @param [Chromosome] chromosome The parent chromosome
   # @return [Chromosome] The resulting mutated chromosome
-  def mutate(chromosome) # Does not work for discrete functions
+  # @note Does not work for discrete functions
+  def mutate(chromosome)
     beta = rand(0..10) / 10.0
     i = -1
     k = -1
@@ -154,7 +161,8 @@ class HTGA < BaseGA
   end
 
   # Perfoms SNR calculation
-  # @param [Chromosome] chromosome The chromosome at which its SNR value is calculated
+  # @param [Chromosome] chromosome The chromosome at which its SNR value
+  # is calculated
   # @return [nil]
   def calculate_snr(chromosome)
     n = chromosome.size.to_f
@@ -178,18 +186,18 @@ class HTGA < BaseGA
         x = selected_indexes.sample
         y = selected_indexes.sample
         new_chrom_x, new_chrom_y =
-        crossover @chromosomes[x].clone, @chromosomes[y].clone
+          crossover @chromosomes[x].clone, @chromosomes[y].clone
         evaluate_chromosome new_chrom_x
         evaluate_chromosome new_chrom_y
         @chromosomes << new_chrom_x << new_chrom_y
       end
     elsif select_method == :tournament
       m = selected_indexes.size - 1
-      (0...m).each do |j|
+      (0...m).each do
         x = selected_indexes.sample
         y = selected_indexes.sample
         new_chrom_x, new_chrom_y =
-        crossover @chromosomes[x].clone, @chromosomes[y].clone
+          crossover @chromosomes[x].clone, @chromosomes[y].clone
         evaluate_chromosome new_chrom_x
         evaluate_chromosome new_chrom_y
       end
@@ -203,6 +211,7 @@ class HTGA < BaseGA
     (0...m).each do |x|
       r = rand(0.0..1.0)
       next if r > @mut_rate
+
       new_chrom = mutate @chromosomes[x].clone
       evaluate_chromosome new_chrom
       @chromosomes << new_chrom
@@ -241,13 +250,15 @@ class HTGA < BaseGA
   end
 
   # Loads Taguchi array from file
-  # @param [String] filename The file name 
+  # @param [String] filename The file name
   # @return [nil]
   def load_array_from_file(filename)
     @taguchi_array = []
-    path_to_file = File.join(File.dirname(__FILE__), '..',
-    "taguchi_orthogonal_arrays/#{filename}")
-    array_file = open(path_to_file, 'r')
+    path_to_file =
+      File.join(File.dirname(__FILE__),
+                '..',
+                "taguchi_orthogonal_arrays/#{filename}")
+    array_file = File.open(path_to_file, 'r')
     array_file.each_line do |line|
       @taguchi_array << line.split(';')[0, @num_genes].map!(&:to_i)
     end
@@ -276,11 +287,12 @@ class HTGA < BaseGA
           sum_lvl_1 += experiment_matrix[i].snr
         end
       end
-      if sum_lvl_1 > sum_lvl_2
-        optimal_chromosome << chromosome_x[j]
-      else
-        optimal_chromosome << chromosome_y[j]
-      end
+      optimal_chromosome <<
+        if sum_lvl_1 > sum_lvl_2
+          chromosome_x[j]
+        else
+          chromosome_y[j]
+        end
     end
     # Find the optimal fitness value
     evaluate_chromosome optimal_chromosome
@@ -299,6 +311,7 @@ class HTGA < BaseGA
         x = rand(0...m)
         y = rand(0...m)
         next if x == y
+
         chromosome_x = @chromosomes[x]
         chromosome_y = @chromosomes[y]
         opt_chromosome = generate_optimal_chromosome chromosome_x, chromosome_y
@@ -319,11 +332,12 @@ class HTGA < BaseGA
     (0...@taguchi_array.size).each do |i|
       row_chromosome = Chromosome.new
       (0...@taguchi_array[0].size).each do |j|
-        if @taguchi_array[i][j] == 0
-          row_chromosome << chromosome_x[j]
-        else
-          row_chromosome << chromosome_y[j]
-        end
+        row_chromosome <<
+          if @taguchi_array[i][j].zero?
+            chromosome_x[j]
+          else
+            chromosome_y[j]
+          end
       end
       experiment_matrix << row_chromosome
     end
@@ -342,18 +356,14 @@ class HTGA < BaseGA
           beta = rand(0.0..1.0)
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
-        @lower_bounds[i])
-        if @continuous # Wrong for discrete functions
-          chromosome << gene
-        else
-          chromosome << gene.floor
-        end
+                                          @lower_bounds[i])
+        # Wrong for discrete functions
+        chromosome << (@continuous ? gene : gene.floor)
       end
       evaluate_chromosome chromosome
       @chromosomes << chromosome
     end
   end
-
 end
 
 if __FILE__ == $PROGRAM_NAME

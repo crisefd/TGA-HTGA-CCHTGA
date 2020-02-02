@@ -1,8 +1,8 @@
 # language: en
-# encoding: utf-8
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co
 # creation date: 2016-04-27
+
 Feature: Correct genes operation
 
     Scenario: Test gene correction rule for upper bound in cchtga

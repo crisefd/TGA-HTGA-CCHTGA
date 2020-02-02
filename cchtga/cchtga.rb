@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 # language: en
-# encoding: utf-8
 # program: cchtga.rb
 # creation date: 2016-04-02
 # last modified: 2016-11-06
@@ -15,38 +16,43 @@ require_relative 'ihtga'
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class CCHTGA < BaseGA
-
   # @!attribute best_chromosome
-  #	@return [Chromosome] current best chromosome
+  #  @return [Chromosome] current best chromosome
   attr_accessor :best_chromosome
   # @!attribute [r] prev_best_chromosome
-  #	@return [Chromosome] The best chromosome of the previous generation
+  #  @return [Chromosome] The best chromosome of the previous generation
   attr_reader :prev_best_chromosome
   # @!attribute [r] subsystems
-  #	@return [Array<Subsystem>] The list of subsystems
+  #  @return [Array<Subsystem>] The list of subsystems
   attr_reader :subsystems
   # @!attribute [w] num_genes
-  #	@return [Integer] The length of the chromosome
+  #  @return [Integer] The length of the chromosome
   attr_writer :num_genes
   # @!attribute [w] chromosomes
-  #	@return [Array<Chromosome>] The population of chromosomes
+  #  @return [Array<Chromosome>] The population of chromosomes
   attr_writer :chromosomes
   # @!attribute [w] selected_func
-  #	@return [Integer] The number of the selected function
+  #  @return [Integer] The number of the selected function
   attr_writer :selected_func
 
   # @param [Hash] input The input values for the algorithm
-  # @option input [String] :beta_values The type of random numbers (discrete | uniform distribution) to be use in {#init_population}
+  # @option input [String] :beta_values The type of random numbers
+  # (discrete | uniform distribution) to be use in {#init_population}
   # @option input [Array] :upper_bounds The upper bounds for the genes
   # @option input [Array] :lower_bounds The lower bounds for the genes
   # @option input [Integer] :pop_size The number of chromosomes the population
   # @option input [Float] :cross_rate The crossover rate
   # @option input [Float] :mut_rate The mutation rate
   # @option input [Integer] :num_genes The number of genes in a chromosome
-  # @option input [Boolean] :continuous Flag to indicate if the problem being solved is continuous or discrete
-  # @option input [Integer] :selected_function The number of the test function (f1, f2,...,f15) to solved
-  # @option input [Boolean] :is_high_fit Flag to indicate if the problem to be resolved is a maximization or minimization problem
-  # @option input [Float] :optimal_func_val The best known value for the problem being solved
+  # @option input [Boolean] :continuous Flag to indicate
+  # if the problem being solved is continuous or discrete
+  # @option input [Integer] :selected_function
+  # The number of the test function (f1, f2,...,f15) to solved
+  # @option input [Boolean] :is_high_fit
+  # Flag to indicate if the problem to be resolved
+  # is a maximization or minimization problem
+  # @option input [Float] :optimal_func_val
+  # The best known value for the problem being solved
   # @option input [Integer] :max_generation The max number of generations
   def initialize(**input)
     @beta_values = input[:beta_values]
@@ -71,18 +77,19 @@ class CCHTGA < BaseGA
   end
 
   # Main method
-  # @return [Hash] The output variables: best fitness, number of generations, number of fitness evaluation, relative error, optimal value, and number of groups
+  # @return [Hash] The output variables:
+  # best fitness, number of generations, number of fitness evaluation,
+  # relative error, optimal value, and number of groups
   def execute
     @generation = 0
-    output_hash = {
-                     best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
-                     relative_error: nil, num_subsystems: 0, optimal_func_val: nil
-                  }
+    output_hash = { best_fit: nil, gen_of_best_fit: 0, func_evals_of_best_fit: 0,
+                    relative_error: nil, num_subsystems: 0, optimal_func_val: nil }
     begin
       init_population
       p 'population initialized'
       divide_variables
-      p "variables divided, num of subsystems #{@subsystems.size} -- genes per group #{@genes_per_group}"
+      p "variables divided, num of subsystems #{@subsystems.size}
+         -- genes per group #{@genes_per_group}"
       select_taguchi_array
       p "selected taguchi array is L#{@taguchi_array.size}"
       random_grouping
@@ -92,22 +99,23 @@ class CCHTGA < BaseGA
         cooperative_coevolution if @generation > 1
         apply_htga_to_subsystems
         update_prev_best_chhromosome
-        if @generation % 50 == 0 && @generation > 1
-          p "Generation: #{@generation} - current best fitness: #{output_hash[:best_fit]} current best fit gen: #{output_hash[:gen_of_best_fit]} "
+        if (@generation % 50).zero? && @generation > 1
+          p "Generation: #{@generation} -
+            current best fitness: #{output_hash[:best_fit]}
+            current best fit gen: #{output_hash[:gen_of_best_fit]}"
           p "Best chromo fitness: #{@best_chromosome.fitness}"
         end
         update_output_hash output_hash
         break if has_stopping_criterion_been_met? output_hash[:best_fit]
         @generation += 1
       end
-      relative_error = (((output_hash[:best_fit] + 1) /
-                         (@optimal_func_val + 1)) - 1).abs
+      relative_error = (((output_hash[:best_fit] + 1) / (@optimal_func_val + 1)) - 1).abs
       output_hash[:relative_error] = relative_error
       output_hash[:num_subsystems] = @subsystems.size
       output_hash[:optimal_func_val] = @optimal_func_val
-    rescue StandardError => error
-      p error.message
-      p error.backtrace.inspect
+    rescue StandardError => e
+      p e.message
+      p e.backtrace.inspect
     end
     output_hash
   end
@@ -131,15 +139,12 @@ class CCHTGA < BaseGA
   def has_best_fit_not_improved?
     answer = false
     delta_fit = 0
-    if @is_high_fit
-      fail 'not implemeted'
+    raise 'not implemeted' if @is_high_fit
+    if @prev_best_chromosome.nil?
+      answer = true
     else
-      if @prev_best_chromosome.nil?
-        answer = true
-      else
-        delta_fit = @best_chromosome.fitness - @prev_best_chromosome.fitness
-        answer = delta_fit > 0 || delta_fit < @prev_best_chromosome.fitness * 0.1
-      end
+      delta_fit = @best_chromosome.fitness - @prev_best_chromosome.fitness
+      answer = delta_fit.positive? || delta_fit < @prev_best_chromosome.fitness * 0.1
     end
     answer
   end
@@ -165,7 +170,7 @@ class CCHTGA < BaseGA
     taguchi_array = []
     path_to_file = File.join(File.dirname(__FILE__), '..',
                              "taguchi_orthogonal_arrays/#{filename}")
-    array_file = open(path_to_file, 'r')
+    array_file = File.open(path_to_file, 'r')
     array_file.each_line do |line|
       taguchi_array << line.split(';')[0, @genes_per_group].map!(&:to_i)
     end
@@ -180,18 +185,16 @@ class CCHTGA < BaseGA
     flags = Array.new(@num_genes) { false }
     m = Math.sqrt(@num_genes)
     (2..m).each do |i|
-      if @num_genes % i == 0
-        unless flags[i]
-          divisors << i
-          flags[i] = true
-        end
-        if i != (@num_genes / i) && 0 != (@num_genes / i) &&
-           1 != (@num_genes / i) && !flags[@num_genes / i]
-
-          divisors << @num_genes / i
-          flags[@num_genes / i] = true
-        end
+      next unless (@num_genes % i).zero?
+      unless flags[i]
+        divisors << i
+        flags[i] = true
       end
+      next unless i != (@num_genes / i) && !(@num_genes / i).zero? &&
+                  (@num_genes / i) != 1 && !flags[@num_genes / i]
+
+      divisors << @num_genes / i
+      flags[@num_genes / i] = true
     end
     divisors
   end
@@ -214,7 +217,7 @@ class CCHTGA < BaseGA
   def random_grouping
     available_genes = (0...@num_genes).to_a
     (0...@subsystems.size).each do |j|
-      @subsystems[j].clear if @subsystems[j].size > 0
+      @subsystems[j].clear unless @subsystems[j].empty?
       (0...@genes_per_group).each do
         gene = available_genes.delete_at(rand(available_genes.size))
         @subsystems[j] << gene
@@ -224,7 +227,7 @@ class CCHTGA < BaseGA
 
   # Performs cooperative coevolution subroutine
   # @return [nil]
-  # @note Cooperation is achieved through the use of {#best_chromosome} and 
+  # @note Cooperation is achieved through the use of {#best_chromosome} and
   # {#prev_best_chromosome} attributes. Coevolution is achieved through the use of
   # the {#best} function
   def cooperative_coevolution
@@ -239,7 +242,8 @@ class CCHTGA < BaseGA
     end
   end
 
-  # Replaces the subchromosome's genes in the best chromosome and calculates the fitness for the this temp best chromosome.
+  # Replaces the subchromosome's genes in the best chromosome
+  # and calculates the fitness for the this temp best chromosome.
   # @param [Subsystem] subsystem The subsystem
   # @param [Chromosome] chromosome The chromosome
   # @return [Chromosome] The temp best chromosome
@@ -257,14 +261,10 @@ class CCHTGA < BaseGA
   # @param [Integer] i The position of a chromosome
   # @return [nil]
   def update_subsystem_best_experiences(subsystem, i)
-    if @is_high_fit
-      fail 'not implemented'
-    else
-      if best(subsystem, subsystem.chromosomes[i]).fitness <
-         best(subsystem, subsystem.best_chromosomes_experiences[i]).fitness
-
-        subsystem.best_chromosomes_experiences[i] = subsystem.chromosomes[i].clone
-      end
+    raise 'not implemented for maximization problems' if @is_high_fit
+    if best(subsystem, subsystem.chromosomes[i]).fitness <
+       best(subsystem, subsystem.best_chromosomes_experiences[i]).fitness
+      subsystem.best_chromosomes_experiences[i] = subsystem.chromosomes[i].clone
     end
   end
 
@@ -273,14 +273,10 @@ class CCHTGA < BaseGA
   # @param [Integer] i The position of a chromosome
   # @return [nil]
   def update_subsystem_best_chromosome(subsystem, i)
-    if @is_high_fit
-      fail 'not implemented'
-    else
-      if best(subsystem, subsystem.best_chromosomes_experiences[i]).fitness <
-         best(subsystem, subsystem.best_chromosome).fitness
-
-        subsystem.best_chromosome = subsystem.best_chromosomes_experiences[i].clone
-      end
+    raise 'not implemented for maximization problems'  if @is_high_fit
+    if best(subsystem, subsystem.best_chromosomes_experiences[i]).fitness <
+       best(subsystem, subsystem.best_chromosome).fitness
+      subsystem.best_chromosome = subsystem.best_chromosomes_experiences[i].clone
     end
   end
 
@@ -288,12 +284,9 @@ class CCHTGA < BaseGA
   # @param [Subsystem] subsystem The subsystem
   # @return [nil]
   def update_best_chromosome(subsystem)
-    if @is_high_fit
-      fail 'not implemented'
-    else
-      if best(subsystem, subsystem.best_chromosome).fitness < @best_chromosome.fitness
-        replace_subsystem_part_in_chromosome subsystem
-      end
+    raise 'not implemented for maximization problems' if @is_high_fit
+    if best(subsystem, subsystem.best_chromosome).fitness < @best_chromosome.fitness
+      replace_subsystem_part_in_chromosome subsystem
     end
   end
 
@@ -321,24 +314,19 @@ class CCHTGA < BaseGA
         end
         gene = @lower_bounds[i] + beta * (@upper_bounds[i] -
         @lower_bounds[i])
-        if @continuous # Wrong for discrete functions
-          chromosome << gene
-        else
-          chromosome << gene.floor
-        end
+        chromosome << if @continuous # Wrong for discrete functions
+                        gene
+                      else
+                        gene.floor
+                      end
       end
       evaluate_chromosome chromosome
       @chromosomes << chromosome
-      if @is_high_fit
-        @best_chromosome = chromosome.clone if @best_chromosome.nil? ||
-                                               chromosome.fitness >
-                                               @best_chromosome.fitness
-      else
-        @best_chromosome = chromosome.clone if @best_chromosome.nil? ||
-                                               chromosome.fitness <
-                                               @best_chromosome.fitness
+      compare_func = @is_high_fit ? :> : :<
+      if @best_chromosome.nil? ||
+         chromosome.fitness.public_send(compare_func, @best_chromosome.fitness)
+        @best_chromosome = chromosome.clone
       end
-
     end
   end
 
@@ -346,11 +334,12 @@ class CCHTGA < BaseGA
   # @return [nil]
   def update_prev_best_chhromosome
     @prev_best_chromosome = @best_chromosome.clone
-    if @is_high_fit
-      @best_chromosome = (@chromosomes.max_by(&:fitness))
-    else
-      @best_chromosome = (@chromosomes.min_by(&:fitness))
-    end
+    @best_chromosome =
+      if @is_high_fit
+        @chromosomes.max_by(&:fitness)
+      else
+        @chromosomes.min_by(&:fitness)
+      end
   end
 
   # Applies the IHTGA subroutine to each subsystem
@@ -408,7 +397,6 @@ class CCHTGA < BaseGA
     end
     [sub_chromosomes, upper_bounds, lower_bounds]
   end
-
 end
 
 if __FILE__ == $PROGRAM_NAME
@@ -458,7 +446,6 @@ if __FILE__ == $PROGRAM_NAME
   #                 is_high_fit: false,
   #                 max_generation: 10_000
   # p cchtga.execute
-
 
   # f4 se acerco al valor reportado con subsystems= 4
 

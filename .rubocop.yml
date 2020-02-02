@@ -1,0 +1,22 @@
+
+Layout/LineLength:
+  Max: 90
+
+Metrics/MethodLength:
+  Description: 'Avoid methods longer than 30 lines of code.'
+  Enabled: true
+  CountComments: false 
+  Max: 30
+  ExcludedMethods: []
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+Metrics/ClassLength:
+  Description: 'Avoid classes longer than 300 lines of code.'
+  Enabled: true
+  CountComments: false 
+  Max: 300

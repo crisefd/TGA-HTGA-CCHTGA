@@ -1,8 +1,8 @@
 # language: en
-# encoding: utf-8
 # author: Cristhian Fuertes
 # email: cristhian.fuertes@correounivalle.edu.co
 # creation date: 2016-05-08
+
 Given(/^a chromosome with number of genes (\d+):$/) do |arg1|
   @cchtga = CCHTGA.new num_genes: arg1.to_i
 end

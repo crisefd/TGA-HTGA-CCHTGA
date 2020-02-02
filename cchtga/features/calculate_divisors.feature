@@ -1,8 +1,8 @@
 # language: en
-# encoding: utf-8
 # author: Oscar Tigreros
 # email:  oscar.tigreros@correounivalle.edu.co
 # creation date: 2016-05-03
+
 Feature: calculate divisors test
 
   @test_calculate_divisors

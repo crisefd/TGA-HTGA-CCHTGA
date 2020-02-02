@@ -1,5 +1,7 @@
-# encoding: utf-8
+# frozen_string_literal: true
+
 # language: en
+
 # program: base_ga.rb
 # creation date: 2015-10-05
 # last modified: 2016-11-06
@@ -15,41 +17,43 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/test_functions.rb')
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class BaseGA
   # Modules for roulette, SUS  test functions
-  extend Roulette, SUS
+  extend Roulette
+  extend SUS
   include TestFunctions
 
-  #@!attribute lower_bounds
-  #	@return [Array] The lower bounds for the genes
+  # @!attribute lower_bounds
+  # @return [Array] The lower bounds for the genes
   attr_accessor :lower_bounds
-  #@!attribute upper_bounds
-  #	@return [Array] The upper bounds for the variables
+  # @!attribute upper_bounds
+  # @return [Array] The upper bounds for the variables
   attr_accessor :upper_bounds
-  #@!attribute [w] pop_size
-  #	@return [Array] The number of chromosomes in the population
+  # @!attribute [w] pop_size
+  # @return [Array] The number of chromosomes in the population
   attr_writer :pop_size
-  #@!attribute chromosomes
-  #	@return [Array] The population of chromosomes
+  # @!attribute chromosomes
+  # @return [Array] The population of chromosomes
   attr_accessor :chromosomes
-  #@!attribute [w] selected_func
-  #	@return [Proc] The selected function to optimize
+  # @!attribute [w] selected_func
+  # @return [Proc] The selected function to optimize
   attr_writer :selected_func
-  #@!attribute [w] optimal_func_val
-  #	@return [Float] Function value for the selected function
+  # @!attribute [w] optimal_func_val
+  # @return [Float] Function value for the selected function
   attr_writer :optimal_func_val
-  #@!attribute [w] is_high_fit
-  #	@return [Boolean] A flag indicating if the problem is of maximization or minimization
+  # @!attribute [w] is_high_fit
+  # @return [Boolean] A flag indicating if the problem is
+  # either maximization or optimization
   attr_writer :is_high_fit
-  #@!attribute [r] generation
-  #	@return [Integer] The counter variable of the number of generations
+  # @!attribute [r] generation
+  # @return [Integer] The counter variable of the number of generations
   attr_reader :generation
-  #@!attribute [r] max_generation
-  #	@return [Integer] The maximum allow number of generations
+  # @!attribute [r] max_generation
+  # @return [Integer] The maximum allow number of generations
   attr_writer :max_generation
-  #@!attribute num_genes
-  #	@return [Integer] The length of the chromosome
+  # @!attribute num_genes
+  # @return [Integer] The length of the chromosome
   attr_accessor :num_genes
-  #@!attribute continuous
-  #	@return [Boolean] Flag to signal if functions is discrete or continuous
+  # @!attribute continuous
+  # @return [Boolean] Flag to signal if functions is discrete or continuous
   attr_accessor :continuous
 
   # Checks if the known best fitness value has been reached
@@ -57,11 +61,13 @@ class BaseGA
   # @return [Bool]
   def has_stopping_criterion_been_met?(best_fit)
     return false if @optimal_func_val.nil?
-    if @is_high_fit
-      answer = best_fit >= @optimal_func_val
-    else
-      answer = best_fit <= @optimal_func_val
-    end
+
+    answer =
+      if @is_high_fit
+        best_fit >= @optimal_func_val
+      else
+        best_fit <= @optimal_func_val
+      end
     answer
   end
 
@@ -77,11 +83,10 @@ class BaseGA
       (0...m).each do |i|
         a = @chromosomes[i].prob
         b = @chromosomes[i + 1].prob
-        if !(a <= b)
-          p "#{a} is not < #{b}"
-          fail 'a is not < b'
-        end
+        raise 'a is not <= b' if a > b
+
         selected_chromos_indexes << i if r >= a && r < b
+
         selected_chromos_indexes << m if r == 1.0
       end
     end
@@ -91,7 +96,7 @@ class BaseGA
   # Tournament selection method
   # @param [Integer] k
   # @return [Array] selected chromosome indexes
-  # @note This function is unused, should be decreated soon
+  # @note This function is unused, should be deprecated soon
   def tournament_select(k)
     selected_chromos_indexes = []
     1.upto(k) do
@@ -104,21 +109,16 @@ class BaseGA
       end
       fit_chromo_x = @chromosomes[x].fitness
       fit_chromo_y = @chromosomes[y].fitness
-      if @is_high_fit
-        if (fit_chromo_x >= fit_chromo_y) then
-          selected_chromos_indexes << x
+      compare_func = @is_high_fit ? :>= : :<=
+      selected_chromos_indexes <<
+        if fit_chromo_x.public_send(compare_func, fit_chromo_y)
+          x
         else
-          selected_chromos_indexes << y
+          y
         end
-      else
-        if (fit_chromo_x <= fit_chromo_y) then
-          selected_chromos_indexes << x
-        else
-          selected_chromos_indexes << y
-        end
-      end
     end
-    fail "tournament size error" if selected_chromos_indexes.size != k
+    raise 'tournament size error' if selected_chromos_indexes.size != k
+
     selected_chromos_indexes
   end
 
@@ -126,19 +126,19 @@ class BaseGA
   # @return [Array<Chromosome>] The selected chromosomes
   def sus_select
     pointers = SUS.sample @chromosomes, @pop_size,
-    is_high_fit: @is_high_fit,
-    is_negative_fit: @is_negative_fit
+                          is_high_fit: @is_high_fit,
+                          is_negative_fit: @is_negative_fit
     k = 0
     selected_chromosomes = []
     pointers.each do |ptr|
       loop do
         break if @chromosomes[k].fit_sum >= ptr
+
         k += 1
       end
       selected_chromosomes << @chromosomes[k]
-
     end
-    fail 'wrong number of selected chromosomes' if selected_chromosomes.size != @pop_size
+    raise 'wrong number of selected chromosomes' if selected_chromosomes.size != @pop_size
     selected_chromosomes
   end
 

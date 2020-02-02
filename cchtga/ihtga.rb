@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 # language: en
-# encoding: utf-8
 # program: ihtga.rb
 # creation date: 2016-05-18
 # last modified: 2016-11-06
@@ -13,33 +14,39 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class IHTGA < HTGA
-
   # @!attribute [w] best_chromosome
-  #	@return [Chromosome] the best chromosome
+  #  @return [Chromosome] the best chromosome
   attr_writer :best_chromosome
   # @!attribute subsystem
-  #	@return [Subsystem] The subsystem
+  #  @return [Subsystem] The subsystem
   attr_accessor :subsystem
   # @!attribute [w] selected_func
-  #	@return [Proc] The function object
+  #  @return [Proc] The function object
   attr_writer :selected_func
 
   # @param [Hash] input The input values for the algorithm
-  # @option input [String] :beta_values The type of random numbers (discrete | uniform distribution) to be use in {#init_population}
+  # @option input [String] :beta_values The type of random numbers
+  # (discrete | uniform distribution) to be use in {#init_population}
   # @option input [Array] :upper_bounds The upper bounds for the grouped genes
   # @option input [Array] :lower_bounds The lower bounds for the grouped genes
   # @option input [Integer] :pop_size The number of chromosomes the population
   # @option input [Float] :cross_rate The crossover rate
   # @option input [Float] :mut_rate The mutation rate
   # @option input [Integer] :num_genes The number of genes in a chromosome
-  # @option input [Boolean] :continuous Flag to indicate if the problem being solved is continuous or discrete
-  # @option input [Integer] :selected_function The number of the test function (f1, f2,...,f15) to solved
-  # @option input [Boolean] :is_high_fit Flag to indicate if the problem to be resolved is a maximization or minimization problem
-  # @option input [Float] :optimal_func_val The best known value for the problem being solved
+  # @option input [Boolean] :continuous Flag to indicate
+  # if the problem being solved is continuous or discrete
+  # @option input [Integer] :selected_function
+  # The number of the test function (f1, f2,...,f15) to solved
+  # @option input [Boolean] :is_high_fit
+  # Flag to indicate if the problem to be resolved is
+  # a maximization or minimization problem
+  # @option input [Float] :optimal_func_val
+  # The best known value for the problem being solved
   # @option input [Integer] :max_generation The max number of generations
   # @option input [Float] :mutation_prob The probabily of a gene to be mutated
   # @option input [Subsystem] :subsystem The subsystem
-  # @option input [Array<Chromosomes>] :chromosomes Population of chromosomes with grouped genes
+  # @option input [Array<Chromosomes>] :chromosomes
+  # Population of chromosomes with grouped genes
   def initialize(**input)
     @beta_values = input[:beta_values]
     @upper_bounds = input[:upper_bounds]
@@ -77,19 +84,15 @@ class IHTGA < HTGA
     @subsystem.num_evaluations = @num_evaluations
   end
 
-  # Finds the current genenration's best chromosome
+  # Finds the current generation's best chromosome
   # @return [nil]
   def find_best_chromosome
     @chromosomes.map! do |chromo|
       evaluate_chromosome chromo
-      if @is_high_fit
-        @best_chromosome = chromo.clone if @best_chromosome.nil? ||
-                                           chromo.fitness >
-                                           @best_chromosome.fitness
-      else
-        @best_chromosome = chromo.clone if @best_chromosome.nil? ||
-                                           chromo.fitness <
-                                           @best_chromosome.fitness
+      compare_func = @is_high_fit ? :> : :<
+      if @best_chromosome.nil? ||
+         chromo.fitness.public_send(compare_func, @best_chromosome.fitness)
+        @best_chromosome = chromo.clone
       end
       chromo
     end
@@ -117,7 +120,6 @@ class IHTGA < HTGA
     corrected_gene
   end
 
-
   # Mutation operator
   # @param [Chromosome] chromosome parent chromosome
   # @param [Integer] position the position of the chromosome in the population
@@ -127,13 +129,13 @@ class IHTGA < HTGA
     (0...@num_genes).each do |i|
       p = rand(0..10) / 10.0
       r = rand(0..10) / 10.0
-      if p < @mutation_prob
-        gene = @lower_bounds[i] + r * (@upper_bounds[i] -
-                                       @lower_bounds[i])
-      else
-        gene = chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
-                                              best_experience[i]).abs
-      end
+      gene = if p < @mutation_prob
+               @lower_bounds[i] + r * (@upper_bounds[i] -
+                                              @lower_bounds[i])
+             else
+               chromosome[i] + (2 * r - 1) * (@best_chromosome[i] -
+                                                     best_experience[i]).abs
+             end
       chromosome[i] = correct_gene gene, @lower_bounds[i], @upper_bounds[i]
     end
     chromosome
@@ -191,7 +193,7 @@ class IHTGA < HTGA
       end
       next if r > @cross_rate
       new_chrom_x, new_chrom_y =
-      crossover @chromosomes[x].clone, @chromosomes[y].clone
+        crossover @chromosomes[x].clone, @chromosomes[y].clone
       evaluate_chromosome new_chrom_x
       evaluate_chromosome new_chrom_y
       @chromosomes << new_chrom_x << new_chrom_y
@@ -202,13 +204,9 @@ class IHTGA < HTGA
   # @param [Chromosome] chromosome The chromosome at which its SNR value is calculated
   # @return [nil]
   def calculate_snr(chromosome)
-    if @is_high_fit
-      fail "CCHTGA's SNR calculation for maximization not implemented yet"
-    else
-      evaluate_chromosome chromosome
-      # What if the rest equals zero ?
-      chromosome.snr = (chromosome.fitness - @best_chromosome.fitness)**-2
-    end
+    raise "CCHTGA's SNR calculation for maximization not implemented yet" if @is_high_fit
+    evaluate_chromosome chromosome
+    # What if the rest equals zero ?
+    chromosome.snr = (chromosome.fitness - @best_chromosome.fitness)**-2
   end
-
 end

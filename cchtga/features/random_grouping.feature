@@ -1,8 +1,8 @@
 # language: en
-# encoding: utf-8
 # author:Cristhian Fuertes
 # email: cristhian.fuertes@correounivalle.edu.co
 # creation date: 2016-05-03
+
 Feature: randomg grouping of variables
 
     @test_random_grouping_of_variables

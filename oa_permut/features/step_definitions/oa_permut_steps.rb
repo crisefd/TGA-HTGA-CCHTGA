@@ -1,5 +1,4 @@
 # language: en
-# encoding: utf-8
 # file: init_population.feature
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co
@@ -7,6 +6,7 @@
 # last modified: 2015-10-11
 # version: 0.2
 # licence: GPL
+
 q = 0
 n = 0
 j = 0

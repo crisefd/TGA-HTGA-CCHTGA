@@ -1,5 +1,4 @@
 # language: en
-# encoding: utf-8
 # file: roulette_selection.feature
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co

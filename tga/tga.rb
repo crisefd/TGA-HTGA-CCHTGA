@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 # language: en
-# encoding: utf-8
 # program: tga.rb
 # creation date: 2016-03-07
 # last modified: 2016-11-06
@@ -13,7 +14,6 @@ require File.join(File.dirname(__FILE__), '..', 'helpers/chromosome.rb')
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 class TGA < BaseGA
-
   # @!attribute [r] mating_pool
   # @return [Array] The subset of chromosomes selected to be crossed/mutated
   attr_reader :mating_pool
@@ -29,17 +29,23 @@ class TGA < BaseGA
   # @!attribute [r] pop_size
   # @return [Array<Chromosome>] The number of chromosomes in the population
   attr_reader :pop_size
-  
+
   # @param [Hash] input The input values for the algorithm
-  # @option input [String] :beta_values The type of random numbers (discrete | uniform distribution) to be use in {#init_population}
+  # @option input [String] :beta_values The type of random numbers
+  # (discrete | uniform distribution) to be use in {#init_population}
   # @option input [Array] :upper_bounds The upper bounds for the genes
   # @option input [Array] :lower_bounds The lower bounds for the genes
   # @option input [Integer] :pop_size The number of chromosomes the population
   # @option input [Integer] :num_genes The number of genes in a chromosome
-  # @option input [Boolean] :continuous Flag to indicate if the problem being solved is continuous or discrete
-  # @option input [Integer] :selected_function The number of the test function (f1, f2,...,f15) to solved
-  # @option input [Boolean] :is_high_fit Flag to indicate if the problem to be resolved is a maximization or minimization problem
-  # @option input [Float] :optimal_func_val The best known value for the problem being solved
+  # @option input [Boolean] :continuous
+  # Flag to indicate if the problem being solved is continuous or discrete
+  # @option input [Integer] :selected_function
+  # The number of the test function (f1, f2,...,f15) to solved
+  # @option input [Boolean] :is_high_fit
+  # Flag to indicate if the problem to be resolved is a maximization
+  # or minimization problem
+  # @option input [Float] :optimal_func_val
+  # The best known value for the problem being solved
   # @option input [Integer] :max_generation The max number of generations
   def initialize(**input)
     @optimal_func_val = OPTIMAL_FUNCTION_VALUES[input[:selected_func] - 1]
@@ -64,7 +70,8 @@ class TGA < BaseGA
   end
 
   # Main method
-  # @return [Hash] The output variables: best fitness, number of generations, number of fitness evaluation, relative error and optimal value
+  # @return [Hash] The output variables: best fitness, number of generations,
+  # number of fitness evaluation, relative error and optimal value
   def execute
     output_hash = {}
     @generation = 1
@@ -83,9 +90,9 @@ class TGA < BaseGA
                            optimal_func_val: @optimal_func_val,
                            relative_error: relative_error
       end
-    rescue StandardError => error
-      p error.message
-      p error.backtrace.inspect
+    rescue StandardError => e
+      p e.message
+      p e.backtrace.inspect
     end
     p output_hash
     output_hash
@@ -111,14 +118,12 @@ class TGA < BaseGA
           @mating_pool << @chromosomes[x]
           prev_chromo = x
         end
-      else
-        if @chromosomes[x].fitness <= @chromosomes[y].fitness
-          @mating_pool << @chromosomes[x]
-          prev_chromo = x
-        elsif @chromosomes[y].fitness < @chromosomes[x].fitness
-          @mating_pool << @chromosomes[y]
-          prev_chromo = y
-        end
+      elsif @chromosomes[x].fitness <= @chromosomes[y].fitness
+        @mating_pool << @chromosomes[x]
+        prev_chromo = x
+      elsif @chromosomes[y].fitness < @chromosomes[x].fitness
+        @mating_pool << @chromosomes[y]
+        prev_chromo = y
       end
     end
   end
@@ -142,14 +147,13 @@ class TGA < BaseGA
   # @return [nil]
   def mutate_matingpool
     (0...@mating_pool.size).each do |i|
-      gene = -1
       mutate_point = rand(0...@num_genes)
       chromosome = @mating_pool[i].clone
-      if @continuous
-        gene = rand(lower_bounds[0].to_f..upper_bounds[0].to_f)
-      else
-        gene = rand(lower_bounds[0].to_i..upper_bounds[0].to_i)
-      end
+      gene = if @continuous
+               rand(lower_bounds[0].to_f..upper_bounds[0].to_f)
+             else
+               rand(lower_bounds[0].to_i..upper_bounds[0].to_i)
+             end
       chromosome[mutate_point] = gene
       @new_generation << chromosome
     end
@@ -173,15 +177,13 @@ class TGA < BaseGA
   # @param [Chromosome] chromosome
   # @return [nil]
   def verify_best_fit(chromosome)
-    if @is_high_fit
-      @best_fit = chromosome.fitness if @best_fit.nil? || chromosome.fitness > @best_fit
-      @gen_of_best_fit = @generation
-      @func_evals_of_best_fit = @num_evaluations
-    else
-      @best_fit = chromosome.fitness if @best_fit.nil? || chromosome.fitness < @best_fit
-      @gen_of_best_fit = @generation
-      @func_evals_of_best_fit = @num_evaluations
+    compare_func = @is_high_fit ? :> : :<
+    if @best_fit.nil? || chromosome.fitness.public_send(compare_func, @best_fit)
+      @best_fit = chromosome.fitness
     end
+    @gen_of_best_fit = @generation
+    @func_evals_of_best_fit = @num_evaluations
+    nil
   end
 
   # Generates the initial population of chromosomes
@@ -190,12 +192,11 @@ class TGA < BaseGA
     (0...@pop_size).each do
       chromosome = Chromosome.new
       (0...@num_genes).each do |i|
-        gene = nil
-        if @continuous
-          gene = rand(lower_bounds[i].to_f..upper_bounds[i].to_f)
-        else
-          gene = rand(lower_bounds[i].to_i..upper_bounds[i].to_i)
-        end
+        gene = if @continuous
+                 rand(lower_bounds[i].to_f..upper_bounds[i].to_f)
+               else
+                 rand(lower_bounds[i].to_i..upper_bounds[i].to_i)
+               end
         chromosome << gene
       end
       evaluate_chromosome chromosome

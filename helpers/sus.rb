@@ -1,5 +1,4 @@
 # language: en
-# encoding: utf-8
 # file: roulette.rb
 # creation date: 2016-04-24
 # last modified: 2016-11-06

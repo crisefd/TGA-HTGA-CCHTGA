@@ -1,5 +1,4 @@
 # language: en
-# encoding: utf-8
 # program: execute.rb
 # creation date: 2016-03-25
 # last modified: 2016-11-06

@@ -1,5 +1,4 @@
 # language: english
-# encoding: utf-8
 # program: cchtga.rb
 # creation date: 2016-04-04
 # last modified: 2016-11-06

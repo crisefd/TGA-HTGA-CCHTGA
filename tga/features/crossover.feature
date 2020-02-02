@@ -1,5 +1,4 @@
 # language: en
-# encoding: utf-8
 # file: init_population.feature
 # author: Oscar Tigreros
 # email:  oscar.tigreros@correounivalle.edu.co

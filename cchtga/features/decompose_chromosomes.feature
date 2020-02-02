@@ -1,8 +1,8 @@
 # language: en
-# encoding: utf-8
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co
 # creation date: 2016-05-29
+
 Feature: Decompose the chromosomes into sub chromosomes  
 
   @test_decompose_operation

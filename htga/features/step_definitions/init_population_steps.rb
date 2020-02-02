@@ -1,5 +1,4 @@
 # language: en
-# encoding: utf-8
 # file: init_population_steps.rb
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co

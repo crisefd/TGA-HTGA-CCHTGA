@@ -1,5 +1,4 @@
 # language: en
-# encoding: utf-8
 # file: matrix.feature
 # author: Cristhian Fuertes
 # email:  cristhian.fuertes@correounivalle.edu.co

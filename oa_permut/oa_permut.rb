@@ -1,4 +1,5 @@
-# encoding: utf-8
+# frozen_string_literal: true
+
 # language: en
 # Program: oa_permut.rb
 # creation date: 2015-10-05
@@ -19,25 +20,28 @@ require 'matrix'
 # J is selected such that number of rows is equal to Q^J and
 # N = (Q^J - 1)/(Q-1)
 #
-# Tested on Taguchi L8 oa_permut(2,7,3), L16 oa_permut(2,15,4) and L32 array oa_permut(2,31,5)
+# Tested on Taguchi L8 oa_permut(2,7,3), L16 oa_permut(2,15,4)
+# and L32 array oa_permut(2,31,5)
 # Reference: Leung, Y.-W.; Yuping Wang, "An orthogonal genetic algorithm
 # with quantization % for global numerical optimization," Evolutionary
 # Computation, IEEE Transactions on , vol.5, % no.1, pp.41,53, Feb 2001,
 # doi: 10.1109/4235.910464
 #
-# This is a Ruby implementation 
+# This is a Ruby implementation
 # based on the original implementation in Matlab by
 # Natasha Y Jeppu, natasha.jeppu@gmail.com
-# visit http://www.mathworks.com/matlabcentral/fileexchange/47218-orthogonal-array
+# Yogananda Jeppu (2020). 
+# Orthogonal Array 
+# (https://www.mathworks.com/matlabcentral/fileexchange/47218-orthogonal-array),
+#  MATLAB Central File Exchange. Retrieved February 2, 2020.
 # @author Cristhian Fuertes <cristhian.fuertes@correounivalle.edu.co>
 # @author Oscar Tigreros <oscar.tigreros@correounivalle.edu.co>
 module OAPermut
-
-  # @!attribute ouput 
-  #	@return [String] The output string to be writen in a file
+  # @!attribute ouput
+  #  @return [String] The output string to be writen in a file
   @@output = ''
   # @!attribute file_name
-  #	@return [String] The name of the file to be writen in
+  #  @return [String] The name of the file to be writen in
   @@file_name = ''
 
   # Main function for the algorithm
@@ -55,7 +59,7 @@ module OAPermut
     @@file_name += "L#{n + 1}"
     row = q**j
     col = (q**j - 1) / (q - 1)
-    _A = Matrix.build(row, col ){ |r, c| 0 }
+    _A = Matrix.build(row, col) { |_r, _c| 0 }
     # Compute de basic columns
     (0...j).each do |k|
       _J = ((q**k) - 1) / (q - 1)
@@ -74,7 +78,7 @@ module OAPermut
         end
       end
     end
-    _A = _A.map{ |e| e % q }
+    _A = _A.map { |e| e % q }
     _A
   end
 
@@ -93,7 +97,8 @@ module OAPermut
     matrix_file.close
   end
 
-private
+  private
+
   # Replaces a column with another column in a matrix
   # @param [Matrix] _A
   # @param [Integer] s
@@ -106,7 +111,7 @@ private
     col_J = _A.column(_J)
     col_s = t * col_s
     col = col_s + col_J
-    col = col.map { |e|  e % q}
+    col = col.map { |e| e % q }
     (0..._A.row_size).each do |i|
       _A.send(:[]=, i, x, col[i])
     end

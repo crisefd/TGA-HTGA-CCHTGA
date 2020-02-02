@@ -1,5 +1,4 @@
 # language: en
-# encoding: utf-8
 # program: test_functions.rb
 # creation date: 2016-02-26
 # last modified: 2016-11-06

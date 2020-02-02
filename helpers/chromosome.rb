@@ -1,5 +1,4 @@
 # language: en
-# encoding: utf-8
 # program: htga.rb
 # creation date: 2015-10-05
 # last modified: 2016-11-06
